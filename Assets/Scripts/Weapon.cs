@@ -8,6 +8,7 @@ public class Weapon : MonoBehaviour
     StarterAssetsInputs starterAssetsInputs;
     ParticleSystem muzzleFlash;
     Animator weaponAnimator;
+    [SerializeField] GameObject hitEffect; 
     const string SHOOT_STRING = "Shoot"; 
     void Awake()
     {
@@ -44,15 +45,23 @@ public class Weapon : MonoBehaviour
         muzzleFlash.Play();
         // You can see docs for this but arguments: animation name, layer, and time to begin animation (0f = beginning)
         weaponAnimator.Play(SHOOT_STRING, 0, 0f);
-         // Then use this method to turn the public bool back to false. 
+        // Then use this method to turn the public bool back to false. 
         // could also just have gotten the public shoot bool and turned it false, but using the method is clearer.
         starterAssetsInputs.ShootInput(false);
 
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity) && hit.collider.tag == "Enemy")
-        {   
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity)) //&& hit.collider.tag == "Enemy"
+        {
+            if (hit.collider.tag == "Enemy")
+            {
+                EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
+                enemyHealth.TakeDamage(damageAmount);
+            }
             // You could also just check that enemyHealth returns null with if(enemyHealth) but I chose to use a tag. 
-            EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
-            enemyHealth.TakeDamage(damageAmount);
+            // EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
+            // enemyHealth.TakeDamage(damageAmount);
+            Vector3 hitLocation = hit.point;
+            Quaternion angle = hitEffect.transform.rotation;
+            Instantiate(hitEffect, hitLocation, angle);
         }
     }
 }
