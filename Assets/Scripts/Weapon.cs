@@ -52,17 +52,15 @@ public class Weapon : MonoBehaviour
 
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity)) //&& hit.collider.tag == "Enemy"
         {   
-            Vector3 hitLocation = hit.point;
-            Quaternion angle = hitEffect.transform.rotation;
             if (hit.collider.tag == "Enemy")
             {
                 EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
                 enemyHealth.TakeDamage(damageAmount);
-                Instantiate(damageEffect, hitLocation, angle);
+                Instantiate(damageEffect, hit.point, Quaternion.identity);
             }
             else
             {
-                Instantiate(hitEffect, hitLocation, angle);
+                Instantiate(hitEffect, hit.point, Quaternion.identity);
             }
 
                 // You could also just check that enemyHealth returns null with if(enemyHealth) but I chose to use a tag. 
