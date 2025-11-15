@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    const int startingHealth = 100;
+    const int startingHealth = 50;
     int currentHealth;
 
     void Awake()
