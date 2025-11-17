@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Damage: 5
   FireRate: 0.2
+  WeaponPrefab: {fileID: 5869524762975325733, guid: 454320201ba7c724c865988ce645174e,
+    type: 3}
   HitEffect: {fileID: 1718301532394158974, guid: 04af0125171f2874d879a818e6f05967,
     type: 3}
   DamageEffect: {fileID: 2728300455018619261, guid: a9e45c78cf70f1143b0948a587247596,

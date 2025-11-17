@@ -5,6 +5,8 @@ public class WeaponSO : ScriptableObject
 {
     public int Damage = 1; 
     public float FireRate = .5f; 
+
+    public GameObject WeaponPrefab; 
     public GameObject HitEffect;
     public GameObject DamageEffect; 
     public bool IsAutomatic = false; 
