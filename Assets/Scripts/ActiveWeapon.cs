@@ -1,6 +1,7 @@
 using Cinemachine;
 using StarterAssets;
-using Unity.Mathematics;
+using Unity.Mathematics; 
+using TMPro; 
 using UnityEngine;
 
 public class ActiveWeapon : MonoBehaviour
@@ -12,12 +13,16 @@ public class ActiveWeapon : MonoBehaviour
     Animator weaponAnimator;
 
     float t = 0f; 
+    int currentAmmo; 
     
-    [SerializeField] WeaponSO weaponSO; 
+    [SerializeField] WeaponSO startingWeapon; 
     [SerializeField] GameObject zoomVignette; 
-
+    [SerializeField] TMP_Text ammoText; 
+    
+    WeaponSO currentWeaponSO;
     CinemachineVirtualCamera cam; 
-    const string SHOOT_STRING = "Shoot"; 
+    const string SHOOT_STRING = "Shoot";
+
     void Awake()
     {
         // This starter assets script belongs to the PlayerCapsule
@@ -31,8 +36,9 @@ public class ActiveWeapon : MonoBehaviour
     }
 
     void Start()
-    {
-        currentWeapon = GetComponentInChildren<Weapon>(); 
+    {   
+        SwitchWeapon(startingWeapon); 
+        //AdjustAmmo(currentWeaponSO.MagazineSize); 
         cam = GameObject.FindAnyObjectByType<CinemachineVirtualCamera>(); 
     }
 
@@ -40,6 +46,12 @@ public class ActiveWeapon : MonoBehaviour
     {    
         HandleShoot(); 
         HandleZoom(); 
+    }
+
+    public void AdjustAmmo(int amount)
+    {
+        currentAmmo += amount; 
+        ammoText.text = currentAmmo.ToString("D2"); 
     }
 
     public void SwitchWeapon(WeaponSO weaponSO)
@@ -55,7 +67,9 @@ public class ActiveWeapon : MonoBehaviour
 
         Weapon newWeapon = Instantiate(weaponSO.WeaponPrefab, transform).GetComponent<Weapon>(); 
         currentWeapon = newWeapon; 
-        this.weaponSO = weaponSO; 
+        currentWeaponSO = weaponSO;
+        // Now refill the magazine, but only by the offset. 
+        AdjustAmmo(currentWeaponSO.MagazineSize - currentAmmo); 
     }
 
     void HandleShoot()
@@ -73,15 +87,16 @@ public class ActiveWeapon : MonoBehaviour
             return;
         }
 
-        if(t >= weaponSO.FireRate)
+        if(t >= currentWeaponSO.FireRate && currentAmmo > 0)
         {
            // You can see docs for this but arguments: animation name, layer, and time to begin animation (0f = beginning)
             weaponAnimator.Play(SHOOT_STRING, 0, 0f);
-            currentWeapon.Shoot(weaponSO); 
+            currentWeapon.Shoot(currentWeaponSO); 
             t = 0f; 
+            AdjustAmmo(-1);
         }
 
-        if(!weaponSO.IsAutomatic)
+        if(!currentWeaponSO.IsAutomatic)
         {
             starterAssetsInputs.ShootInput(false); 
         }
@@ -101,19 +116,19 @@ public class ActiveWeapon : MonoBehaviour
     void HandleZoom()
     {
         // Allow any object to zoom, IF the scriptable object itself can zoom.
-        if (!weaponSO.CanZoom) return; 
+        if (!currentWeaponSO.CanZoom) return; 
 
         if (starterAssetsInputs.zoom)
         {   
             zoomVignette.SetActive(true);
-            firstPersonController.RotationSpeed = weaponSO.ZoomRotationSpeed; // MAGIC NUMBER
-            cam.m_Lens.FieldOfView = weaponSO.ZoomAmount;
+            firstPersonController.RotationSpeed = currentWeaponSO.ZoomRotationSpeed; // MAGIC NUMBER
+            cam.m_Lens.FieldOfView = currentWeaponSO.ZoomAmount;
         }
         else
         {   
             zoomVignette.SetActive(false);
-            firstPersonController.RotationSpeed = weaponSO.DefaultRotationSpeed; //MAGIC NUMBER
-            cam.m_Lens.FieldOfView = weaponSO.DefaultFOV; 
+            firstPersonController.RotationSpeed = currentWeaponSO.DefaultRotationSpeed; //MAGIC NUMBER
+            cam.m_Lens.FieldOfView = currentWeaponSO.DefaultFOV; 
         }
 
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 public class WeaponSO : ScriptableObject
 {
     public int Damage = 1; 
-    
+
     public float FireRate = .5f; 
 
     public float ZoomAmount = 10f;
@@ -14,6 +14,8 @@ public class WeaponSO : ScriptableObject
     public float DefaultRotationSpeed = 1f; 
 
     public float DefaultFOV = 40f; 
+
+    public int MagazineSize = 12; 
 
     public bool IsAutomatic = false; 
 

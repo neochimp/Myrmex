@@ -14,6 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Damage: 50
   FireRate: 1
+  ZoomAmount: 10
+  ZoomRotationSpeed: 0.2
+  DefaultRotationSpeed: 1
+  DefaultFOV: 40
+  MagazineSize: 8
   IsAutomatic: 0
   CanZoom: 1
   WeaponPrefab: {fileID: 9070003950996144133, guid: 4a49631755147ed46a5c671e07311871,

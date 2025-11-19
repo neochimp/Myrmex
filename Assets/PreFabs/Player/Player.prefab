@@ -436,8 +436,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38187fd5a5d6b03498debdc03e51d60c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponSO: {fileID: 11400000, guid: 024fdc04f558469439717a4e3ad06956, type: 2}
+  startingWeapon: {fileID: 11400000, guid: be2461f2c4cabfd4ea5abf691408cd10, type: 2}
+  currentWeaponSO: {fileID: 0}
   zoomVignette: {fileID: 0}
+  ammoText: {fileID: 0}
 --- !u!1001 &8387824030126125218
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -505,6 +507,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Pistol
+      objectReference: {fileID: 0}
+    - target: {fileID: 5869524762975325733, guid: f55ebdc3c54eff844bda0be5f6ef1fe8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
