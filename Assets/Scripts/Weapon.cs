@@ -7,6 +7,7 @@ public class Weapon : MonoBehaviour
 {
  
    ParticleSystem muzzleFlash;
+   [SerializeField] LayerMask interactionLayers; 
 
    void Start()
     {
@@ -27,7 +28,7 @@ public class Weapon : MonoBehaviour
         muzzleFlash.Play();
 
         
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity))
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity, interactionLayers, QueryTriggerInteraction.Ignore))
         {   
             if (hit.collider.tag == "Enemy")
             {
