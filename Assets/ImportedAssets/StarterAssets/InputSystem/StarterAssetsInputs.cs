@@ -10,10 +10,13 @@ namespace StarterAssets
 		[Header("Character Input Values")]
 		public Vector2 move;
 		public Vector2 look;
+
+		// Various bools for incoming actions, i.e shoot etc. 
 		public bool jump;
 		public bool sprint;
 
 		public bool shoot;
+		public bool zoom; 
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -47,8 +50,15 @@ namespace StarterAssets
 		}
 
 		public void OnShoot(InputValue value)
-        {
+        {	
+			// Example, we retrieve an incoming value for the action (as a value argument)
 			ShootInput(value.isPressed); 
+			// True, but if it's a release for example, then the action may trigger but return a false bool (trigger on release)
+        }
+
+		public void OnZoom(InputValue value)
+        {
+            ZoomInput(value.isPressed); 
         }
 #endif
 
@@ -74,8 +84,15 @@ namespace StarterAssets
 		}
 
 		public void ShootInput(bool newShootState)
-        {
+        {	
+			// The function above, that trigger on associated action, now change the public bools for that action. 
+			// That is, the action IS occuring OR is NOT. 
             shoot = newShootState; 
+        }
+
+		public void ZoomInput(bool newZoomState)
+        {
+            zoom = newZoomState; 
         }
 		
 		private void OnApplicationFocus(bool hasFocus)
