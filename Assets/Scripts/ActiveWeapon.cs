@@ -17,6 +17,8 @@ public class ActiveWeapon : MonoBehaviour
     
     [SerializeField] WeaponSO startingWeapon; 
     [SerializeField] GameObject zoomVignette; 
+
+    [SerializeField] Camera weaponCamera; 
     [SerializeField] TMP_Text ammoText; 
     
     WeaponSO currentWeaponSO;
@@ -49,8 +51,15 @@ public class ActiveWeapon : MonoBehaviour
     }
 
     public void AdjustAmmo(int amount)
-    {
+    {   
+        // Important delta adjustment, we never want to surpass the magazine amount. 
         currentAmmo += amount; 
+
+        if (currentAmmo > currentWeaponSO.MagazineSize) 
+        {
+            currentAmmo = currentWeaponSO.MagazineSize;
+        }
+
         ammoText.text = currentAmmo.ToString("D2"); 
     }
 
@@ -63,13 +72,14 @@ public class ActiveWeapon : MonoBehaviour
             zoomVignette.SetActive(false);
             firstPersonController.RotationSpeed = weaponSO.DefaultRotationSpeed; 
             cam.m_Lens.FieldOfView = weaponSO.DefaultFOV;
+            weaponCamera.fieldOfView = weaponSO.DefaultFOV; 
         }
 
         Weapon newWeapon = Instantiate(weaponSO.WeaponPrefab, transform).GetComponent<Weapon>(); 
         currentWeapon = newWeapon; 
         currentWeaponSO = weaponSO;
-        // Now refill the magazine, but only by the offset. 
-        AdjustAmmo(currentWeaponSO.MagazineSize - currentAmmo); 
+        // Now refill the magazine, but never by more than the mag capacity. 
+        AdjustAmmo(currentWeaponSO.MagazineSize); 
     }
 
     void HandleShoot()
@@ -123,12 +133,14 @@ public class ActiveWeapon : MonoBehaviour
             zoomVignette.SetActive(true);
             firstPersonController.RotationSpeed = currentWeaponSO.ZoomRotationSpeed; // MAGIC NUMBER
             cam.m_Lens.FieldOfView = currentWeaponSO.ZoomAmount;
+            weaponCamera.fieldOfView = currentWeaponSO.ZoomAmount; 
         }
         else
         {   
             zoomVignette.SetActive(false);
             firstPersonController.RotationSpeed = currentWeaponSO.DefaultRotationSpeed; //MAGIC NUMBER
             cam.m_Lens.FieldOfView = currentWeaponSO.DefaultFOV; 
+            weaponCamera.fieldOfView = currentWeaponSO.DefaultFOV; 
         }
 
     }

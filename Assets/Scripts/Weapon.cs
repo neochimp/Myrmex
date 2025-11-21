@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using StarterAssets;
 using UnityEngine;
 
@@ -7,12 +8,14 @@ public class Weapon : MonoBehaviour
 {
  
    ParticleSystem muzzleFlash;
+   CinemachineImpulseSource impulseSource; 
    [SerializeField] LayerMask interactionLayers; 
 
    void Start()
     {
         // Yes we could have serialized a field, but I don't want a bunch of serializations. 
        muzzleFlash = GetComponentInChildren<ParticleSystem>();  
+       impulseSource = GetComponent<CinemachineImpulseSource>(); 
     }
     public void Shoot(WeaponSO weaponSO)
     {   
@@ -25,6 +28,7 @@ public class Weapon : MonoBehaviour
         // Note that RayCastHit will only return a value if we hit a collider. This prevents null ref
 
         RaycastHit hit;
+        impulseSource.GenerateImpulse(); 
         muzzleFlash.Play();
 
         
