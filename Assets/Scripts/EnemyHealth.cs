@@ -16,21 +16,21 @@ public class EnemyHealth : MonoBehaviour
         currentHealth = startingHealth; 
     }
 
-    void CheckHealth()
+    public void SelfDestruct()
     {   
-        // Simply check if health is less than zero and destroy if true. 
-        if(currentHealth <= 0)
-        {   
-            Instantiate(explodeVFX, transform.position, Quaternion.identity);  
-            Destroy(gameObject);
-        }
+        Instantiate(explodeVFX, transform.position, Quaternion.identity);  
+        Destroy(gameObject);
     }
     
     public void TakeDamage(int damageAmount)
     {
         // Public to be called by weapons script (or others)
         currentHealth -= damageAmount;
-        CheckHealth();
-        // Could also add knockback here
+        
+        // Simply check if health is less than zero and destroy if true. 
+        if(currentHealth <= 0)
+        {   
+            SelfDestruct(); 
+        }
     }
 }
