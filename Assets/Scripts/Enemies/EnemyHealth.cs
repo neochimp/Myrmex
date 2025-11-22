@@ -1,11 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using Microsoft.Unity.VisualStudio.Editor;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEngine.UI; 
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class EnemyHealth : MonoBehaviour
 // Contains general behavior for all types of enemy health. 

@@ -21,11 +21,6 @@ public class WeaponSO : ScriptableObject
     public float ZoomAmount = 10f;
 
     public float ZoomRotationSpeed = 0.2f; 
-
-    public float DefaultRotationSpeed = 1f; 
-
-    public float DefaultFOV = 40f; 
-
     public int MagazineSize = 12; 
 
     public bool IsAutomatic = false; 
