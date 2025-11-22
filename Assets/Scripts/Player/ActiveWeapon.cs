@@ -155,9 +155,34 @@ public class ActiveWeapon : MonoBehaviour
             // So if it IS, we can hold down and keep shooting. 
             starterAssetsInputs.ShootInput(false); 
         }
-        
+    }
 
-        // A note on the overall design pattern:
+    void HandleZoom()
+    {
+        // Allow any object to zoom, but only IF the scriptable object itself can zoom.
+        if (!currentWeaponSO.CanZoom) return; 
+
+        if (starterAssetsInputs.zoom)
+        {   
+            zoomVignette.SetActive(true);
+            // If you keep the same rotation speed when the camera zoom in...
+            // You will get very fast and unplayable zoom mechanics.
+
+            // An idea for future development
+            // Each weapon could hold ITS OWN zoomImage for use on the overlay
+            // Then muliple weapons could zoom, with various visuals (just a thought) 
+            firstPersonController.RotationSpeed = currentWeaponSO.ZoomRotationSpeed;
+            cam.m_Lens.FieldOfView = currentWeaponSO.ZoomAmount;
+            weaponCamera.fieldOfView = currentWeaponSO.ZoomAmount; 
+        }
+        else
+        {   
+            UnzoomWeapon(); 
+        }
+    }
+}
+
+// A note on the overall design pattern:
         /*
         The scriptable objects for weapons contain all their data.
         The concern for the weapon script itself is the specific ray casting concerns and actual mechanisms of firing.
@@ -167,27 +192,3 @@ public class ActiveWeapon : MonoBehaviour
         Seperation of concerns, specifically,seperating data from functionality.  
         This is how we can expand it into more of an ANT GAME - Jordan
         */
-    }
-
-    void HandleZoom()
-    {
-        // Allow any object to zoom, IF the scriptable object itself can zoom.
-        if (!currentWeaponSO.CanZoom) return; 
-
-        if (starterAssetsInputs.zoom)
-        {   
-            zoomVignette.SetActive(true);
-            firstPersonController.RotationSpeed = currentWeaponSO.ZoomRotationSpeed; // MAGIC NUMBER
-            cam.m_Lens.FieldOfView = currentWeaponSO.ZoomAmount;
-            weaponCamera.fieldOfView = currentWeaponSO.ZoomAmount; 
-        }
-        else
-        {   
-            zoomVignette.SetActive(false);
-            firstPersonController.RotationSpeed = currentWeaponSO.DefaultRotationSpeed; //MAGIC NUMBER
-            cam.m_Lens.FieldOfView = currentWeaponSO.DefaultFOV; 
-            weaponCamera.fieldOfView = currentWeaponSO.DefaultFOV; 
-        }
-
-    }
-}
