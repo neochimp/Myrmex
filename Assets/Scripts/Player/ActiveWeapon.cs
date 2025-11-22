@@ -6,15 +6,33 @@ using UnityEngine;
 
 public class ActiveWeapon : MonoBehaviour
 {   
+    // This is the public facing interface of the Weapon GameObject
+    // It is used by Pickups, and contains the direct functionality 
+    // (representing the weapon which is currently functional)
+    // Shooting, zooming, animations etc is all handled within this class. 
     Weapon currentWeapon; 
+
+    // starterAssetsInputs is another unity imported script (I did not make this)
+    // It handles an "action map" essentialy making key bindings much easier.
     StarterAssetsInputs starterAssetsInputs;
 
     FirstPersonController firstPersonController; 
     Animator weaponAnimator;
 
+    // This t is used to measure timing in HandleShoot, controlling fire rate. 
     float t = 0f; 
     int currentAmmo; 
-    
+
+    // You would very rarely want to change these defaults. 
+    // Refers to camera zoom, and angular movement. 
+    const float DefaultRotationSpeed = 1f; 
+
+    const float DefaultFOV = 40f; 
+
+    // It makes most sense to serialize these.
+    // The camera is used to prevent clipping. 
+    // The zoomVignette is for the sniper rifle zoom in (and potentially others)
+    // The ammo text is part of the UI overlay. 
     [SerializeField] WeaponSO startingWeapon; 
     [SerializeField] GameObject zoomVignette; 
 
@@ -27,99 +45,127 @@ public class ActiveWeapon : MonoBehaviour
 
     void Awake()
     {
-        // This starter assets script belongs to the PlayerCapsule
-        // It is created by unity for moduler input binding (comes in the starter assets). 
+        // Note that in awake, we get only those items which are part of self OR parent objects (bound to exist)
         starterAssetsInputs = gameObject.GetComponentInParent<StarterAssetsInputs>();
         weaponAnimator = gameObject.GetComponentInParent<Animator>(); 
         firstPersonController = gameObject.GetComponentInParent<FirstPersonController>(); 
+        // No zoomVignette because no zoom. When this is true, user sees a rifle scope. 
         zoomVignette.SetActive(false); 
-        // These references are on gameobjects which must already exist, either the parent or the object itself..
-        // So it's okay to call on awake(), others should go in start. 
     }
 
     void Start()
     {   
+        // Begin the game by switching to the starting weapon, and initialize the main camera. 
         SwitchWeapon(startingWeapon); 
-        //AdjustAmmo(currentWeaponSO.MagazineSize); 
         cam = GameObject.FindAnyObjectByType<CinemachineVirtualCamera>(); 
     }
 
     void Update()
-    {    
+    {   
+        // See these methods for more detail.
+        // Let's leave update clean.  
         HandleShoot(); 
         HandleZoom(); 
     }
 
     public void AdjustAmmo(int amount)
     {   
-        // Important delta adjustment, we never want to surpass the magazine amount. 
+        // Update the amount 
         currentAmmo += amount; 
 
+        // But importantly, if the ammo amount would surpass the fixed magazine size of that scriptable object.
         if (currentAmmo > currentWeaponSO.MagazineSize) 
-        {
+        {   
+            // Then simply fill the magazine, but dont surpass it
+            // (for example we don't want a pistol to hold 100 rounds)
             currentAmmo = currentWeaponSO.MagazineSize;
         }
 
+        // Two decimals worth of ammo info
+        // (for example 2 rounds left displays as 02)
         ammoText.text = currentAmmo.ToString("D2"); 
     }
 
     public void SwitchWeapon(WeaponSO weaponSO)
     {
         if (currentWeapon)
-        {
+        {   
+            // We first destroy the previous object
             Destroy(currentWeapon.gameObject);
-            // UNZOOM
-            zoomVignette.SetActive(false);
-            firstPersonController.RotationSpeed = weaponSO.DefaultRotationSpeed; 
-            cam.m_Lens.FieldOfView = weaponSO.DefaultFOV;
-            weaponCamera.fieldOfView = weaponSO.DefaultFOV; 
+            // This is important, otherwise the player might just be stuck zoomed in. 
+            UnzoomWeapon(); 
         }
 
+        // Instantiate the weapons prefab through its scriptable object
+        // Then tetrieve the weapon script component. 
         Weapon newWeapon = Instantiate(weaponSO.WeaponPrefab, transform).GetComponent<Weapon>(); 
+        // Change current values for both. 
         currentWeapon = newWeapon; 
         currentWeaponSO = weaponSO;
-        // Now refill the magazine, but never by more than the mag capacity. 
+        // Now refill the magazine. (modular: note how each game object handles its own functionality, for the most part) 
         AdjustAmmo(currentWeaponSO.MagazineSize); 
+    }
+
+    void UnzoomWeapon()
+    {   
+        // Remove the image (no rifle scope)
+        zoomVignette.SetActive(false);
+        // Return to default rotation speed and camera FOV's. 
+        // Rotation speed must change when zoomed, or we get extremely fast zoom movement. 
+        firstPersonController.RotationSpeed = DefaultRotationSpeed; 
+        cam.m_Lens.FieldOfView = DefaultFOV;
+        weaponCamera.fieldOfView = DefaultFOV; 
     }
 
     void HandleShoot()
     {   
-        //*NOTE*
-        // OnShoot in StarterAssetsInputs.cs will fire on press and release
-        // On release it will return a false value for .shoot (isPressed == false)
-        // For this reason a release of the button also triggers a return of handleshoot(). 
+        //*NOTE*: because this is complicated
+        // OnShoot is a method in StarterAssetsInputs.cs 
+        // It is action mapped to fire on press and release of the left trigger
+        // On release it will return a false value for the public :shoot: bool [because (isPressed == false)]
+        // For this reason a release of the button also triggers a return of handleshoot(), but with a false value of shoot. 
 
+
+        // Now thats explained here is the rest:
+        // We track the frame rate independant time here. 
         t += Time.deltaTime;
 
         if (!starterAssetsInputs.shoot)
-        {
+        {   
             // eliminate one indentation block
+            // If we dont shoot, the dont handle it.
             return;
         }
 
         if(t >= currentWeaponSO.FireRate && currentAmmo > 0)
         {
-           // You can see docs for this but arguments: animation name, layer, and time to begin animation (0f = beginning)
+            // You can see docs for this but WeaponAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
             weaponAnimator.Play(SHOOT_STRING, 0, 0f);
+            // A method of the Weapon.cs script
             currentWeapon.Shoot(currentWeaponSO); 
+            // Reset the time now (because we already shot)
             t = 0f; 
+            // Decrease ammo, and you get a nice magic number here :)
             AdjustAmmo(-1);
         }
 
         if(!currentWeaponSO.IsAutomatic)
-        {
+        {   
+            // If its not automatic, false (no shoot) UNTIL the next left mouse click
+            // So if it IS, we can hold down and keep shooting. 
             starterAssetsInputs.ShootInput(false); 
         }
-        // Then use this method to turn the public bool back to false. 
-        // could also just have gotten the public shoot bool and turned it false, but using the method is clearer.
+        
 
-        // A note on this pattern:
+        // A note on the overall design pattern:
         /*
         The scriptable objects for weapons contain all their data.
-        The concern for the weapon script itself is the specific ray casting concerns and actual mechanism.
-        The active weapon here, handles the rest including animations, declerations, and updates. This is how we will seperate concerns.
-        Scriptable objects are going to be one the most useful things for this game as it builds further. Seperation of concerns, specifically,
-        seperating data from functionality.  
+        The concern for the weapon script itself is the specific ray casting concerns and actual mechanisms of firing.
+        The active weapon here, handles direct results of INPUT
+        including animations, declerations, and updates. This is how we will seperate concerns.
+        Scriptable objects are going to be one of the most useful things for this game as it builds further. 
+        Seperation of concerns, specifically,seperating data from functionality.  
+        This is how we can expand it into more of an ANT GAME - Jordan
         */
     }
 
