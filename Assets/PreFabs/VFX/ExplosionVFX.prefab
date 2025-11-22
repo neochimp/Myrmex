@@ -9538,4 +9538,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 1.5
-  damageAmount: 10
+  damageAmount: 1

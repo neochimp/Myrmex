@@ -4,12 +4,14 @@ using Cinemachine;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
-{
-        [SerializeField] int startingHealth = 5;
-        // The virtual camera is used for display after game over. 
-        [SerializeField] CinemachineVirtualCamera virtualCamera; 
-        [SerializeField] Transform weaponCamera; 
-        [SerializeField] GameObject overlayUI; 
+{       
+    [Range(1, 10)]
+    [SerializeField] int startingHealth = 5;
+    // The virtual camera is used for display after game over. 
+    [SerializeField] CinemachineVirtualCamera virtualCamera; 
+    [SerializeField] Transform weaponCamera; 
+    [SerializeField] GameObject overlayUI; 
+    [SerializeField] UnityEngine.UI.Image[] shieldBars; 
     int currentHealth;
     const int virtualCameraPriority = 20; 
 
@@ -17,11 +19,13 @@ public class PlayerHealth : MonoBehaviour
     {   
         // Initialize health. 
         currentHealth = startingHealth; 
+        AdjustShieldUI(); 
     }
     public void TakeDamage(int damageAmount)
     {
         // Public to be called by weapons script (or others)
         currentHealth -= damageAmount;
+        AdjustShieldUI();
         
         // Simply check if health is less than zero and destroy if true. 
         if(currentHealth <= 0)
@@ -34,6 +38,21 @@ public class PlayerHealth : MonoBehaviour
             overlayUI.SetActive(false); 
             // Destroy the player. 
             Destroy(gameObject); 
+        }
+    }
+
+    public void AdjustShieldUI()
+    {   
+        for (int i = 0; i < shieldBars.Length; i++)
+        {
+            if (i < currentHealth)
+            {
+                shieldBars[i].gameObject.SetActive(true); 
+            }
+            else
+            {
+                shieldBars[i].gameObject.SetActive(false);
+            }
         }
     }
 }

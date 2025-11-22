@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEngine.UI; 
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class EnemyHealth : MonoBehaviour
 {   
+    [SerializeField] int startingHealth = 10;
     [SerializeField] ParticleSystem explodeVFX; 
-    [SerializeField] int startingHealth = 50;
     int currentHealth;
 
     void Awake()

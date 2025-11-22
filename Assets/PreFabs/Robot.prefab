@@ -141,6 +141,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   explodeVFX: {fileID: 305274947037447249, guid: 0a0468b306e81704f8d766f26fbea385,
     type: 3}
+  startingHealth: 10
+  shieldBars:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!95 &7812091269182159868
 Animator:
   serializedVersion: 5
