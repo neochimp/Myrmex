@@ -12,12 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e44e1fcdea3351a41ba7d8d9520c462d, type: 3}
   m_Name: MachineGun
   m_EditorClassIdentifier: 
-  Damage: 5
+  Damage: 1
   FireRate: 0.07
   ZoomAmount: 10
   ZoomRotationSpeed: 0.2
-  DefaultRotationSpeed: 1
-  DefaultFOV: 40
   MagazineSize: 100
   IsAutomatic: 1
   CanZoom: 0

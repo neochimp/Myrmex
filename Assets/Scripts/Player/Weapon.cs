@@ -43,7 +43,7 @@ public class Weapon : MonoBehaviour
         {   
             if (hit.collider.tag == "Enemy")
             {
-                EnemyHealth enemyHealth = hit.collider.GetComponent<EnemyHealth>();
+                EnemyHealth enemyHealth = hit.collider.GetComponentInParent<EnemyHealth>();
                 enemyHealth.TakeDamage(weaponSO.Damage);
                 // A special particle effect to visualize damage. 
                 Instantiate(weaponSO.DamageEffect, hit.point, Quaternion.identity);

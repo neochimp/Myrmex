@@ -12,12 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e44e1fcdea3351a41ba7d8d9520c462d, type: 3}
   m_Name: SniperRifle
   m_EditorClassIdentifier: 
-  Damage: 50
+  Damage: 10
   FireRate: 1
   ZoomAmount: 10
   ZoomRotationSpeed: 0.2
-  DefaultRotationSpeed: 1
-  DefaultFOV: 40
   MagazineSize: 8
   IsAutomatic: 0
   CanZoom: 1
