@@ -101,7 +101,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -119,8 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ef9e73d637304d49ab95d47fd1348ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5000
-  projectile: {fileID: 2500804997408492058}
+  rb: {fileID: 2500804997408492058}
+  hitVFX: {fileID: 8736725515232474050, guid: 946f6e186b7086146965c7c413a1aea1, type: 3}
 --- !u!54 &2500804997408492058
 Rigidbody:
   m_ObjectHideFlags: 0

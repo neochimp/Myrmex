@@ -98,6 +98,8 @@ MonoBehaviour:
   playerTargetPoint: {fileID: 0}
   projectileSpawnPoint: {fileID: 4890947947413275869}
   fireRate: 1
+  damage: 2
+  speed: 30
 --- !u!1 &8056536090847983849
 GameObject:
   m_ObjectHideFlags: 0
