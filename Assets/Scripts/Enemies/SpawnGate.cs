@@ -6,7 +6,7 @@ public class SpawnGate : MonoBehaviour
     // Spawns a specific enemy at the given point, with a delay.
     // Can be destroyed if given collider and EnemyHealth script. 
     [SerializeField] GameObject enemy;
-    GameObject player;  
+    PlayerHealth player;  
     [SerializeField] Transform spawnPoint; 
 
     // Careful with this, if it's too small you will be spamming prefabs.
@@ -15,7 +15,7 @@ public class SpawnGate : MonoBehaviour
     void Start() 
     {   
         // Call the coroutine once, upon the gates initialization. 
-        player = GameObject.FindGameObjectWithTag("Player"); 
+        player = GameObject.FindFirstObjectByType<PlayerHealth>(); 
         StartCoroutine(SpawnEnemy());
     }
 
