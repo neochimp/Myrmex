@@ -1,8 +1,31 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement; 
 
 public class GameManager : MonoBehaviour
-{
+{   
+    [SerializeField] TMP_Text enemiesText; 
+    [SerializeField] GameObject winText; 
+
+    const string ENEMIES_STRING = "Enemies: ";
+    int enemiesRemaining = 0;
+
+    public void AdjustEnemyCount(int amount)
+    {   
+        // *note* This tracker could easily be adjusted to track multiple types of enemies, such as spiders, mantises, etc. 
+
+        // Increase the enemies remaining tracker (or decrease if given negative argument value)
+        enemiesRemaining += amount;
+        // Adjust the TMP_Text object, including the newly updated value. 
+        enemiesText.text = ENEMIES_STRING + enemiesRemaining.ToString(); 
+
+        if (enemiesRemaining <= 0)
+        {
+            // Currently, the player wins the game when no enemies remain. 
+            // This can be changed as development continues. 
+            winText.SetActive(true); 
+        }
+    }
     public void RestartLevel()
     {   
         // Obtain the current scene from the build hierarchy.
