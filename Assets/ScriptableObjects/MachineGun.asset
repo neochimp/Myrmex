@@ -16,7 +16,7 @@ MonoBehaviour:
   FireRate: 0.07
   ZoomAmount: 10
   ZoomRotationSpeed: 0.2
-  MagazineSize: 100
+  MagazineSize: 500
   IsAutomatic: 1
   CanZoom: 0
   WeaponPrefab: {fileID: 5869524762975325733, guid: 454320201ba7c724c865988ce645174e,

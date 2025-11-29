@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using StarterAssets;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -15,9 +16,10 @@ public class PlayerHealth : MonoBehaviour
     // It is easiest just to serialize the various cameras and the UI canvas. 
     [SerializeField] CinemachineVirtualCamera virtualCamera; 
     [SerializeField] Transform weaponCamera; 
-    [SerializeField] GameObject overlayUI; 
+    //[SerializeField] GameObject overlayUI; 
     // An array of shield bars, intented to decrease as the player takes damage. 
     [SerializeField] UnityEngine.UI.Image[] shieldBars; 
+    [SerializeField] GameObject gameOverUI;  
     int currentHealth;
 
     // The highest priority camera will always be the POV. 
@@ -37,19 +39,27 @@ public class PlayerHealth : MonoBehaviour
         // Adjust UI bars to display changes. 
         AdjustShieldUI();
         
-        // Simply check if health is less than zero and destroy if true. 
+        // Check if health is less than zero and call a GameOver result if true. 
         if(currentHealth <= 0)
         {      
-            // Unparent the weapon cam to prevent errors after player deletion. 
-            // It would be childed to a destroyed object
-            weaponCamera.parent = null; 
-            // Increase priority to instigate a switch of cameras. 
-            virtualCamera.Priority = virtualCameraPriority;
-            // Deactivate UI (because it's game over)
-            overlayUI.SetActive(false); 
-            // Destroy the player. 
-            Destroy(gameObject); 
+            PlayerGameOver(); 
         }
+    }
+
+    void PlayerGameOver()
+    {
+        // Unparent the weapon cam to prevent errors after player deletion. 
+        // It would be childed to a destroyed object
+        weaponCamera.parent = null; 
+        // Increase priority to instigate a switch of cameras. 
+        virtualCamera.Priority = virtualCameraPriority;
+        // Deactivate Cursor/Lock cursor: (because it's game over)
+        StarterAssetsInputs starterAssetsInputs = gameObject.GetComponent<StarterAssetsInputs>(); 
+        starterAssetsInputs.SetCursorState(false); 
+        // Display the game over screen 
+        gameOverUI.SetActive(true);
+        // Destroy the player. 
+        Destroy(gameObject);
     }
 
     public void AdjustShieldUI()

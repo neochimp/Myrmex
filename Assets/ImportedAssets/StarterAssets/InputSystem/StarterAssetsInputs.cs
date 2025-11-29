@@ -25,7 +25,14 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
+		void Start()
+        {	
+			// In order to keep the cursor visible during every scene reload. 
+            SetCursorState(true);
+        }
+
 #if ENABLE_INPUT_SYSTEM
+
 		public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
@@ -96,12 +103,14 @@ namespace StarterAssets
         }
 		
 		private void OnApplicationFocus(bool hasFocus)
-		{
-			SetCursorState(cursorLocked);
+		{	
+			SetCursorState(cursorLocked); 
 		}
 
-		private void SetCursorState(bool newState)
-		{
+		public void SetCursorState(bool newState)
+		{	
+			// Make sure to fire this with FALSE, before a GameOver event. 
+			// This is why it's a public method. 
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
 	}
