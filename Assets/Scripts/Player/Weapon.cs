@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using Cinemachine;
-using StarterAssets;
 using UnityEngine;
 
 public class Weapon : MonoBehaviour
@@ -38,8 +35,8 @@ public class Weapon : MonoBehaviour
         impulseSource.GenerateImpulse(); 
         // Muzzle flash particle effect
         muzzleFlash.Play();
-
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, Mathf.Infinity, interactionLayers, QueryTriggerInteraction.Ignore))
+                                                                                                    // PROTOTYPE (RETURN TO Mathf.Infinity)
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, weaponSO.range, interactionLayers, QueryTriggerInteraction.Ignore))
         {   
             if (hit.collider.tag == "Enemy")
             {

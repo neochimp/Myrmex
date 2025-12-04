@@ -23,6 +23,8 @@ public class WeaponSO : ScriptableObject
     public float ZoomRotationSpeed = 0.2f; 
     public int MagazineSize = 12; 
 
+    public float range = Mathf.Infinity; // PROTOTYPE
+
     public bool IsAutomatic = false; 
 
     public bool CanZoom = false; 

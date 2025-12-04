@@ -97,7 +97,7 @@ public class ActiveWeapon : MonoBehaviour
         }
 
         // Instantiate the weapons prefab through its scriptable object
-        // Then tetrieve the weapon script component. 
+        // Then Retrieve the weapon script component. 
         Weapon newWeapon = Instantiate(weaponSO.WeaponPrefab, transform).GetComponent<Weapon>(); 
         // Change current values for both. 
         currentWeapon = newWeapon; 
