@@ -1,6 +1,5 @@
 using Cinemachine;
 using StarterAssets;
-using Unity.Mathematics; 
 using TMPro; 
 using UnityEngine;
 
