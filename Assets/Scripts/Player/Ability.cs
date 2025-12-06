@@ -19,10 +19,12 @@ public class Ability : MonoBehaviour
    void Start()
     {
         // Yes we could have serialized a field, but I don't want a bunch of serializations. 
+        // This acid splash should be included in the prefab itself. 
        acidSplash = GetComponentInChildren<ParticleSystem>();  
        impulseSource = GetComponent<CinemachineImpulseSource>(); 
     }
-    public void Shoot(AbilitySO abilitySO)
+
+    public void FireAbility(AbilitySO abilitySO)
     {   
         // This is attached to the ability prefab itself, and called by the SoldierAbility script. 
         // On left click, the ant shoots acid
@@ -54,5 +56,27 @@ public class Ability : MonoBehaviour
                 Instantiate(abilitySO.HitEffect, hit.point, Quaternion.identity);
             }
         }
+    }
+
+    public void WorkerAbility(AbilitySO abilitySO)
+    {
+        RaycastHit hit;
+
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, abilitySO.range, interactionLayers, QueryTriggerInteraction.Ignore))
+        {   
+            if (hit.collider.tag == "Food")
+            {   
+                Debug.Log("Picked up food"); 
+                // Activate the food model in the worker (so it looks like we picked up food)
+                // destroy this model
+                // or if we already have food, drop it (spawn a food and deactivate the food ability)
+
+
+                //EnemyHealth enemyHealth = hit.collider.GetComponentInParent<EnemyHealth>();
+                //enemyHealth.TakeDamage(abilitySO.Damage);
+                // A special particle effect to visualize damage. 
+                //Instantiate(abilitySO.DamageEffect, hit.point, Quaternion.identity);
+            }
+        } 
     }
 }

@@ -196,7 +196,7 @@ PrefabInstance:
     - target: {fileID: 3266682224156924427, guid: 6f343774bf0cec542bafc965512de72d,
         type: 3}
       propertyPath: m_Name
-      value: MuzzleFlash
+      value: AcidSplash
       objectReference: {fileID: 0}
     - target: {fileID: 3266682224156924427, guid: 6f343774bf0cec542bafc965512de72d,
         type: 3}

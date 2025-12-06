@@ -159,7 +159,7 @@ public class SoldierAbility : MonoBehaviour
             // You can see docs for this but WeaponAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
             abilityAnimator.Play(SHOOT_STRING, 0, 0f);
             // A method of the Ability.cs script attached to the ability itself 
-            shootAbility.Shoot(shootAbilitySO); 
+            shootAbility.FireAbility(shootAbilitySO); 
             // Reset the time now (because we already shot)
             shootTimer = 0f; 
             // Decrease ammo, and you get a nice magic number here :)
@@ -191,7 +191,7 @@ public class SoldierAbility : MonoBehaviour
             // You can see docs for this but WeaponAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
             abilityAnimator.Play(BITE_STRING, 0, 0f);
             // A method of the Weapon.cs script
-            biteAbility.Shoot(biteAbilitySO); 
+            biteAbility.FireAbility(biteAbilitySO); 
             // Reset the time now (because we already shot)
             biteTimer = 0f; 
             // No need to decrease ammo, because the bite has unlimited ammo. 
