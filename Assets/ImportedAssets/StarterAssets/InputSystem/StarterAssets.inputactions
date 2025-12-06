@@ -51,9 +51,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Zoom",
+                    "name": "Bite",
                     "type": "Button",
                     "id": "eebb6f9b-7fc7-4cbb-8a7e-414099f049e7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Zoom",
+                    "type": "Button",
+                    "id": "f254192b-6fa0-4cdc-9780-e39471d2b1ff",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -266,7 +275,7 @@
                     "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "",
-                    "action": "Zoom",
+                    "action": "Bite",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -275,6 +284,17 @@
                     "id": "ae42a116-f6f0-4608-922d-0a8f44f29ed3",
                     "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Bite",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8f2bcb33-0ccc-453b-ba8b-e8b8852c5bb9",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "Press(behavior=2)",
                     "processors": "",
                     "groups": "",
                     "action": "Zoom",

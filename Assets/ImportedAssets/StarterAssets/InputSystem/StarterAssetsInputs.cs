@@ -16,6 +16,8 @@ namespace StarterAssets
 		public bool sprint;
 
 		public bool shoot;
+
+		public bool bite; 
 		public bool zoom; 
 
 		[Header("Movement Settings")]
@@ -63,6 +65,11 @@ namespace StarterAssets
 			// True, but if it's a release for example, then the action may trigger but return a false bool (trigger on release)
         }
 
+		public void OnBite(InputValue value)
+        {
+            BiteInput(value.isPressed); 
+        }
+
 		public void OnZoom(InputValue value)
         {
             ZoomInput(value.isPressed); 
@@ -96,6 +103,12 @@ namespace StarterAssets
 			// That is, the action IS occuring OR is NOT. 
             shoot = newShootState; 
         }
+
+		public void BiteInput(bool newBiteState)
+        {
+            bite = newBiteState; 
+        }
+		
 
 		public void ZoomInput(bool newZoomState)
         {

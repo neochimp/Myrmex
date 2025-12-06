@@ -11,6 +11,12 @@ public class ActiveAbility : MonoBehaviour
     // Shooting, zooming, animations etc is all handled within this class. 
     Ability shootAbility; 
 
+    Ability biteAbility; // This ability is static, it never switches.  
+    AbilitySO shootAbilitySO;
+
+    AbilitySO biteAbilitySO; 
+
+
     // starterAssetsInputs is another unity imported script (I did not make this)
     // It handles an "action map" essentially making key bindings much easier.
     StarterAssetsInputs starterAssetsInputs;
@@ -19,7 +25,9 @@ public class ActiveAbility : MonoBehaviour
     Animator abilityAnimator;
 
     // This t is used to measure timing in HandleShoot, controlling fire rate. 
-    float t = 0f; 
+    float shootTimer = 0f; 
+    // Likewise for the secondary bite ability. 
+    float biteTimer = 0f; 
     int currentAmmo; 
 
     // You would very rarely want to change these defaults. 
@@ -32,16 +40,20 @@ public class ActiveAbility : MonoBehaviour
     // The camera is used to prevent clipping. 
     // The zoomVignette is for the sniper rifle zoom in (and potentially others)
     // The ammo text is part of the UI overlay. 
-    [SerializeField] AbilitySO startingAbility; 
+    [SerializeField] AbilitySO primaryAbility; 
+
+    [SerializeField] AbilitySO secondaryAbility; 
+
     [SerializeField] GameObject zoomVignette; 
 
     // We have this present to prevent clipping of ability objects, they render over the main camera to solve that issue. 
     [SerializeField] Camera abilityCamera; 
     [SerializeField] TMP_Text ammoText; 
     
-    AbilitySO currentAbilitySO;
     CinemachineVirtualCamera cam; 
     const string SHOOT_STRING = "Shoot";
+
+    const string BITE_STRING = "Bite"; 
 
     void Awake()
     {
@@ -51,12 +63,16 @@ public class ActiveAbility : MonoBehaviour
         firstPersonController = gameObject.GetComponentInParent<FirstPersonController>(); 
         // No zoomVignette because no zoom. When this is true, user sees a rifle scope. 
         zoomVignette.SetActive(false); 
+        // This line retrieves the ability script from the Mandibles prefab that is installed on the player. 
+        biteAbility = GetComponentInChildren<Ability>();
+        // Load in the scriptable object for bite. 
+        biteAbilitySO = secondaryAbility;
     }
 
     void Start()
     {   
         // Begin the game by switching to the starting weapon, and initialize the main camera. 
-        SwitchAbility(startingAbility); 
+        SwitchAbility(primaryAbility); 
         cam = GameObject.FindAnyObjectByType<CinemachineVirtualCamera>(); 
     }
 
@@ -66,6 +82,7 @@ public class ActiveAbility : MonoBehaviour
         // Let's leave update clean.  
         HandleShoot(); 
         HandleZoom(); 
+        HandleBite(); 
     }
 
     public void AdjustAmmo(int amount)
@@ -74,11 +91,11 @@ public class ActiveAbility : MonoBehaviour
         currentAmmo += amount; 
 
         // But importantly, if the ammo amount would surpass the fixed magazine size of that scriptable object.
-        if (currentAmmo > currentAbilitySO.MagazineSize) 
+        if (currentAmmo > shootAbilitySO.MagazineSize) 
         {   
             // Then simply fill the magazine, but dont surpass it
             // (for example we don't want a pistol to hold 100 rounds)
-            currentAmmo = currentAbilitySO.MagazineSize;
+            currentAmmo = shootAbilitySO.MagazineSize;
         }
 
         // Two decimals worth of ammo info
@@ -87,7 +104,7 @@ public class ActiveAbility : MonoBehaviour
     }
 
     public void SwitchAbility(AbilitySO abilitySO)
-    {
+    {   
         if (shootAbility)
         {   
             // We first destroy the previous object
@@ -101,9 +118,9 @@ public class ActiveAbility : MonoBehaviour
         Ability newAbility = Instantiate(abilitySO.AbilityPrefab, transform).GetComponent<Ability>(); 
         // Change current values for both. 
         shootAbility = newAbility; 
-        currentAbilitySO = abilitySO; // CHANGE THIS currentWeaponSO
+        shootAbilitySO = abilitySO; // CHANGE THIS currentWeaponSO
         // Now refill the magazine. (modular: note how each game object handles its own functionality, for the most part) 
-        AdjustAmmo(currentAbilitySO.MagazineSize); 
+        AdjustAmmo(shootAbilitySO.MagazineSize); 
     }
 
     void UnzoomWeapon()
@@ -128,7 +145,7 @@ public class ActiveAbility : MonoBehaviour
 
         // Now thats explained here is the rest:
         // We track the frame rate independant time here. 
-        t += Time.deltaTime;
+        shootTimer += Time.deltaTime;
 
         if (!starterAssetsInputs.shoot)
         {   
@@ -137,19 +154,19 @@ public class ActiveAbility : MonoBehaviour
             return;
         }
 
-        if(t >= currentAbilitySO.FireRate && currentAmmo > 0)
+        if(shootTimer >= shootAbilitySO.FireRate && currentAmmo > 0)
         {
             // You can see docs for this but WeaponAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
             abilityAnimator.Play(SHOOT_STRING, 0, 0f);
             // A method of the Weapon.cs script
-            shootAbility.Shoot(currentAbilitySO); 
+            shootAbility.Shoot(shootAbilitySO); 
             // Reset the time now (because we already shot)
-            t = 0f; 
+            shootTimer = 0f; 
             // Decrease ammo, and you get a nice magic number here :)
             AdjustAmmo(-1);
         }
 
-        if(!currentAbilitySO.IsAutomatic)
+        if(!shootAbilitySO.IsAutomatic)
         {   
             // If its not automatic, false (no shoot) UNTIL the next left mouse click
             // So if it IS, we can hold down and keep shooting. 
@@ -157,10 +174,34 @@ public class ActiveAbility : MonoBehaviour
         }
     }
 
+    void HandleBite()
+    {
+        
+        biteTimer += Time.deltaTime;
+
+        if (!starterAssetsInputs.bite)
+        {   
+            // eliminate one indentation block
+            // If we dont shoot, the dont handle it.
+            return;
+        }
+
+        if(biteTimer >= biteAbilitySO.FireRate)
+        {
+            // You can see docs for this but WeaponAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
+            abilityAnimator.Play(BITE_STRING, 0, 0f);
+            // A method of the Weapon.cs script
+            biteAbility.Shoot(biteAbilitySO); 
+            // Reset the time now (because we already shot)
+            biteTimer = 0f; 
+            // No need to decrease ammo, because the bite has unlimited ammo. 
+        }
+    }
+
     void HandleZoom()
     {
         // Allow any object to zoom, but only IF the scriptable object itself can zoom.
-        if (!currentAbilitySO.CanZoom) return; 
+        if (!shootAbilitySO.CanZoom) return; 
 
         if (starterAssetsInputs.zoom)
         {   
@@ -171,9 +212,9 @@ public class ActiveAbility : MonoBehaviour
             // An idea for future development
             // Each weapon could hold ITS OWN zoomImage for use on the overlay
             // Then muliple weapons could zoom, with various visuals (just a thought) 
-            firstPersonController.RotationSpeed = currentAbilitySO.ZoomRotationSpeed;
-            cam.m_Lens.FieldOfView = currentAbilitySO.ZoomAmount;
-            abilityCamera.fieldOfView = currentAbilitySO.ZoomAmount; 
+            firstPersonController.RotationSpeed = shootAbilitySO.ZoomRotationSpeed;
+            cam.m_Lens.FieldOfView = shootAbilitySO.ZoomAmount;
+            abilityCamera.fieldOfView = shootAbilitySO.ZoomAmount; 
         }
         else
         {   

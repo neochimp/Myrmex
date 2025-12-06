@@ -1,19 +1,23 @@
 using UnityEngine;
 
+// This creates an enum so we know if the ability is primary or secondary. 
+//public enum AbilityType { Primary, Secondary }
+
 // This creates a menu option in the unity editors,
 // So that we can quickly create scriptable objects in the editor. 
 [CreateAssetMenu(fileName = "AbilitySO", menuName = "Scriptable Objects/AbilitySO")]
+
 public class AbilitySO : ScriptableObject
 // A scriptable object
 // This is a modular way to store data which is common to all instances of a class
 // BUT will differ between those classes
-// In this way we can create all manner of differing weapons. 
-// We likely want to create other types of scriptable objects in the future, not just weapons.
+// In this way we can create all manner of differing abilities. 
+// We likely want to create other types of scriptable objects in the future, not just weapon style abilities.
 // This will happen as serialized data fields start to stack up, as development continues.  
 
 // TLDR: ScriptableObject == Data
 // MnonehaviorScript == Functionality
-{
+{   
     public int Damage = 1; 
 
     public float FireRate = .5f; 
@@ -29,7 +33,11 @@ public class AbilitySO : ScriptableObject
 
     public bool CanZoom = false; // GET RID OF THIS
 
+    //public AbilityType abilityType = AbilityType.Primary; 
+
     public GameObject AbilityPrefab; 
     public GameObject HitEffect;
     public GameObject DamageEffect; 
+
+    
 }
