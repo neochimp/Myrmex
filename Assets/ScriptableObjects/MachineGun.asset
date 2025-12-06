@@ -17,9 +17,10 @@ MonoBehaviour:
   ZoomAmount: 10
   ZoomRotationSpeed: 0.2
   MagazineSize: 500
+  range: Infinity
   IsAutomatic: 1
   CanZoom: 0
-  WeaponPrefab: {fileID: 5869524762975325733, guid: 454320201ba7c724c865988ce645174e,
+  AbilityPrefab: {fileID: 5869524762975325733, guid: 454320201ba7c724c865988ce645174e,
     type: 3}
   HitEffect: {fileID: 1718301532394158974, guid: 04af0125171f2874d879a818e6f05967,
     type: 3}

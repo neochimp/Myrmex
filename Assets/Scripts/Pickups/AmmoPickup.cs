@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class AmmoPickup : Pickup
@@ -8,9 +7,9 @@ public class AmmoPickup : Pickup
     // Simple enough, the pickup stores an ammo amount which can be retrieved by OnPickup
     [SerializeField] int ammoAmount = 100;
 
-    protected override void OnPickup(ActiveWeapon activeWeapon)
+    protected override void OnPickup(ActiveAbility activeAbility)
     {   
         // Active weapon contains the public method AdjustAmmo
-        activeWeapon.AdjustAmmo(ammoAmount); 
+        activeAbility.AdjustAmmo(ammoAmount); 
     }
 }
