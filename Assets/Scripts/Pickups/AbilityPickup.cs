@@ -6,9 +6,9 @@ public class AbilityPickup : Pickup
     // A good use case of the scriptable object type.  
     [SerializeField] AbilitySO abilitySO; 
 
-    protected override void OnPickup(ActiveAbility activeAbility)
+    protected override void OnPickup(SoldierAbility soldierAbility)
     {   
         // See ActiveWeapon.CS
-        activeAbility.SwitchAbility(abilitySO);
+        soldierAbility.SwitchAbility(abilitySO);
     }
 }

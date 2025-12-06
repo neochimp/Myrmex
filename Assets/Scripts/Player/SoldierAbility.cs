@@ -3,7 +3,7 @@ using StarterAssets;
 using TMPro; 
 using UnityEngine;
 
-public class ActiveAbility : MonoBehaviour
+public class SoldierAbility : MonoBehaviour
 {   
     // This is the public facing interface of the Weapon GameObject
     // It is used by Pickups, and contains the direct functionality 
