@@ -3,7 +3,7 @@ using StarterAssets;
 using TMPro; 
 using UnityEngine;
 
-public class ActiveAbility : MonoBehaviour
+public class SoldierAbility : MonoBehaviour
 {   
     // This is the public facing interface of the Weapon GameObject
     // It is used by Pickups, and contains the direct functionality 
@@ -147,7 +147,7 @@ public class ActiveAbility : MonoBehaviour
         // We track the frame rate independant time here. 
         shootTimer += Time.deltaTime;
 
-        if (!starterAssetsInputs.shoot)
+        if (!starterAssetsInputs.primary)
         {   
             // eliminate one indentation block
             // If we dont shoot, the dont handle it.
@@ -158,7 +158,7 @@ public class ActiveAbility : MonoBehaviour
         {
             // You can see docs for this but WeaponAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
             abilityAnimator.Play(SHOOT_STRING, 0, 0f);
-            // A method of the Weapon.cs script
+            // A method of the Ability.cs script attached to the ability itself 
             shootAbility.Shoot(shootAbilitySO); 
             // Reset the time now (because we already shot)
             shootTimer = 0f; 
@@ -170,7 +170,7 @@ public class ActiveAbility : MonoBehaviour
         {   
             // If its not automatic, false (no shoot) UNTIL the next left mouse click
             // So if it IS, we can hold down and keep shooting. 
-            starterAssetsInputs.ShootInput(false); 
+            starterAssetsInputs.PrimaryInput(false); 
         }
     }
 
@@ -179,7 +179,7 @@ public class ActiveAbility : MonoBehaviour
         
         biteTimer += Time.deltaTime;
 
-        if (!starterAssetsInputs.bite)
+        if (!starterAssetsInputs.secondary)
         {   
             // eliminate one indentation block
             // If we dont shoot, the dont handle it.
@@ -203,7 +203,7 @@ public class ActiveAbility : MonoBehaviour
         // Allow any object to zoom, but only IF the scriptable object itself can zoom.
         if (!shootAbilitySO.CanZoom) return; 
 
-        if (starterAssetsInputs.zoom)
+        if (starterAssetsInputs.special)
         {   
             zoomVignette.SetActive(true);
             // If you keep the same rotation speed when the camera zoom in...

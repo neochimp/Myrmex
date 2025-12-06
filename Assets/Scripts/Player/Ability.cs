@@ -24,6 +24,7 @@ public class Ability : MonoBehaviour
     }
     public void Shoot(AbilitySO abilitySO)
     {   
+        // This is attached to the ability prefab itself, and called by the SoldierAbility script. 
         // On left click, the ant shoots acid
         // **A NOTE ON RAYCASTING**
         // Use the cameras position (reference is precached by unity as Camera, so no need to save variable)

@@ -14,8 +14,8 @@ public class PlayerHealth : MonoBehaviour
     // The virtual camera is used for display after game over (pan out effect). 
 
     // It is easiest just to serialize the various cameras and the UI canvas. 
-    [SerializeField] CinemachineVirtualCamera virtualCamera; 
-    [SerializeField] Transform weaponCamera; 
+    [SerializeField] CinemachineVirtualCamera gameOverCamera; 
+    [SerializeField] Transform abilityCamera; 
     //[SerializeField] GameObject overlayUI; 
     // An array of shield bars, intented to decrease as the player takes damage. 
     [SerializeField] UnityEngine.UI.Image[] shieldBars; 
@@ -50,9 +50,9 @@ public class PlayerHealth : MonoBehaviour
     {
         // Unparent the weapon cam to prevent errors after player deletion. 
         // It would be childed to a destroyed object
-        weaponCamera.parent = null; 
+        abilityCamera.parent = null; 
         // Increase priority to instigate a switch of cameras. 
-        virtualCamera.Priority = virtualCameraPriority;
+        gameOverCamera.Priority = virtualCameraPriority;
         // Deactivate Cursor/Lock cursor: (because it's game over)
         StarterAssetsInputs starterAssetsInputs = gameObject.GetComponent<StarterAssetsInputs>(); 
         starterAssetsInputs.SetCursorState(false); 

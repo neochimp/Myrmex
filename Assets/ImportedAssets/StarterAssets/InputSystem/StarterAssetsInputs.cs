@@ -11,14 +11,14 @@ namespace StarterAssets
 		public Vector2 move;
 		public Vector2 look;
 
-		// Various bools for incoming actions, i.e shoot etc. 
+		// Various bools for incoming actions, i.e shoot, pickup food, etc. 
 		public bool jump;
 		public bool sprint;
 
-		public bool shoot;
+		public bool primary;
 
-		public bool bite; 
-		public bool zoom; 
+		public bool secondary; 
+		public bool special; 
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -58,21 +58,21 @@ namespace StarterAssets
 			SprintInput(value.isPressed);
 		}
 
-		public void OnShoot(InputValue value)
+		public void OnPrimary(InputValue value)
         {	
 			// Example, we retrieve an incoming value for the action (as a value argument)
-			ShootInput(value.isPressed); 
+			PrimaryInput(value.isPressed); 
 			// True, but if it's a release for example, then the action may trigger but return a false bool (trigger on release)
         }
 
-		public void OnBite(InputValue value)
+		public void OnSecondary(InputValue value)
         {
-            BiteInput(value.isPressed); 
+            SecondaryInput(value.isPressed); 
         }
 
-		public void OnZoom(InputValue value)
+		public void OnSpecial(InputValue value)
         {
-            ZoomInput(value.isPressed); 
+            SpecialInput(value.isPressed); 
         }
 #endif
 
@@ -97,22 +97,22 @@ namespace StarterAssets
 			sprint = newSprintState;
 		}
 
-		public void ShootInput(bool newShootState)
+		public void PrimaryInput(bool newPrimaryState)
         {	
 			// The function above, that trigger on associated action, now change the public bools for that action. 
 			// That is, the action IS occuring OR is NOT. 
-            shoot = newShootState; 
+            primary = newPrimaryState; 
         }
 
-		public void BiteInput(bool newBiteState)
+		public void SecondaryInput(bool newSecondaryState)
         {
-            bite = newBiteState; 
+            secondary = newSecondaryState; 
         }
 		
 
-		public void ZoomInput(bool newZoomState)
+		public void SpecialInput(bool newSpecialState)
         {
-            zoom = newZoomState; 
+            special = newSpecialState; 
         }
 		
 		private void OnApplicationFocus(bool hasFocus)
