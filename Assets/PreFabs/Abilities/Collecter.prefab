@@ -4871,8 +4871,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7981791059182643421}
-  - component: {fileID: 3684350785768903029}
   - component: {fileID: 6711836392248267895}
+  - component: {fileID: -3016169939326155705}
   m_Layer: 7
   m_Name: Collecter
   m_TagString: Untagged
@@ -4897,21 +4897,6 @@ Transform:
   - {fileID: 2467531643868511969}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: -5}
---- !u!114 &3684350785768903029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9070003950996144133}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68b9b3f7907aff5499a6b2a7a38f95ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  interactionLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &6711836392248267895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4983,3 +4968,20 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 0, y: -0.5, z: 0}
+--- !u!114 &-3016169939326155705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9070003950996144133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae6a4bdb4845f174ba0fb828b204cc10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foodPrefab: {fileID: 2911023951351720111, guid: f79621f4e75ddbd46bb4c8af97cbfa4d,
+    type: 3}
+  interactionLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295

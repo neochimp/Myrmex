@@ -9,9 +9,9 @@ public class SoldierAbility : MonoBehaviour
     // It is used by Pickups, and contains the direct functionality 
     // (representing the weapon which is currently functional)
     // Shooting, zooming, animations etc is all handled within this class. 
-    Ability shootAbility; 
+    SoldierHandler shootHandler; 
 
-    Ability biteAbility; // This ability is static, it never switches.  
+    SoldierHandler biteHandler; // This ability is static, it never switches.  
     AbilitySO shootAbilitySO;
 
     AbilitySO biteAbilitySO; 
@@ -64,7 +64,7 @@ public class SoldierAbility : MonoBehaviour
         // No zoomVignette because no zoom. When this is true, user sees a rifle scope. 
         zoomVignette.SetActive(false); 
         // This line retrieves the ability script from the Mandibles prefab that is installed on the player. 
-        biteAbility = GetComponentInChildren<Ability>();
+        biteHandler = GetComponentInChildren<SoldierHandler>();
         // Load in the scriptable object for bite. 
         biteAbilitySO = secondaryAbility;
     }
@@ -105,20 +105,20 @@ public class SoldierAbility : MonoBehaviour
 
     public void SwitchAbility(AbilitySO abilitySO)
     {   
-        if (shootAbility)
+        if (shootHandler)
         {   
             // We first destroy the previous object
-            Destroy(shootAbility.gameObject);
+            Destroy(shootHandler.gameObject);
             // This is important, otherwise the player might just be stuck zoomed in. 
             UnzoomWeapon(); 
         }
 
         // Instantiate the weapons prefab through its scriptable object
         // Then Retrieve the weapon script component. 
-        Ability newAbility = Instantiate(abilitySO.AbilityPrefab, transform).GetComponent<Ability>(); 
+        SoldierHandler newHandler = Instantiate(abilitySO.AbilityPrefab, transform).GetComponent<SoldierHandler>(); 
         // Change current values for both. 
-        shootAbility = newAbility; 
-        shootAbilitySO = abilitySO; // CHANGE THIS currentWeaponSO
+        shootHandler = newHandler; 
+        shootAbilitySO = abilitySO; 
         // Now refill the magazine. (modular: note how each game object handles its own functionality, for the most part) 
         AdjustAmmo(shootAbilitySO.MagazineSize); 
     }
@@ -159,7 +159,7 @@ public class SoldierAbility : MonoBehaviour
             // You can see docs for this but WeaponAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
             abilityAnimator.Play(SHOOT_STRING, 0, 0f);
             // A method of the Ability.cs script attached to the ability itself 
-            shootAbility.FireAbility(shootAbilitySO); 
+            shootHandler.FireSoldierAbility(shootAbilitySO); 
             // Reset the time now (because we already shot)
             shootTimer = 0f; 
             // Decrease ammo, and you get a nice magic number here :)
@@ -191,7 +191,7 @@ public class SoldierAbility : MonoBehaviour
             // You can see docs for this but WeaponAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
             abilityAnimator.Play(BITE_STRING, 0, 0f);
             // A method of the Weapon.cs script
-            biteAbility.FireAbility(biteAbilitySO); 
+            biteHandler.FireSoldierAbility(biteAbilitySO); 
             // Reset the time now (because we already shot)
             biteTimer = 0f; 
             // No need to decrease ammo, because the bite has unlimited ammo. 
