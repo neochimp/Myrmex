@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     const string ENEMIES_STRING = "Enemies: ";
     int enemiesRemaining = 0;
 
+    [SerializeField] PlayerManager playerManager;
+
     public void AdjustEnemyCount(int amount)
     {   
         // *note* This tracker could easily be adjusted to track multiple types of enemies, such as spiders, mantises, etc. 
@@ -23,9 +25,12 @@ public class GameManager : MonoBehaviour
         {
             // Currently, the player wins the game when no enemies remain. 
             // This can be changed as development continues. 
-            winText.SetActive(true); 
+            //winText.SetActive(true); 
+            Debug.Log("No more enemies");
+            playerManager.SpawnWorker(); 
         }
     }
+
     public void RestartLevel()
     {   
         // Obtain the current scene from the build hierarchy.

@@ -218,7 +218,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8855642544093131033
 Transform:
   m_ObjectHideFlags: 0
@@ -457,6 +457,7 @@ GameObject:
   - component: {fileID: 2565634269576258067}
   - component: {fileID: 5843972734238080869}
   - component: {fileID: 5734426556023397789}
+  - component: {fileID: 5120595589092349682}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -686,7 +687,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7e2f0dfbb69db94b9cb0d0cf865479f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHealth: 1
+  soldierHealth: 1
+  workerHealth: 5
   gameOverCamera: {fileID: 0}
   abilityCamera: {fileID: 5025889459488487171}
   shieldBars:
@@ -701,6 +703,24 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   gameOverUI: {fileID: 0}
+  playerManager: {fileID: 5120595589092349682}
+--- !u!114 &5120595589092349682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7553666250524768330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 087d5724a3e4ee542915dff3927a7278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WorkerAbilities: {fileID: 2864630072224904241}
+  SoldierAbilities: {fileID: 8834856586799442869}
+  SpawnPoint: {fileID: 0}
+  playerHealth: {fileID: 5734426556023397789}
+  inputController: {fileID: 5970610436475852267}
 --- !u!1 &8834856586799442869
 GameObject:
   m_ObjectHideFlags: 0
@@ -847,12 +867,12 @@ PrefabInstance:
     - target: {fileID: 7120633593150331515, guid: c724d7fb1f7c82b4ea011b0624284b50,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 6828
+      value: 6840
       objectReference: {fileID: 0}
     - target: {fileID: 7629818310611406425, guid: c724d7fb1f7c82b4ea011b0624284b50,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 195
+      value: 207
       objectReference: {fileID: 0}
     - target: {fileID: 7981791059182643421, guid: c724d7fb1f7c82b4ea011b0624284b50,
         type: 3}
@@ -928,6 +948,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8855642544093131033}
     m_Modifications:
+    - target: {fileID: -3016169939326155705, guid: 45b4ee99d8b2bbc409f3ac192a98041c,
+        type: 3}
+      propertyPath: playerFood
+      value: 
+      objectReference: {fileID: 4459956144177327983}
     - target: {fileID: 7981791059182643421, guid: 45b4ee99d8b2bbc409f3ac192a98041c,
         type: 3}
       propertyPath: m_LocalPosition.x

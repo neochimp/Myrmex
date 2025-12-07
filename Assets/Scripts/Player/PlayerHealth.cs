@@ -10,7 +10,10 @@ public class PlayerHealth : MonoBehaviour
     // Max is currently 10 because we use ten bars in the image.
     // This could be changed by adding more bars to the array.     
     [Range(1, 10)]
-    [SerializeField] int startingHealth = 10;
+    [SerializeField] int soldierHealth = 10;
+
+    [Range(1, 10)]
+    [SerializeField] int workerHealth = 10; 
     // This camera is used for display after game over (pan out effect). 
 
     // It is easiest just to serialize the various cameras and the UI canvas. 
@@ -20,18 +23,14 @@ public class PlayerHealth : MonoBehaviour
     // An array of shield bars, intented to decrease as the player takes damage. 
     [SerializeField] UnityEngine.UI.Image[] shieldBars; 
     [SerializeField] GameObject gameOverUI;  
+
+    [SerializeField] PlayerManager playerManager; 
     int currentHealth;
 
     // The highest priority camera will always be the POV. 
     // So adjusting priority switches cameras (that's unity behavior)
     const int virtualCameraPriority = 20; 
 
-    void Awake()
-    {   
-        // Initialize health. 
-        currentHealth = startingHealth; 
-        AdjustShieldUI(); 
-    }
     public void TakeDamage(int damageAmount)
     {
         // Public, intended to be called by weapons script (or any script which damages the player)
@@ -41,8 +40,12 @@ public class PlayerHealth : MonoBehaviour
         
         // Check if health is less than zero and call a GameOver result if true. 
         if(currentHealth <= 0)
-        {      
-            PlayerGameOver(); 
+        {   
+            Debug.Log("You died, becoming worker.");   
+            //PlayerGameOver();
+            // I think the problem is this is calling OUR version of playerManager
+            playerManager.SpawnWorker();  
+
         }
     }
 
@@ -77,5 +80,20 @@ public class PlayerHealth : MonoBehaviour
                 shieldBars[i].gameObject.SetActive(false);
             }
         }
+    }
+
+    public void ResetHealth()
+    {   
+        if (playerManager.IsSoldier())
+        {   
+            Debug.Log("loading soldier health"); 
+            currentHealth = soldierHealth;
+        }
+        else if (playerManager.IsWorker())
+        {   
+            Debug.Log("loading worker health"); 
+            currentHealth = workerHealth;
+        }
+        AdjustShieldUI(); 
     }
 }
