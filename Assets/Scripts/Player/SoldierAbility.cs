@@ -5,20 +5,22 @@ using UnityEngine;
 
 public class SoldierAbility : MonoBehaviour
 {   
-    // This is the public facing interface of the Weapon GameObject
-    // It is used by Pickups, and contains the direct functionality 
-    // (representing the weapon which is currently functional)
+    // This is the public facing interface of the Soldier Ants abilities,
+    // It is used by Pickups, the Player GameObject itself, and contains the direct functionality 
     // Shooting, zooming, animations etc is all handled within this class. 
-    SoldierHandler shootHandler; 
+    SoldierHandler shootHandler; // These handler classes manage the raycasting and implementation of mechanics. 
 
     SoldierHandler biteHandler; // This ability is static, it never switches.  
-    AbilitySO shootAbilitySO;
+
+    // Every ant type has two abilties, but they could have more. 
+    AbilitySO shootAbilitySO; // Scriptable objects holding data for the different abilities (modular)
 
     AbilitySO biteAbilitySO; 
 
 
     // starterAssetsInputs is another unity imported script (I did not make this)
     // It handles an "action map" essentially making key bindings much easier.
+
     StarterAssetsInputs starterAssetsInputs;
 
     FirstPersonController firstPersonController; 
@@ -63,7 +65,8 @@ public class SoldierAbility : MonoBehaviour
         firstPersonController = gameObject.GetComponentInParent<FirstPersonController>(); 
         // No zoomVignette because no zoom. When this is true, user sees a rifle scope. 
         zoomVignette.SetActive(false); 
-        // This line retrieves the ability script from the Mandibles prefab that is installed on the player. 
+        // This line retrieves the handler script from the Mandibles prefab that is installed on the player. 
+        // Prefabs hold their own handlers. 
         biteHandler = GetComponentInChildren<SoldierHandler>();
         // Load in the scriptable object for bite. 
         biteAbilitySO = secondaryAbility;
@@ -113,10 +116,10 @@ public class SoldierAbility : MonoBehaviour
             UnzoomWeapon(); 
         }
 
-        // Instantiate the weapons prefab through its scriptable object
-        // Then Retrieve the weapon script component. 
+        // Instantiate the abilities prefab through its scriptable object where it is stored. 
+        // At the same time, retrieve the handler script component. 
         SoldierHandler newHandler = Instantiate(abilitySO.AbilityPrefab, transform).GetComponent<SoldierHandler>(); 
-        // Change current values for both. 
+        // Change current handler and scriptable object, implementing a "switch" of abilities. 
         shootHandler = newHandler; 
         shootAbilitySO = abilitySO; 
         // Now refill the magazine. (modular: note how each game object handles its own functionality, for the most part) 
@@ -137,7 +140,7 @@ public class SoldierAbility : MonoBehaviour
     void HandleShoot()
     {   
         //*NOTE*: because this is complicated
-        // OnShoot is a method in StarterAssetsInputs.cs 
+        // OnPrimary is a method in StarterAssetsInputs.cs 
         // It is action mapped to fire on press and release of the left trigger
         // On release it will return a false value for the public :shoot: bool [because (isPressed == false)]
         // For this reason a release of the button also triggers a return of handleshoot(), but with a false value of shoot. 
@@ -150,19 +153,19 @@ public class SoldierAbility : MonoBehaviour
         if (!starterAssetsInputs.primary)
         {   
             // eliminate one indentation block
-            // If we dont shoot, the dont handle it.
+            // If we dont shoot, then dont handle it.
             return;
         }
 
         if(shootTimer >= shootAbilitySO.FireRate && currentAmmo > 0)
         {
-            // You can see docs for this but WeaponAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
+            // You can see docs for this but abilityAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
             abilityAnimator.Play(SHOOT_STRING, 0, 0f);
-            // A method of the Ability.cs script attached to the ability itself 
+            // A method of the SoldierHandler.cs script attached to the ability itself 
             shootHandler.FireSoldierAbility(shootAbilitySO); 
             // Reset the time now (because we already shot)
             shootTimer = 0f; 
-            // Decrease ammo, and you get a nice magic number here :)
+            // Decrease ammo by one
             AdjustAmmo(-1);
         }
 
@@ -175,24 +178,23 @@ public class SoldierAbility : MonoBehaviour
     }
 
     void HandleBite()
-    {
+    {   
+        // These handle methods could be refactored into two seperate function,
+        // But it would require so many arguments, and two seperate functions, its simpler to seperate concerns right now.
         
         biteTimer += Time.deltaTime;
 
         if (!starterAssetsInputs.secondary)
         {   
-            // eliminate one indentation block
-            // If we dont shoot, the dont handle it.
             return;
         }
 
         if(biteTimer >= biteAbilitySO.FireRate)
         {
-            // You can see docs for this but WeaponAnimator arguments: animation name, layer, and time to begin animation (0f = beginning)
             abilityAnimator.Play(BITE_STRING, 0, 0f);
-            // A method of the Weapon.cs script
+
             biteHandler.FireSoldierAbility(biteAbilitySO); 
-            // Reset the time now (because we already shot)
+  
             biteTimer = 0f; 
             // No need to decrease ammo, because the bite has unlimited ammo. 
         }
@@ -203,7 +205,7 @@ public class SoldierAbility : MonoBehaviour
         // Allow any object to zoom, but only IF the scriptable object itself can zoom.
         if (!shootAbilitySO.CanZoom) return; 
 
-        if (starterAssetsInputs.special)
+        if (starterAssetsInputs.special && !zoomVignette.activeInHierarchy)
         {   
             zoomVignette.SetActive(true);
             // If you keep the same rotation speed when the camera zoom in...
@@ -214,11 +216,15 @@ public class SoldierAbility : MonoBehaviour
             // Then muliple weapons could zoom, with various visuals (just a thought) 
             firstPersonController.RotationSpeed = shootAbilitySO.ZoomRotationSpeed;
             cam.m_Lens.FieldOfView = shootAbilitySO.ZoomAmount;
-            abilityCamera.fieldOfView = shootAbilitySO.ZoomAmount; 
+            abilityCamera.fieldOfView = shootAbilitySO.ZoomAmount;
+            starterAssetsInputs.SpecialInput(false);  
         }
-        else
+        else if (starterAssetsInputs.special && zoomVignette.activeInHierarchy)
         {   
+            // That is, if the user toggles zoom, but we are already zoomed in, untoggle it.
+            // So zoom is toggle on/off NOT hold down. 
             UnzoomWeapon(); 
+            starterAssetsInputs.SpecialInput(false);
         }
     }
 }

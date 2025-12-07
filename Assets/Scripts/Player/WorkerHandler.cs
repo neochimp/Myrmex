@@ -15,6 +15,7 @@ public class WorkerHandler : MonoBehaviour
 
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, abilitySO.range, interactionLayers, QueryTriggerInteraction.Ignore))
         {   
+            // Pickup food if HIT food and NOT already carring food.
             if (hit.collider.tag == "Food" && !playerFood.activeInHierarchy)
             {   
                 // PICKUP FOOD
@@ -22,6 +23,8 @@ public class WorkerHandler : MonoBehaviour
                 Destroy(hit.collider.gameObject); 
                 playerFood.SetActive(true); 
             }
+            // If you worker ant is "carrying food", then dropping is available. 
+            // Only one food carried at a time (toggle on/off)
             else if (playerFood.activeInHierarchy)
             {   
                 // DROP FOOD

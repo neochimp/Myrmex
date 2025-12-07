@@ -2,8 +2,7 @@ using UnityEngine;
 
 public abstract class Pickup : MonoBehaviour
 {   
-    // An abstract pickup class which will be inherited by children such as weapon, ammo, food pickups etc. 
-
+    // An abstract pickup class which will be inherited by children such as weapon, ammo,  etc. 
     // A value which makes the pickup rotate for a visual effect.
     [SerializeField] float rotationSpeed = 100f; 
 

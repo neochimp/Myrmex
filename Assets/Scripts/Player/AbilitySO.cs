@@ -12,6 +12,8 @@ public class AbilitySO : ScriptableObject
 // This is a modular way to store data which is common to all instances of a class
 // BUT will differ between those classes
 // In this way we can create all manner of differing abilities. 
+
+
 // We likely want to create other types of scriptable objects in the future, not just weapon style abilities.
 // This will happen as serialized data fields start to stack up, as development continues.  
 
@@ -27,14 +29,11 @@ public class AbilitySO : ScriptableObject
     public float ZoomRotationSpeed = 0.2f; 
     public int MagazineSize = 12; 
 
-    public float range = Mathf.Infinity; // PROTOTYPE
+    public float range = Mathf.Infinity; 
 
     public bool IsAutomatic = false; 
 
-    public bool CanZoom = false; // GET RID OF THIS
-
-    //public AbilityType abilityType = AbilityType.Primary; 
-
+    public bool CanZoom = false; 
     public GameObject AbilityPrefab; 
     public GameObject HitEffect;
     public GameObject DamageEffect; 

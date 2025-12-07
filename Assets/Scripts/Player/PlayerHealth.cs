@@ -11,7 +11,7 @@ public class PlayerHealth : MonoBehaviour
     // This could be changed by adding more bars to the array.     
     [Range(1, 10)]
     [SerializeField] int startingHealth = 10;
-    // The virtual camera is used for display after game over (pan out effect). 
+    // This camera is used for display after game over (pan out effect). 
 
     // It is easiest just to serialize the various cameras and the UI canvas. 
     [SerializeField] CinemachineVirtualCamera gameOverCamera; 

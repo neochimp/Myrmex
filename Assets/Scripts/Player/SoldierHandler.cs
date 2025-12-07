@@ -4,7 +4,7 @@ using UnityEngine;
 public class SoldierHandler : MonoBehaviour
 {
 
-    // Contains the main functionality for all abilities
+    // Handles the main functionality for all Soldier abilities
     // Such as: the ability to shoot acid. 
     // The ability to bite, etc. 
    ParticleSystem acidSplash;
@@ -13,7 +13,7 @@ public class SoldierHandler : MonoBehaviour
    CinemachineImpulseSource impulseSource; 
 
    // The interaction layers are how we adjust raycasting
-   // For example if we don't want to shoot pickups, add them to their own protected layer
+   // For example if we don't want projectiles to shoot pickups, add them to their own protected layer
    [SerializeField] LayerMask interactionLayers; 
 
    void Start()
@@ -40,7 +40,7 @@ public class SoldierHandler : MonoBehaviour
         impulseSource.GenerateImpulse(); 
         // Acid splash particle effect
         acidSplash.Play();
-                                                                                                    // PROTOTYPE (RETURN TO Mathf.Infinity)
+                                                                                                    
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, abilitySO.range, interactionLayers, QueryTriggerInteraction.Ignore))
         {   
             if (hit.collider.tag == "Enemy")

@@ -294,7 +294,7 @@
                     "name": "",
                     "id": "8f2bcb33-0ccc-453b-ba8b-e8b8852c5bb9",
                     "path": "<Mouse>/middleButton",
-                    "interactions": "Press(behavior=2)",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": "",
                     "action": "Special",
