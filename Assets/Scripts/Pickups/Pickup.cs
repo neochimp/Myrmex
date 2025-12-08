@@ -5,7 +5,6 @@ public abstract class Pickup : MonoBehaviour
     // An abstract pickup class which will be inherited by children such as weapon, ammo,  etc. 
     // A value which makes the pickup rotate for a visual effect.
     [SerializeField] float rotationSpeed = 100f; 
-
     void Update()
     {   
         // The rotation, note it's frame rate independance. 
@@ -22,8 +21,14 @@ public abstract class Pickup : MonoBehaviour
             // The pickup is then destroyed. 
             SoldierAbility soldierAbility; 
             soldierAbility = other.GetComponentInChildren<SoldierAbility>();
-            OnPickup(soldierAbility); 
-            Destroy(this.gameObject); 
+
+            if(soldierAbility)
+            // Pickups are for soldiers only, they should wont with workers (as of right now)
+            // We could certainly add worker specific pickups later with a bit of additional code here. 
+            {
+                OnPickup(soldierAbility); 
+                Destroy(this.gameObject); 
+            } 
         }
     }
 
