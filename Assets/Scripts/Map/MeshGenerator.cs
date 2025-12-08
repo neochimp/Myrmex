@@ -10,34 +10,39 @@ public class MeshGenerator : MonoBehaviour
     int[] triangles;
 
     //vertex count = (xSize + 1) * (zSize + 1)
-    public int xSize = 20;
-    public int zSize = 20;
+    public int xSize = 100;
+    public int zSize = 100;
+
+    //Perlin noise testing variables
+    public float xPerlin = 0.3f;
+    public float zPerlin = 0.3f;
+    public float scalePerlin = 2f;
+
+    [Header("Base Hills")]
+    public float baseScale = 0.05f;
+    public float baseHeight = 8f;
+
+    [Header("Medium Detail")]
+    public float midScale = 0.1f;
+    public float midHeight = 3f;
+
+    [Header("Fine Detail")]
+    public float detailScale = 0.3f;
+    public float detailHeight = 1f;
+
+    public Vector2 noiseOffset; // for moving terrain around / randomizing
+    public float scrollSpeed = 1f;
     // Start is called before the first frame update
     void Start()
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-
-        StartCoroutine(CreateShape());
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        UpdateMesh();
-    }
-
-    IEnumerator CreateShape()
-    {
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
-        float[] vertY = new float[(xSize + 1) * (zSize + 1)];
         for (int i = 0, z = 0; z <= zSize; z++)
         {
             for (int x = 0; x <= xSize; x++)
             {
-                vertY[i] = Mathf.PerlinNoise(x * .3f, z * .3f) * 2f;
-                vertices[i] = new Vector3(x, 0, z);
+                vertices[i] = new Vector3(x, GetHeight(x, z), z);
                 i++;
             }
         }
@@ -60,36 +65,27 @@ public class MeshGenerator : MonoBehaviour
                 vert++;
                 tris += 6;
 
-                yield return new WaitForSeconds(0.01f);
+                //yield return new WaitForSeconds(0.01f);
             }
             vert++;
         }
 
-        //demo animation remove vertY and set y directly for instant
-        float duration = 1.5f;
-        float elapsed = 0f;
+        UpdateMesh();
+    }
 
-        while (elapsed < duration)
+    // Update is called once per frame
+    void Update()
+    {
+        for (int i = 0, z = 0; z <= zSize; z++)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-
-            for (int i = 0; i < vertices.Length; i++)
+            for (int x = 0; x <= xSize; x++)
             {
-                float y = Mathf.Lerp(0f, vertY[i], t);
-                vertices[i] = new Vector3(vertices[i].x, y, vertices[i].z);
+                vertices[i].y = GetHeight(x, z);
+                i++;
             }
-
-            mesh.vertices = vertices;
-            mesh.RecalculateNormals();
-            yield return null;
         }
-
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            vertices[i] = new Vector3(vertices[i].x, vertY[i], vertices[i].z);
-        }
-
+        noiseOffset.x += scrollSpeed;
+        UpdateMesh();
     }
 
     void UpdateMesh()
@@ -112,5 +108,28 @@ public class MeshGenerator : MonoBehaviour
             Gizmos.DrawSphere(vertices[i], .1f);
         }
     }
+
+    public float clusterScale = 0.02f; // very low frequency
+    public float clusterThreshold = 0.4f;
+
+    float GetHeight(float x, float z)
+    {
+        float nx = x + noiseOffset.x;
+        float nz = z + noiseOffset.y;
+
+        // Cluster mask
+        float cluster = Mathf.PerlinNoise(nx * clusterScale, nz * clusterScale);
+        // Optional: sharpen the mask a bit so clusters are more defined
+        cluster = Mathf.Clamp01((cluster - clusterThreshold) / (1f - clusterThreshold));
+        // Now cluster is ~0 in flat regions, >0 where hills should appear
+
+        float big = Mathf.PerlinNoise(nx * baseScale, nz * baseScale) * baseHeight * cluster;
+        float mid = Mathf.PerlinNoise(nx * midScale, nz * midScale) * midHeight * cluster;
+        float small = Mathf.PerlinNoise(nx * detailScale, nz * detailScale) * detailHeight * cluster;
+
+        return big + mid + small;
+    }
+
+
 }
 
