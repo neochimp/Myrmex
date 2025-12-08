@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using StarterAssets;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Rendering;
+using Cinemachine;
+using StarterAssets;
 
 public class PlayerManager : MonoBehaviour
 {   
@@ -14,8 +11,18 @@ public class PlayerManager : MonoBehaviour
 
     [SerializeField] PlayerHealth playerHealth; 
 
-   // [SerializeField] FirstPersonController inputController; 
+    [SerializeField] GameObject gameOverUI;
+    [SerializeField] GameObject respawnUI; 
+
+    [SerializeField] CinemachineVirtualCamera gameOverCamera;
+    [SerializeField] CinemachineVirtualCamera playerFollowCamera; 
     [SerializeField] CharacterController characterController; 
+
+    [SerializeField] Transform abilityCamera;
+
+    // The highest priority camera will always be the POV. 
+    // So adjusting priority switches cameras (that's unity behavior)
+    const int virtualCameraPriority = 20;
 
     bool isSoldier = false;
     bool isWorker = false; 
@@ -25,8 +32,40 @@ public class PlayerManager : MonoBehaviour
         SpawnSoldier(); 
     }
 
+    public void Respawn()
+    {
+        // Unparent the weapon cam to prevent errors after player deletion. 
+        // It would be childed to a destroyed object
+        //abilityCamera.parent = null; 
+        // Increase priority to instigate a switch of cameras. 
+        gameOverCamera.Priority = virtualCameraPriority;
+        // Deactivate Cursor/Lock cursor: (because it's game over)
+        StarterAssetsInputs starterAssetsInputs = gameObject.GetComponent<StarterAssetsInputs>(); 
+        starterAssetsInputs.SetCursorState(false); 
+        // Display the game over screen 
+        respawnUI.SetActive(true);
+    }
+
+    void GameOver()
+    {
+        // Unparent the weapon cam to prevent errors after player deletion. 
+        // It would be childed to a destroyed object
+        abilityCamera.parent = null; 
+        // Increase priority to instigate a switch of cameras. 
+        gameOverCamera.Priority = virtualCameraPriority;
+        // Deactivate Cursor/Lock cursor: (because it's game over)
+        StarterAssetsInputs starterAssetsInputs = gameObject.GetComponent<StarterAssetsInputs>(); 
+        starterAssetsInputs.SetCursorState(false); 
+        // Display the game over screen 
+        gameOverUI.SetActive(true);
+        // Destroy the player. 
+        Destroy(gameObject);
+    }
+
     public void SpawnSoldier()
     {   
+        playerFollowCamera.Priority = virtualCameraPriority; // Return camera to follow position. 
+        gameOverCamera.Priority = 0; 
         characterController.enabled = false; // disable movement (must be done in unity)
 
         gameObject.transform.position = SpawnPoint.position; // perform teleport
@@ -45,7 +84,8 @@ public class PlayerManager : MonoBehaviour
 
     public void SpawnWorker()
     {   
-        
+        playerFollowCamera.Priority = virtualCameraPriority; // Return camera to follow position. 
+        gameOverCamera.Priority = 0; 
         //Debug.Log("Original Position: " + gameObject.transform.position + " Moving to " + SpawnPoint.position);
 
         // 1. Disable movement
@@ -63,6 +103,7 @@ public class PlayerManager : MonoBehaviour
         // 5. Switch form
         Debug.Log("Becoming Worker");
         WorkerAbilities.SetActive(true);
+        SoldierAbilities.GetComponent<SoldierAbility>().ResetSoldier(); // See SoldierAbility.cs 
         SoldierAbilities.SetActive(false);
     
         isSoldier = false;

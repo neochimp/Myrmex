@@ -50,7 +50,9 @@ public class SoldierAbility : MonoBehaviour
 
     // We have this present to prevent clipping of ability objects, they render over the main camera to solve that issue. 
     [SerializeField] Camera abilityCamera; 
-    [SerializeField] TMP_Text ammoText; 
+
+    [SerializeField] GameObject ammoUI; 
+    TMP_Text ammoText; 
     
     CinemachineVirtualCamera cam; 
     const string SHOOT_STRING = "Shoot";
@@ -70,6 +72,7 @@ public class SoldierAbility : MonoBehaviour
         biteHandler = GetComponentInChildren<SoldierHandler>();
         // Load in the scriptable object for bite. 
         biteAbilitySO = secondaryAbility;
+        ammoText = ammoUI.GetComponentInChildren<TMP_Text>(); 
     }
 
     void Start()
@@ -77,6 +80,7 @@ public class SoldierAbility : MonoBehaviour
         // Begin the game by switching to the starting weapon, and initialize the main camera. 
         SwitchAbility(primaryAbility); 
         cam = GameObject.FindAnyObjectByType<CinemachineVirtualCamera>(); 
+        //ammoText = ammoUI.GetComponentInChildren<TMP_Text>(); 
     }
 
     void Update()
@@ -88,8 +92,22 @@ public class SoldierAbility : MonoBehaviour
         HandleBite(); 
     }
 
+    public void ResetSoldier()
+    {   
+        // A public facing method to take care of some housecleaning which needs to occur when switching from soldier to worker.
+         UnzoomWeapon(); // If this is not called we will be permanently zoomed in.
+         ammoUI.SetActive(false); 
+
+    }
+
     public void AdjustAmmo(int amount)
     {   
+        if(!ammoUI.activeInHierarchy)
+        {   
+            // Display ammo UI if not visible.
+            ammoUI.SetActive(true); 
+        }
+
         // Update the amount 
         currentAmmo += amount; 
 
@@ -126,7 +144,7 @@ public class SoldierAbility : MonoBehaviour
         AdjustAmmo(shootAbilitySO.MagazineSize); 
     }
 
-    void UnzoomWeapon()
+    public void UnzoomWeapon()
     {   
         // Remove the image (no rifle scope)
         zoomVignette.SetActive(false);

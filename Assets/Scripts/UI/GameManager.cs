@@ -1,11 +1,14 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement; 
+using Cinemachine; 
 
 public class GameManager : MonoBehaviour
 {   
     [SerializeField] TMP_Text enemiesText; 
     [SerializeField] GameObject winText; 
+
+    [SerializeField] GameObject respawnUI; 
 
     const string ENEMIES_STRING = "Enemies: ";
     int enemiesRemaining = 0;
@@ -29,6 +32,23 @@ public class GameManager : MonoBehaviour
             Debug.Log("No more enemies");
             playerManager.SpawnWorker(); 
         }
+    }
+
+    public void Respawn()
+    {
+        
+    }
+
+    public void RespawnSoldier()
+    {
+        playerManager.SpawnSoldier();
+        respawnUI.SetActive(false);
+    }
+
+    public void RespawnWorker()
+    {
+        playerManager.SpawnWorker();
+        respawnUI.SetActive(false);
     }
 
     public void RestartLevel()

@@ -17,12 +17,12 @@ public class PlayerHealth : MonoBehaviour
     // This camera is used for display after game over (pan out effect). 
 
     // It is easiest just to serialize the various cameras and the UI canvas. 
-    [SerializeField] CinemachineVirtualCamera gameOverCamera; 
-    [SerializeField] Transform abilityCamera; 
+    //[SerializeField] CinemachineVirtualCamera gameOverCamera; 
+    //[SerializeField] Transform abilityCamera; 
     //[SerializeField] GameObject overlayUI; 
     // An array of shield bars, intented to decrease as the player takes damage. 
     [SerializeField] UnityEngine.UI.Image[] shieldBars; 
-    [SerializeField] GameObject gameOverUI;  
+    //[SerializeField] GameObject gameOverUI;  
 
     [SerializeField] PlayerManager playerManager; 
     int currentHealth;
@@ -44,26 +44,27 @@ public class PlayerHealth : MonoBehaviour
             Debug.Log("You died, becoming worker.");   
             //PlayerGameOver();
             // I think the problem is this is calling OUR version of playerManager
-            playerManager.SpawnWorker();  
+            playerManager.Respawn();   
 
         }
     }
 
-    void PlayerGameOver()
-    {
-        // Unparent the weapon cam to prevent errors after player deletion. 
-        // It would be childed to a destroyed object
-        abilityCamera.parent = null; 
-        // Increase priority to instigate a switch of cameras. 
-        gameOverCamera.Priority = virtualCameraPriority;
-        // Deactivate Cursor/Lock cursor: (because it's game over)
-        StarterAssetsInputs starterAssetsInputs = gameObject.GetComponent<StarterAssetsInputs>(); 
-        starterAssetsInputs.SetCursorState(false); 
-        // Display the game over screen 
-        gameOverUI.SetActive(true);
-        // Destroy the player. 
-        Destroy(gameObject);
-    }
+    // currently refactoring this into PlayerManager
+    // void PlayerGameOver()
+    // {
+    //     // Unparent the weapon cam to prevent errors after player deletion. 
+    //     // It would be childed to a destroyed object
+    //     abilityCamera.parent = null; 
+    //     // Increase priority to instigate a switch of cameras. 
+    //     gameOverCamera.Priority = virtualCameraPriority;
+    //     // Deactivate Cursor/Lock cursor: (because it's game over)
+    //     StarterAssetsInputs starterAssetsInputs = gameObject.GetComponent<StarterAssetsInputs>(); 
+    //     starterAssetsInputs.SetCursorState(false); 
+    //     // Display the game over screen 
+    //     gameOverUI.SetActive(true);
+    //     // Destroy the player. 
+    //     Destroy(gameObject);
+    // }
 
     public void AdjustShieldUI()
     {   
