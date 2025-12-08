@@ -11,12 +11,14 @@ namespace StarterAssets
 		public Vector2 move;
 		public Vector2 look;
 
-		// Various bools for incoming actions, i.e shoot etc. 
+		// Various bools for incoming actions, i.e shoot, pickup food, etc. 
 		public bool jump;
 		public bool sprint;
 
-		public bool shoot;
-		public bool zoom; 
+		public bool primary;
+
+		public bool secondary; 
+		public bool special; 
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -25,7 +27,14 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
+		void Start()
+        {	
+			// In order to keep the cursor visible during every scene reload. 
+            SetCursorState(true);
+        }
+
 #if ENABLE_INPUT_SYSTEM
+
 		public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
@@ -40,7 +49,7 @@ namespace StarterAssets
 		}
 
 		public void OnJump(InputValue value)
-		{
+		{	
 			JumpInput(value.isPressed);
 		}
 
@@ -49,16 +58,21 @@ namespace StarterAssets
 			SprintInput(value.isPressed);
 		}
 
-		public void OnShoot(InputValue value)
+		public void OnPrimary(InputValue value)
         {	
 			// Example, we retrieve an incoming value for the action (as a value argument)
-			ShootInput(value.isPressed); 
+			PrimaryInput(value.isPressed); 
 			// True, but if it's a release for example, then the action may trigger but return a false bool (trigger on release)
         }
 
-		public void OnZoom(InputValue value)
+		public void OnSecondary(InputValue value)
         {
-            ZoomInput(value.isPressed); 
+            SecondaryInput(value.isPressed); 
+        }
+
+		public void OnSpecial(InputValue value)
+        {
+            SpecialInput(value.isPressed); 
         }
 #endif
 
@@ -83,25 +97,33 @@ namespace StarterAssets
 			sprint = newSprintState;
 		}
 
-		public void ShootInput(bool newShootState)
+		public void PrimaryInput(bool newPrimaryState)
         {	
 			// The function above, that trigger on associated action, now change the public bools for that action. 
 			// That is, the action IS occuring OR is NOT. 
-            shoot = newShootState; 
+            primary = newPrimaryState; 
         }
 
-		public void ZoomInput(bool newZoomState)
+		public void SecondaryInput(bool newSecondaryState)
         {
-            zoom = newZoomState; 
+            secondary = newSecondaryState; 
+        }
+		
+
+		public void SpecialInput(bool newSpecialState)
+        {
+            special = newSpecialState; 
         }
 		
 		private void OnApplicationFocus(bool hasFocus)
-		{
-			SetCursorState(cursorLocked);
+		{	
+			SetCursorState(cursorLocked); 
 		}
 
-		private void SetCursorState(bool newState)
-		{
+		public void SetCursorState(bool newState)
+		{	
+			// Make sure to fire this with FALSE, before a GameOver event. 
+			// This is why it's a public method. 
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
 	}

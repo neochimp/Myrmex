@@ -76,6 +76,13 @@ namespace StarterAssets
 
         private const float _threshold = 0.01f;
 
+        public void ResetInput()
+        {
+            _verticalVelocity = 0f;
+            _rotationVelocity = 0f;
+            _speed = 0f;
+        }
+
         private bool IsCurrentDeviceMouse
         {
             get
