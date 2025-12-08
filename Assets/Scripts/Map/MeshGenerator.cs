@@ -77,20 +77,13 @@ public class MeshGenerator : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.P))
+        if (Input.GetKeyDown("escape"))
         {
             paused = !paused;
-            Debug.Log("Pause Toggled, Paused: " + paused);
+            Debug.Log("Pause Toggled");
         }
 
-        if (paused)
-        {
-            Time.timeScale = 0;
-        }
-        else
-        {
-            Time.timeScale = 1;
-        }
+        Time.timeScale = paused ? 0 : 1;
 
 
         for (int i = 0, z = 0; z <= zSize; z++)
