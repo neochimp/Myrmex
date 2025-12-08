@@ -41,10 +41,10 @@ public class PlayerHealth : MonoBehaviour
         // Check if health is less than zero and call a GameOver result if true. 
         if(currentHealth <= 0)
         {   
-            Debug.Log("You died, becoming worker.");   
+            Debug.Log("You died, respawning");   
             //PlayerGameOver();
             // I think the problem is this is calling OUR version of playerManager
-            playerManager.Respawn();   
+            playerManager.Respawn();   // FOr some reason this call works here, but not in PlayerManager. 
 
         }
     }

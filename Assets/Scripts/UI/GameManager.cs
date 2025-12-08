@@ -15,6 +15,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] PlayerManager playerManager;
 
+    void Start()
+    {
+        playerManager.Respawn(); 
+    }
+
     public void AdjustEnemyCount(int amount)
     {   
         // *note* This tracker could easily be adjusted to track multiple types of enemies, such as spiders, mantises, etc. 
@@ -30,23 +35,20 @@ public class GameManager : MonoBehaviour
             // This can be changed as development continues. 
             //winText.SetActive(true); 
             Debug.Log("No more enemies");
-            playerManager.SpawnWorker(); 
+            //playerManager.SpawnWorker(); // this works
+            playerManager.Respawn(); // this works better
         }
     }
-
-    public void Respawn()
-    {
-        
-    }
-
     public void RespawnSoldier()
-    {
+    {   
+        Debug.Log("Respawning Soldier");
         playerManager.SpawnSoldier();
         respawnUI.SetActive(false);
     }
 
     public void RespawnWorker()
-    {
+    {   
+        Debug.Log("Respawning Soldier");
         playerManager.SpawnWorker();
         respawnUI.SetActive(false);
     }

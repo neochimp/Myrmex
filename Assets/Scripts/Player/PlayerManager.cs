@@ -1,6 +1,7 @@
 using UnityEngine;
 using Cinemachine;
 using StarterAssets;
+using UnityEngine.InputSystem;
 
 public class PlayerManager : MonoBehaviour
 {   
@@ -17,6 +18,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera gameOverCamera;
     [SerializeField] CinemachineVirtualCamera playerFollowCamera; 
     [SerializeField] CharacterController characterController; 
+    [SerializeField] PlayerInput inputSystem; 
 
     [SerializeField] Transform abilityCamera;
 
@@ -29,7 +31,8 @@ public class PlayerManager : MonoBehaviour
     void Start() 
     {   
         // Spawn as soldier
-        SpawnSoldier(); 
+       // SpawnSoldier(); // this works
+        //Respawn(); // but this doesnt!
     }
 
     public void Respawn()
@@ -42,6 +45,7 @@ public class PlayerManager : MonoBehaviour
         // Deactivate Cursor/Lock cursor: (because it's game over)
         StarterAssetsInputs starterAssetsInputs = gameObject.GetComponent<StarterAssetsInputs>(); 
         starterAssetsInputs.SetCursorState(false); 
+        //inputSystem.enabled = false;  // PROTOTYPE REFACTOR THIS
         // Display the game over screen 
         respawnUI.SetActive(true);
     }
@@ -64,9 +68,10 @@ public class PlayerManager : MonoBehaviour
 
     public void SpawnSoldier()
     {   
+       // inputSystem.enabled = true; //PROTO
         playerFollowCamera.Priority = virtualCameraPriority; // Return camera to follow position. 
         gameOverCamera.Priority = 0; 
-        characterController.enabled = false; // disable movement (must be done in unity)
+        characterController.enabled = false; // disable movement to allow for transport
 
         gameObject.transform.position = SpawnPoint.position; // perform teleport
 
@@ -78,12 +83,14 @@ public class PlayerManager : MonoBehaviour
         isWorker = false; 
 
         characterController.enabled = true; // return input
+        //inputSystem.enabled = true; 
 
         playerHealth.ResetHealth(); // health reset
     }
 
     public void SpawnWorker()
     {   
+        //inputSystem.enabled = true; //PROTO
         playerFollowCamera.Priority = virtualCameraPriority; // Return camera to follow position. 
         gameOverCamera.Priority = 0; 
         //Debug.Log("Original Position: " + gameObject.transform.position + " Moving to " + SpawnPoint.position);
@@ -99,6 +106,7 @@ public class PlayerManager : MonoBehaviour
 
         // 4. Re-enable movement
         characterController.enabled = true;
+       // inputSystem.enabled = true; 
 
         // 5. Switch form
         Debug.Log("Becoming Worker");
