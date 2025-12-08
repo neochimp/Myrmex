@@ -8,7 +8,7 @@ public class MeshGenerator : MonoBehaviour
     Mesh mesh;
     Vector3[] vertices;
     int[] triangles;
-
+    private bool paused = false;
     //vertex count = (xSize + 1) * (zSize + 1)
     public int xSize = 100;
     public int zSize = 100;
@@ -76,6 +76,23 @@ public class MeshGenerator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            paused = !paused;
+            Debug.Log("Pause Toggled, Paused: " + paused);
+        }
+
+        if (paused)
+        {
+            Time.timeScale = 0;
+        }
+        else
+        {
+            Time.timeScale = 1;
+        }
+
+
         for (int i = 0, z = 0; z <= zSize; z++)
         {
             for (int x = 0; x <= xSize; x++)
@@ -84,7 +101,7 @@ public class MeshGenerator : MonoBehaviour
                 i++;
             }
         }
-        noiseOffset.x += scrollSpeed;
+        noiseOffset.x += scrollSpeed * Time.deltaTime;
         UpdateMesh();
     }
 
