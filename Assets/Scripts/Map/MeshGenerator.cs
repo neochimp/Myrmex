@@ -31,7 +31,10 @@ public class MeshGenerator : MonoBehaviour
     public float detailHeight = 1f;
 
     public Vector2 noiseOffset; // for moving terrain around / randomizing
-    public float scrollSpeed = 1f;
+    public float scrollSpeed = 0f;
+
+    [Header("Grass Objects")]
+    public GameObject[] grass;
     // Start is called before the first frame update
     void Start()
     {
@@ -71,6 +74,19 @@ public class MeshGenerator : MonoBehaviour
         }
 
         UpdateMesh();
+
+        //grass spawning stuff
+        //this gives the vertex at the center of a 4x4 square. This is the point we will use to find the perlin noise for density.
+        for (int z = 2; z <= zSize; z += 4)
+        {
+            for (int x = 2; x <= xSize; x += 4)
+            {
+                int index = z * (xSize + 1) + x;
+
+                SpawnTerrainObject(grass[0], vertices[index], 0.5f);
+            }
+        }
+
     }
 
     // Update is called once per frame
@@ -138,6 +154,13 @@ public class MeshGenerator : MonoBehaviour
         float small = Mathf.PerlinNoise(nx * detailScale, nz * detailScale) * detailHeight * cluster;
 
         return big + mid + small;
+    }
+
+    void SpawnTerrainObject(GameObject obj, Vector3 pos, float scale)
+    {
+        GameObject grassBlade = Instantiate(obj, pos, Quaternion.Euler(-90, 0, -180));
+        grassBlade.transform.parent = transform;
+        grassBlade.transform.localScale = new Vector3(scale, scale, scale);
     }
 
 
