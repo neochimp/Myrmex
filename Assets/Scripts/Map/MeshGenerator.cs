@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+using Unity.AI.Navigation;
 
 [RequireComponent(typeof(MeshFilter))]
 public class MeshGenerator : MonoBehaviour
 {
     Mesh mesh;
+    public NavMeshSurface navMeshSurface;
     Vector3[] vertices;
     int[] triangles;
     private bool paused = false;
@@ -75,6 +78,17 @@ public class MeshGenerator : MonoBehaviour
 
         UpdateMesh();
 
+        MeshCollider mc = GetComponent<MeshCollider>();
+        mc.sharedMesh = mesh;
+
+        if (navMeshSurface == null)
+        {
+            navMeshSurface = gameObject.AddComponent<NavMeshSurface>();
+        }
+
+        navMeshSurface.collectObjects = CollectObjects.Children;
+        navMeshSurface.BuildNavMesh();
+
         //grass spawning stuff
         //this gives the vertex at the center of a 4x4 square. This is the point we will use to find the perlin noise for density.
         for (int z = 2; z <= zSize; z += 4)
@@ -83,7 +97,14 @@ public class MeshGenerator : MonoBehaviour
             {
                 int index = z * (xSize + 1) + x;
 
-                SpawnTerrainObject(grass[0], vertices[index], 0.5f);
+                float spawnDensity = Mathf.PerlinNoise(x * 0.05f, z * 0.05f);
+
+                Debug.Log("Zone: " + index + ", Spawn Count: " + (int)(spawnDensity * 10));
+
+                for (int i = 0; i < (int)(spawnDensity * 30); i++)
+                {
+                    SpawnTerrainObject(grass[Random.Range(0, 2)], vertices[index], 0.5f);
+                }
             }
         }
 
@@ -120,6 +141,10 @@ public class MeshGenerator : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
+
+        MeshCollider mc = GetComponent<MeshCollider>();
+        mc.sharedMesh = null;
+        mc.sharedMesh = mesh;
     }
     private void OnDrawGizmos()
     {
@@ -158,7 +183,8 @@ public class MeshGenerator : MonoBehaviour
 
     void SpawnTerrainObject(GameObject obj, Vector3 pos, float scale)
     {
-        GameObject grassBlade = Instantiate(obj, pos, Quaternion.Euler(-90, 0, -180));
+        Vector3 randPos = new Vector3(pos.x - 2f + Random.Range(0.0f, 4.0f), pos.y - 0.5f, pos.z - 2f + Random.Range(0.0f, 4.0f));
+        GameObject grassBlade = Instantiate(obj, randPos, Quaternion.Euler(-90, 0, Random.Range(0, 360)));
         grassBlade.transform.parent = transform;
         grassBlade.transform.localScale = new Vector3(scale, scale, scale);
     }
