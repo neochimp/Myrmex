@@ -11,16 +11,13 @@ public class MeshGenerator : MonoBehaviour
     public NavMeshSurface navMeshSurface;
     Vector3[] vertices;
     int[] triangles;
+    Vector2[] uvs;
     private bool paused = false;
     //vertex count = (xSize + 1) * (zSize + 1)
-    public int xSize = 100;
-    public int zSize = 100;
+    public int xSize = 200;
+    public int zSize = 200;
 
     //Perlin noise testing variables
-    public float xPerlin = 0.3f;
-    public float zPerlin = 0.3f;
-    public float scalePerlin = 2f;
-
     [Header("Base Hills")]
     public float baseScale = 0.05f;
     public float baseHeight = 8f;
@@ -33,8 +30,12 @@ public class MeshGenerator : MonoBehaviour
     public float detailScale = 0.3f;
     public float detailHeight = 1f;
 
+    [Header("Other Perlin Stuff")]
     public Vector2 noiseOffset; // for moving terrain around / randomizing
     public float scrollSpeed = 0f;
+    public float clusterScale = 0.02f; // very low frequency
+    public float clusterThreshold = 0.4f;
+
 
     [Header("Grass Objects")]
     public GameObject[] grass;
@@ -44,15 +45,17 @@ public class MeshGenerator : MonoBehaviour
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
+        uvs = new Vector2[vertices.Length];
+
         for (int i = 0, z = 0; z <= zSize; z++)
         {
             for (int x = 0; x <= xSize; x++)
             {
                 vertices[i] = new Vector3(x, GetHeight(x, z), z);
+                uvs[i] = new Vector2((float)x / xSize, (float)z / zSize);
                 i++;
             }
         }
-
         triangles = new int[xSize * zSize * 6];
         int vert = 0;
         int tris = 0;
@@ -97,11 +100,25 @@ public class MeshGenerator : MonoBehaviour
             {
                 int index = z * (xSize + 1) + x;
 
+                float grassThreshold = 0.4f;
                 float spawnDensity = Mathf.PerlinNoise(x * 0.05f, z * 0.05f);
+                spawnDensity = Mathf.Clamp01((spawnDensity - grassThreshold) / (1f - grassThreshold));
+                int spawnCount = (int)(spawnDensity * 60 * DistanceFromCenterNormalizedWithEdgeBias(new Vector2(x, z)));
+                int borderThickness = 5;
+                bool isBorder =
+                  x <= borderThickness ||
+                  z <= borderThickness ||
+                  x >= xSize - borderThickness ||
+                  z >= zSize - borderThickness;
+
+                if (isBorder)
+                {
+                    spawnCount = 40;
+                }
 
                 Debug.Log("Zone: " + index + ", Spawn Count: " + (int)(spawnDensity * 10));
 
-                for (int i = 0; i < (int)(spawnDensity * 30); i++)
+                for (int i = 0; i < spawnCount; i++)
                 {
                     SpawnTerrainObject(grass[Random.Range(0, 2)], vertices[index], 0.5f);
                 }
@@ -122,17 +139,18 @@ public class MeshGenerator : MonoBehaviour
 
         Time.timeScale = paused ? 0 : 1;
 
-
-        for (int i = 0, z = 0; z <= zSize; z++)
-        {
-            for (int x = 0; x <= xSize; x++)
-            {
-                vertices[i].y = GetHeight(x, z);
-                i++;
-            }
-        }
-        noiseOffset.x += scrollSpeed * Time.deltaTime;
-        UpdateMesh();
+        /* commenting out constant update so my computer doesnt explode with big map
+                for (int i = 0, z = 0; z <= zSize; z++)
+                {
+                    for (int x = 0; x <= xSize; x++)
+                    {
+                        vertices[i].y = GetHeight(x, z);
+                        i++;
+                    }
+                }
+                noiseOffset.x += scrollSpeed * Time.deltaTime;
+                UpdateMesh();
+          */
     }
 
     void UpdateMesh()
@@ -140,6 +158,7 @@ public class MeshGenerator : MonoBehaviour
         mesh.Clear();
         mesh.vertices = vertices;
         mesh.triangles = triangles;
+        mesh.uv = uvs;
         mesh.RecalculateNormals();
 
         MeshCollider mc = GetComponent<MeshCollider>();
@@ -159,9 +178,6 @@ public class MeshGenerator : MonoBehaviour
             Gizmos.DrawSphere(vertices[i], .1f);
         }
     }
-
-    public float clusterScale = 0.02f; // very low frequency
-    public float clusterThreshold = 0.4f;
 
     float GetHeight(float x, float z)
     {
@@ -187,6 +203,13 @@ public class MeshGenerator : MonoBehaviour
         GameObject grassBlade = Instantiate(obj, randPos, Quaternion.Euler(-90, 0, Random.Range(0, 360)));
         grassBlade.transform.parent = transform;
         grassBlade.transform.localScale = new Vector3(scale, scale, scale);
+    }
+
+    float DistanceFromCenterNormalizedWithEdgeBias(Vector2 pos)
+    {
+        Vector2 center = new Vector2(xSize / 2f, zSize / 2f);
+        float rampValue = 1.5f;
+        return Mathf.Pow((Vector2.Distance(pos, center) / (xSize / 2f)), rampValue) + 0.2f;
     }
 
 
