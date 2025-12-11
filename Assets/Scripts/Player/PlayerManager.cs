@@ -1,8 +1,6 @@
 using UnityEngine;
-using Cinemachine;
-using StarterAssets;
-using UnityEngine.InputSystem;
 
+// Handles the switching between worker ant:soldier ant 
 public class PlayerManager : MonoBehaviour
 {   
     [SerializeField] GameObject WorkerAbilities;

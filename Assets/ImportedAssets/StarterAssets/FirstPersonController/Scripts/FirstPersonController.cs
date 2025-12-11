@@ -122,7 +122,8 @@ namespace StarterAssets
         }
 
         public void PauseGame()
-        {
+        {   
+            // This is used to fire the pause system externally, for example when a UI menu is shown. 
             if (!UIpause)
             {
                 UIpause = true;
@@ -145,7 +146,8 @@ namespace StarterAssets
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.P) && !UIpause) //change KeyCode.P to "escape" to change key
-            {
+            {   
+                // Only occurs if key down AND a UI menu is not being currently displayed
                 paused = !paused;
                 Debug.Log("Pause Toggled");
             }
@@ -160,22 +162,15 @@ namespace StarterAssets
                 GroundedCheck();
                 Move();
             }
-
-            //Time.timeScale = paused ? 0 : 1;
-
-
-            // JumpAndGravity();
-            // GroundedCheck();
-            // Move();
         }
 
         private void LateUpdate()
         {   
             if (!paused)
-            {
+            {   
+                // Camera only moves if the game is not paused. 
                 CameraRotation();
             }
-            //CameraRotation();
         }
 
         private void GroundedCheck()

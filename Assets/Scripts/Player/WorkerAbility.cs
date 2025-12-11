@@ -10,7 +10,7 @@ public class WorkerAbility : MonoBehaviour
     AbilitySO foodAbilitySO; 
     StarterAssetsInputs starterAssetsInputs;
     FirstPersonController firstPersonController; 
-    Animator abilityAnimator;
+    
 
    
     [SerializeField] AbilitySO primaryAbility; 

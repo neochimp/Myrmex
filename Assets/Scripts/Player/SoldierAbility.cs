@@ -5,14 +5,13 @@ using UnityEngine;
 
 public class SoldierAbility : MonoBehaviour
 {   
-    // This is the public facing interface of the Soldier Ants abilities,
+    // The public facing interface of the Soldier Ants abilities,
     // It is used by Pickups, the Player GameObject itself, and contains the direct functionality 
     // Shooting, zooming, animations etc is all handled within this class. 
     SoldierHandler shootHandler; // These handler classes manage the raycasting and implementation of mechanics. 
 
     SoldierHandler biteHandler; // This ability is static, it never switches.  
 
-    // Every ant type has two abilties, but they could have more. 
     AbilitySO shootAbilitySO; // Scriptable objects holding data for the different abilities (modular)
 
     AbilitySO biteAbilitySO; 

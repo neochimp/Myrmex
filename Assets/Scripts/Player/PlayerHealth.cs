@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// This class is intended to manage the UI health display only, and the updating/reseting of player health.
 public class PlayerHealth : MonoBehaviour
 {   
     // Create a slideable range for the player health
@@ -13,15 +14,11 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] UnityEngine.UI.Image[] shieldBars; 
     [SerializeField] GameManager gameManager; 
 
-    int currentHealth;
-
-    // The highest priority camera will always become the current camera being viewed. 
-    // So increasing the priority forces a switch of camera (that's literally how unity behaves, not a cute scripting quirk)
-    const int virtualCameraPriority = 20; 
+    int currentHealth; 
 
     public void TakeDamage(int damageAmount)
     {
-        // Public, intended to be called by weapons script (or any script which damages the player)
+        // Public, because it's intended to be called by weapons script (or any script which damages the player)
         currentHealth -= damageAmount;
         // Adjust UI bars to display changes. 
         AdjustShieldUI();
@@ -36,7 +33,7 @@ public class PlayerHealth : MonoBehaviour
 
         }
     }
-    
+
     public void AdjustShieldUI()
     {   
         // Iterate through the array of UI bar images
