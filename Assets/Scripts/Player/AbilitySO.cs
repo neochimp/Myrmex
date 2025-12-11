@@ -1,6 +1,13 @@
 using UnityEngine;
 
-// This creates an enum so we know if the ability is primary or secondary. 
+// This is the scriptable object for abilities used by the worker/soldier ant (the player)
+// It is intended to be attached to the prefabs of the abilities themselves, acting like external appendages/modules
+// They can be equipped or unequipped, their information/data is contained within this scriptable object. 
+
+// TLDR: ScriptableObject == Data
+// MnonehaviorScript == Functionality
+
+// PROTOTYPE:This creates an enum so we know if the ability is primary or secondary. 
 //public enum AbilityType { Primary, Secondary }
 
 // This creates a menu option in the unity editors,
@@ -8,17 +15,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "AbilitySO", menuName = "Scriptable Objects/AbilitySO")]
 
 public class AbilitySO : ScriptableObject
-// A scriptable object
-// This is a modular way to store data which is common to all instances of a class
-// BUT will differ between those classes
-// In this way we can create all manner of differing abilities. 
-
-
-// We likely want to create other types of scriptable objects in the future, not just weapon style abilities.
-// This will happen as serialized data fields start to stack up, as development continues.  
-
-// TLDR: ScriptableObject == Data
-// MnonehaviorScript == Functionality
 {   
     public int Damage = 1; 
 
@@ -29,13 +25,13 @@ public class AbilitySO : ScriptableObject
     public float ZoomRotationSpeed = 0.2f; 
     public int MagazineSize = 12; 
 
-    public float range = Mathf.Infinity; 
+    public float range = Mathf.Infinity; // Important for raycasting, such as creating melee objects or short range abilities
 
     public bool IsAutomatic = false; 
 
     public bool CanZoom = false; 
-    public GameObject AbilityPrefab; 
-    public GameObject HitEffect;
+    public GameObject AbilityPrefab; // The prefab for the model itself. 
+    public GameObject HitEffect; // Visual effects for ability activation. 
     public GameObject DamageEffect; 
 
     

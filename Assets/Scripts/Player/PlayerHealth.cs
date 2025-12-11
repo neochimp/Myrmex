@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Cinemachine;
-using StarterAssets;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -14,21 +10,13 @@ public class PlayerHealth : MonoBehaviour
 
     [Range(1, 10)]
     [SerializeField] int workerHealth = 10; 
-    // This camera is used for display after game over (pan out effect). 
-
-    // It is easiest just to serialize the various cameras and the UI canvas. 
-    //[SerializeField] CinemachineVirtualCamera gameOverCamera; 
-    //[SerializeField] Transform abilityCamera; 
-    //[SerializeField] GameObject overlayUI; 
-    // An array of shield bars, intented to decrease as the player takes damage. 
     [SerializeField] UnityEngine.UI.Image[] shieldBars; 
-    //[SerializeField] GameObject gameOverUI;  
+    [SerializeField] GameManager gameManager; 
 
-    [SerializeField] PlayerManager playerManager; 
     int currentHealth;
 
-    // The highest priority camera will always be the POV. 
-    // So adjusting priority switches cameras (that's unity behavior)
+    // The highest priority camera will always become the current camera being viewed. 
+    // So increasing the priority forces a switch of camera (that's literally how unity behaves, not a cute scripting quirk)
     const int virtualCameraPriority = 20; 
 
     public void TakeDamage(int damageAmount)
@@ -43,29 +31,12 @@ public class PlayerHealth : MonoBehaviour
         {   
             Debug.Log("You died, respawning");   
             //PlayerGameOver();
-            // I think the problem is this is calling OUR version of playerManager
-            playerManager.Respawn();   // FOr some reason this call works here, but not in PlayerManager. 
+            // At this point, when the player dies, we just get the option to respawn as a new type of ant. 
+            gameManager.Respawn();  
 
         }
     }
-
-    // currently refactoring this into PlayerManager
-    // void PlayerGameOver()
-    // {
-    //     // Unparent the weapon cam to prevent errors after player deletion. 
-    //     // It would be childed to a destroyed object
-    //     abilityCamera.parent = null; 
-    //     // Increase priority to instigate a switch of cameras. 
-    //     gameOverCamera.Priority = virtualCameraPriority;
-    //     // Deactivate Cursor/Lock cursor: (because it's game over)
-    //     StarterAssetsInputs starterAssetsInputs = gameObject.GetComponent<StarterAssetsInputs>(); 
-    //     starterAssetsInputs.SetCursorState(false); 
-    //     // Display the game over screen 
-    //     gameOverUI.SetActive(true);
-    //     // Destroy the player. 
-    //     Destroy(gameObject);
-    // }
-
+    
     public void AdjustShieldUI()
     {   
         // Iterate through the array of UI bar images
@@ -85,16 +56,17 @@ public class PlayerHealth : MonoBehaviour
 
     public void ResetHealth()
     {   
-        if (playerManager.IsSoldier())
+        if (gameManager.IsSoldier())
         {   
             Debug.Log("loading soldier health"); 
             currentHealth = soldierHealth;
         }
-        else if (playerManager.IsWorker())
+        else if (gameManager.IsWorker())
         {   
             Debug.Log("loading worker health"); 
             currentHealth = workerHealth;
         }
+        // Once the correct health level is set, adjust the UI to match. 
         AdjustShieldUI(); 
     }
 }

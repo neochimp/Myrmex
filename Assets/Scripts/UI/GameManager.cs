@@ -1,23 +1,58 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement; 
-using Cinemachine; 
+using Cinemachine;
+using StarterAssets;
 
 public class GameManager : MonoBehaviour
 {   
     [SerializeField] TMP_Text enemiesText; 
     [SerializeField] GameObject winText; 
 
-    [SerializeField] GameObject respawnUI; 
+    [SerializeField] GameObject respawnUI;
+
+    [SerializeField] CinemachineVirtualCamera gameOverCamera;
+    [SerializeField] CinemachineVirtualCamera playerFollowCamera; 
+
+    [SerializeField] StarterAssetsInputs starterAssetsInputs; // Required in order to detect input
+
+    [SerializeField] PlayerManager playerManager;
 
     const string ENEMIES_STRING = "Enemies: ";
     int enemiesRemaining = 0;
 
-    [SerializeField] PlayerManager playerManager;
+    // The highest priority camera will always be the POV. 
+    // So adjusting priority switches cameras (that's unity behavior)
+    const int virtualCameraPriority = 20;
+
+    bool isSoldier;
+    bool isWorker; 
 
     void Start()
     {
-        playerManager.Respawn(); 
+        Respawn(); 
+    }
+
+    void SwitchPlayerCamera()
+    {
+        playerFollowCamera.Priority = virtualCameraPriority; // Return camera to follow position. 
+        gameOverCamera.Priority = 0; 
+    }
+
+    void SwitchGameCamera()
+    {
+        // Increase camera priority to initiate a switch of cameras. 
+        gameOverCamera.Priority = virtualCameraPriority;
+        playerFollowCamera.Priority = 0; 
+    }
+
+    public void Respawn()
+    {
+        // Increase camera priority to initiate a switch of cameras. 
+        SwitchGameCamera(); 
+        starterAssetsInputs.SetCursorState(false); 
+        // Display the respawning menu (pick the type of ant to respawn as) 
+        respawnUI.SetActive(true);
     }
 
     public void AdjustEnemyCount(int amount)
@@ -36,20 +71,28 @@ public class GameManager : MonoBehaviour
             //winText.SetActive(true); 
             Debug.Log("No more enemies");
             //playerManager.SpawnWorker(); // this works
-            playerManager.Respawn(); // this works better
+            //playerManager.Respawn(); // this works better
+            Respawn(); 
         }
     }
     public void RespawnSoldier()
     {   
         Debug.Log("Respawning Soldier");
-        playerManager.SpawnSoldier();
+        SwitchPlayerCamera(); 
+
+        isSoldier = true;
+        isWorker = false; 
+        playerManager.SpawnAnt(isSoldier, isWorker);
         respawnUI.SetActive(false);
     }
 
     public void RespawnWorker()
     {   
-        Debug.Log("Respawning Soldier");
-        playerManager.SpawnWorker();
+        Debug.Log("Respawning Worker");
+        SwitchPlayerCamera();
+        isSoldier = false;
+        isWorker = true; 
+        playerManager.SpawnAnt(isSoldier, isWorker);
         respawnUI.SetActive(false);
     }
 
@@ -66,5 +109,15 @@ public class GameManager : MonoBehaviour
         // You can't actually Application.Quit the editor, has to be built. 
         Debug.LogWarning("Will not work in Unity editor"); 
         Application.Quit(); 
+    }
+
+    public bool IsWorker()
+    {
+        return isWorker; 
+    }
+
+    public bool IsSoldier()
+    {
+        return isSoldier; 
     }
 }
