@@ -127,17 +127,32 @@ namespace StarterAssets
                 Debug.Log("Pause Toggled");
             }
 
-            Time.timeScale = paused ? 0 : 1;
+            if (paused)
+            {
+                Time.timeScale = 0;
+            } else if (!paused)
+            {
+                Time.timeScale = 1;
+                JumpAndGravity();
+                GroundedCheck();
+                Move();
+            }
+
+            //Time.timeScale = paused ? 0 : 1;
 
 
-            JumpAndGravity();
-            GroundedCheck();
-            Move();
+            // JumpAndGravity();
+            // GroundedCheck();
+            // Move();
         }
 
         private void LateUpdate()
-        {
-            CameraRotation();
+        {   
+            if (!paused)
+            {
+                CameraRotation();
+            }
+            //CameraRotation();
         }
 
         private void GroundedCheck()

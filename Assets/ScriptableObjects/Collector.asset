@@ -17,7 +17,7 @@ MonoBehaviour:
   ZoomAmount: 10
   ZoomRotationSpeed: 0.2
   MagazineSize: 10
-  range: 1
+  range: 5
   IsAutomatic: 0
   CanZoom: 0
   AbilityPrefab: {fileID: 9070003950996144133, guid: 45b4ee99d8b2bbc409f3ac192a98041c,
