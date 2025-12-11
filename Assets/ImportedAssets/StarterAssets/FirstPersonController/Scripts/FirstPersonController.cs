@@ -67,6 +67,8 @@ namespace StarterAssets
         //pause game
         private bool paused;
 
+        private bool UIpause; 
+
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
 #endif
@@ -119,9 +121,30 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
         }
 
+        public void PauseGame()
+        {
+            if (!UIpause)
+            {
+                UIpause = true;
+                paused = true;  
+            } else if (UIpause)
+            {
+                UIpause = false; 
+                paused = false; 
+            }
+        }
+
+        public bool isPaused()
+        {   
+            // This will come in handy when pausing the game.
+            // Soldier/Worker abilities.cs has no way of knowing if the game is paused
+            // With this, we are able to determine that and handle accordingly - Jordan
+            return paused; 
+        }
+
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.P)) //change KeyCode.P to "escape" to change key
+            if (Input.GetKeyDown(KeyCode.P) && !UIpause) //change KeyCode.P to "escape" to change key
             {
                 paused = !paused;
                 Debug.Log("Pause Toggled");

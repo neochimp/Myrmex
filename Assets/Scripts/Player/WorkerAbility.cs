@@ -36,7 +36,10 @@ public class WorkerAbility : MonoBehaviour
 
     void Update()
     {   
-        HandleFood(); 
+        if (!firstPersonController.isPaused())
+        {
+            HandleFood(); 
+        }
     }
     void HandleFood()
     {

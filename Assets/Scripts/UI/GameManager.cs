@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera playerFollowCamera; 
 
     [SerializeField] StarterAssetsInputs starterAssetsInputs; // Required in order to detect input
+    [SerializeField] FirstPersonController FirstPersonController; // Also required for handling input (onPause for example). 
 
     [SerializeField] PlayerManager playerManager;
 
@@ -53,6 +54,7 @@ public class GameManager : MonoBehaviour
         starterAssetsInputs.SetCursorState(false); 
         // Display the respawning menu (pick the type of ant to respawn as) 
         respawnUI.SetActive(true);
+        FirstPersonController.PauseGame(); 
     }
 
     public void AdjustEnemyCount(int amount)
@@ -79,7 +81,7 @@ public class GameManager : MonoBehaviour
     {   
         Debug.Log("Respawning Soldier");
         SwitchPlayerCamera(); 
-
+        FirstPersonController.PauseGame(); 
         isSoldier = true;
         isWorker = false; 
         playerManager.SpawnAnt(isSoldier, isWorker);
@@ -90,6 +92,7 @@ public class GameManager : MonoBehaviour
     {   
         Debug.Log("Respawning Worker");
         SwitchPlayerCamera();
+        FirstPersonController.PauseGame();
         isSoldier = false;
         isWorker = true; 
         playerManager.SpawnAnt(isSoldier, isWorker);

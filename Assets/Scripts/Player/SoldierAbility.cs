@@ -87,9 +87,12 @@ public class SoldierAbility : MonoBehaviour
     {   
         // See these methods for more detail.
         // Let's leave update clean.  
-        HandleShoot(); 
-        HandleZoom(); 
-        HandleBite(); 
+        if (!firstPersonController.isPaused())
+        {
+            HandleShoot(); 
+            HandleZoom(); 
+            HandleBite(); 
+        }
     }
 
     public void ResetSoldier()
