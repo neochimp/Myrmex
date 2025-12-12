@@ -89,9 +89,6 @@ public class MeshGenerator : MonoBehaviour
             navMeshSurface = gameObject.AddComponent<NavMeshSurface>();
         }
 
-        navMeshSurface.collectObjects = CollectObjects.Children;
-        navMeshSurface.BuildNavMesh();
-
         //grass spawning stuff
         //this gives the vertex at the center of a 4x4 square. This is the point we will use to find the perlin noise for density.
         for (int z = 2; z <= zSize; z += 4)
@@ -116,14 +113,15 @@ public class MeshGenerator : MonoBehaviour
                     spawnCount = 40;
                 }
 
-                Debug.Log("Zone: " + index + ", Spawn Count: " + (int)(spawnDensity * 10));
-
                 for (int i = 0; i < spawnCount; i++)
                 {
                     SpawnTerrainObject(grass[Random.Range(0, 2)], vertices[index], 0.5f);
                 }
             }
         }
+        navMeshSurface.collectObjects = CollectObjects.Children;
+        navMeshSurface.BuildNavMesh();
+
 
     }
 
@@ -131,7 +129,7 @@ public class MeshGenerator : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKeyDown("escape"))
+        if (Input.GetKeyDown(KeyCode.P))
         {
             paused = !paused;
             Debug.Log("Pause Toggled");
