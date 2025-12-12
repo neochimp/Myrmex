@@ -67,6 +67,8 @@ namespace StarterAssets
         //pause game
         private bool paused;
 
+        private bool UIpause; 
+
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
 #endif
@@ -119,25 +121,56 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
         }
 
+        public void PauseGame()
+        {   
+            // This is used to fire the pause system externally, for example when a UI menu is shown. 
+            if (!UIpause)
+            {
+                UIpause = true;
+                paused = true;  
+            } else if (UIpause)
+            {
+                UIpause = false; 
+                paused = false; 
+            }
+        }
+
+        public bool IsPaused()
+        {   
+            // This will come in handy when pausing the game.
+            // Soldier/Worker abilities.cs has no way of knowing if the game is paused
+            // With this, we are able to determine that and handle accordingly - Jordan
+            return paused; 
+        }
+
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.P)) //change KeyCode.P to "escape" to change key
-            {
+            if (Input.GetKeyDown(KeyCode.P) && !UIpause) //change KeyCode.P to "escape" to change key
+            {   
+                // Only occurs if key down AND a UI menu is not being currently displayed
                 paused = !paused;
                 Debug.Log("Pause Toggled");
             }
 
-            Time.timeScale = paused ? 0 : 1;
-
-
-            JumpAndGravity();
-            GroundedCheck();
-            Move();
+            if (paused)
+            {
+                Time.timeScale = 0;
+            } else if (!paused)
+            {
+                Time.timeScale = 1;
+                JumpAndGravity();
+                GroundedCheck();
+                Move();
+            }
         }
 
         private void LateUpdate()
-        {
-            CameraRotation();
+        {   
+            if (!paused)
+            {   
+                // Camera only moves if the game is not paused. 
+                CameraRotation();
+            }
         }
 
         private void GroundedCheck()
