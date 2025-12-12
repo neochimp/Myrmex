@@ -10,9 +10,9 @@ public class SoldierAbility : MonoBehaviour
     // Shooting, zooming, animations etc is all handled within this class. 
     SoldierHandler shootHandler; // These handler classes manage the raycasting and implementation of mechanics. 
 
-    SoldierHandler biteHandler; // This ability is static, it never switches.  
+    SoldierHandler biteHandler; // This ability is static, it never switches out.  
 
-    AbilitySO shootAbilitySO; // Scriptable objects holding data for the different abilities (modular)
+    AbilitySO shootAbilitySO; // Scriptable objects holding data for the two different abilities (modular)
 
     AbilitySO biteAbilitySO; 
 
@@ -76,17 +76,16 @@ public class SoldierAbility : MonoBehaviour
 
     void Start()
     {   
-        // Begin the game by switching to the starting weapon, and initialize the main camera. 
+        // Begin the game by switching to the starting ability, and initialize the main camera. 
         SwitchAbility(primaryAbility); 
         cam = GameObject.FindAnyObjectByType<CinemachineVirtualCamera>(); 
-        //ammoText = ammoUI.GetComponentInChildren<TMP_Text>(); 
     }
 
     void Update()
     {   
         // See these methods for more detail.
         // Let's leave update clean.  
-        if (!firstPersonController.isPaused())
+        if (!firstPersonController.IsPaused())
         {
             HandleShoot(); 
             HandleZoom(); 
@@ -94,12 +93,24 @@ public class SoldierAbility : MonoBehaviour
         }
     }
 
-    public void ResetSoldier()
-    {   
+   
+    void OnEnable() 
+    {
         // A public facing method to take care of some housecleaning which needs to occur when switching from soldier to worker.
-         UnzoomWeapon(); // If this is not called we will be permanently zoomed in.
-         ammoUI.SetActive(false); 
+        //Debug.Log("Enabling soldier.");
+        //UnzoomWeapon(); // If this is not called we will be permanently zoomed in. // But we might not need it if we switch primary. 
+        ammoUI.SetActive(true); // Hide the ammo 
+    }
 
+    void OnDisable()
+    {
+        ammoUI.SetActive(false);
+        //Debug.Log("Disabling soldier.");
+    }
+
+    public void Reset()
+    {
+        SwitchAbility(primaryAbility); // Switch ability back to primary (as if we just spawned)
     }
 
     public void AdjustAmmo(int amount)

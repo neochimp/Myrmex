@@ -135,7 +135,7 @@ namespace StarterAssets
             }
         }
 
-        public bool isPaused()
+        public bool IsPaused()
         {   
             // This will come in handy when pausing the game.
             // Soldier/Worker abilities.cs has no way of knowing if the game is paused
