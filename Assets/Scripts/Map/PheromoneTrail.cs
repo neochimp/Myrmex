@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -6,7 +7,7 @@ using UnityEngine.AI;
 public class PheromoneTrail : MonoBehaviour
 {
     public Transform home;
-    public Transform targetItem;
+    //public Transform targetItem;
     public float refreshRate = 0.2f;
 
     private LineRenderer line;
@@ -23,7 +24,11 @@ public class PheromoneTrail : MonoBehaviour
     bool showTrail = false; 
 
     private List<Vector3> lastTrailPoints = new List<Vector3>();
-    // Start is called before the first frame update
+
+    // add these:
+    private Vector3 lockedTargetPos = Vector3.zero;
+    private bool hasLockedTarget = false; 
+    
     void Awake()
     {
         line = GetComponent<LineRenderer>();
@@ -60,7 +65,7 @@ public class PheromoneTrail : MonoBehaviour
     System.Collections.IEnumerator UpdatePathRoutine()
     {
         while (true)
-        {
+        {   
             UpdatePath();
             yield return new WaitForSeconds(refreshRate);
         }
@@ -70,6 +75,35 @@ public class PheromoneTrail : MonoBehaviour
     {   
         // Flag the trail (either showing or NOT showing)
         showTrail = flag; 
+
+        if (showTrail)
+        {
+            // lock a target when trail is triggered by true flag
+            Vector3 candidate = GetClosestFood();
+            line.startWidth = 0f;
+            line.endWidth = 0f; 
+            if (candidate == Vector3.zero)
+            {   
+                // no valid food found
+                hasLockedTarget = false;
+                line.positionCount = 0;
+            }
+            else
+            {   
+                lockedTargetPos = candidate; 
+                hasLockedTarget = true;
+            }
+            //line.startWidth = 0.3f;
+            //line.endWidth = 0.3f;
+        }
+        else
+        {   
+            // Turn off the trail
+            hasLockedTarget = false;
+            line.positionCount = 0;
+            //line.startWidth = 0f;
+            //line.endWidth = 0f; 
+        }
     }
 
     public bool TrailShowing()
@@ -97,10 +131,10 @@ public class PheromoneTrail : MonoBehaviour
             
             for(int i = 0; i < puffsPerInterval; i++)
             {
-                int idx = Random.Range(0, lastTrailPoints.Count);
+                int idx = UnityEngine.Random.Range(0, lastTrailPoints.Count);
                 Vector3 basePos = lastTrailPoints[idx];
 
-                Vector2 offset2D = Random.insideUnitCircle*tubeRadius;
+                Vector2 offset2D = UnityEngine.Random.insideUnitCircle*tubeRadius;
                 Vector3 spawnPos = basePos + new Vector3(offset2D.x, 0f, offset2D.y);
 
                 spawnPos += Vector3.up*0.05f;
@@ -110,19 +144,68 @@ public class PheromoneTrail : MonoBehaviour
         }
     }
 
-    void UpdatePath()
+    Vector3 GetClosestFood()
     {
-        if (home == null || targetItem == null)
+        Debug.Log("Calculating next closest food.");
+        //1. Get home position
+        // already exists as home.  
+        
+        //2. Find all objects tagged food.
+        //and 3. Loop through food.
+        float smallest = Mathf.Infinity;
+        FoodItem smallestFood = null;   
+
+        foreach (GameObject f in GameObject.FindGameObjectsWithTag("Food"))
+        {   
+            FoodItem food = f.GetComponent<FoodItem>();
+            if (food == null)
+            {   
+                // We are only worried about base food items with scripts attached. 
+                continue;
+            }
+            Debug.Log("Found a valid food item " + f.name); 
+            float d = food.DistanceToTarget(home); // Squared Distance
+
+            if (d < smallest)
+            {
+                smallest = d;
+                smallestFood = food; 
+            }
+           if(food.DistanceToTarget(home) < smallest)
+           {    
+                smallest = food.DistanceToTarget(home);
+                smallestFood = food; 
+           }
+        }
+
+        // If no food found return a flag value
+        if (smallestFood == null)
         {
+            return Vector3.zero;
+        }
+        // else 
+        return smallestFood.foodLocation().position;
+    }
+    void UpdatePath()
+    {   
+        // if trail is off or no target locked, do nothing
+        if (home == null || !showTrail || !hasLockedTarget)
+        {   
+            Debug.Log("No target");
             line.positionCount = 0;
             return;
         }
 
-        if (!NavMesh.CalculatePath(home.position, targetItem.position, NavMesh.AllAreas, path))
-        {
+        Vector3 targetPos = lockedTargetPos;
+
+        if (!NavMesh.CalculatePath(home.position, targetPos, NavMesh.AllAreas, path))
+        {   
+            Debug.Log("Also no target"); 
             line.positionCount = 0;
             return;
         }
+
+        Debug.Log("Succesfull trail lock, generating path to" + targetPos);
 
         // If only 2 corners, still generate smooth and terrain-adjusted points.
         List<Vector3> finalPoints = new List<Vector3>();

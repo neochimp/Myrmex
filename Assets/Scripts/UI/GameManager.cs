@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour
         isWorker = false; 
         playerManager.SpawnAnt(isSoldier, isWorker);
         respawnUI.SetActive(false);
+        starterAssetsInputs.SetCursorState(true);
     }
 
     public void RespawnWorker()
@@ -97,6 +98,7 @@ public class GameManager : MonoBehaviour
         isWorker = true; 
         playerManager.SpawnAnt(isSoldier, isWorker);
         respawnUI.SetActive(false);
+        starterAssetsInputs.SetCursorState(true); 
     }
 
     public void RestartLevel()

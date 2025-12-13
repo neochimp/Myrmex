@@ -20,7 +20,8 @@ public class WorkerHandler : MonoBehaviour
             {   
                 // PICKUP FOOD
                 Debug.Log("Picking up food!"); 
-                Destroy(hit.collider.gameObject); 
+                // Destroy the entire game object. 
+                Destroy(hit.collider.GetComponentInParent<FoodItem>().gameObject);
                 playerFood.SetActive(true); 
             }
             // If you worker ant is "carrying food", then dropping is available. 
