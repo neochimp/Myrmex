@@ -71,20 +71,17 @@ public class WorkerAbility : MonoBehaviour
     void SenseFood()
     {
         if (starterAssetsInputs.secondary)
-        {
+        {   
+            // While input detected, trail is always set to true. 
             pheromoneTrail.ShowTrail(true);  
         }
-        else
+        else if (pheromoneTrail.TrailShowing())
         {   
-            // Could eventually refactor this so it's not CONSTANTLY plugging it false.
-            // example: else if (pheremoneTrail showing then make it false)
-            // but it doesn't seem to cause a major slowdown 
+            // If the trail is showing with no fire input
+            // Then hide trail
             pheromoneTrail.ShowTrail(false); 
         }
     }
-
-    // Still need to refactor this out and add an actual ability for this, with a cooldown timer. 
-    // It works though, needs some comments and a refactor. 
 
     void HandlePheremones()
     {
@@ -131,7 +128,6 @@ public class WorkerAbility : MonoBehaviour
        // loop from i = 0 to steps
        // trailPoint = playerPos + direction * (spacing * i)
        // instantiate a pheremone puff at that position 
-
     }
 }
 

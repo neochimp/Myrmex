@@ -67,8 +67,15 @@ public class PheromoneTrail : MonoBehaviour
     }
 
     public void ShowTrail(bool flag)
-    {
+    {   
+        // Flag the trail (either showing or NOT showing)
         showTrail = flag; 
+    }
+
+    public bool TrailShowing()
+    {   
+        // Return trail status
+        return showTrail; 
     }
 
     void Update()
