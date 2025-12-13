@@ -18,7 +18,7 @@ public class WorkerAbility : MonoBehaviour
 
     [SerializeField] GameObject playerFood; 
 
-    [SerializeField] GameObject pheremoneVFX; 
+    [SerializeField] PheromoneTrail pheromoneTrail; 
     
     //[SerializeField] AbilitySO secondaryAbility; 
 
@@ -72,7 +72,14 @@ public class WorkerAbility : MonoBehaviour
     {
         if (starterAssetsInputs.secondary)
         {
-            HandlePheremones(); 
+            pheromoneTrail.ShowTrail(true);  
+        }
+        else
+        {   
+            // Could eventually refactor this so it's not CONSTANTLY plugging it false.
+            // example: else if (pheremoneTrail showing then make it false)
+            // but it doesn't seem to cause a major slowdown 
+            pheromoneTrail.ShowTrail(false); 
         }
     }
 
@@ -117,7 +124,7 @@ public class WorkerAbility : MonoBehaviour
        for (int i = 0; i < steps; i++)
        {
         // Current position + direction we need to travel * the magnitude (number of steps)
-        Instantiate(pheremoneVFX, loc + (direction * i), Quaternion.identity);
+        //Instantiate(pheremoneVFX, loc + (direction * i), Quaternion.identity);
        } 
 
        // steps = distance/spacing

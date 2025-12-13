@@ -20,6 +20,8 @@ public class PheromoneTrail : MonoBehaviour
     public int puffsPerInterval = 3;
     public float tubeRadius = 0.08f;
 
+    bool showTrail = false; 
+
     private List<Vector3> lastTrailPoints = new List<Vector3>();
     // Start is called before the first frame update
     void Awake()
@@ -64,7 +66,20 @@ public class PheromoneTrail : MonoBehaviour
         }
     }
 
+    public void ShowTrail(bool flag)
+    {
+        showTrail = flag; 
+    }
+
     void Update()
+    {
+        if (showTrail)
+        {
+            HandleTrail(); 
+        }
+    }
+
+    void HandleTrail()
     {
         if(lastTrailPoints == null || lastTrailPoints.Count == 0) return;
 
