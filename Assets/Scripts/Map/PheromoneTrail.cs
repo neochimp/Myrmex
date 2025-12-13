@@ -1,19 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(LineRenderer))]
 public class PheromoneTrail : MonoBehaviour
 {
-    public Transform player;
+    public Transform home;
     public Transform targetItem;
     public float refreshRate = 0.2f;
 
     private LineRenderer line;
     private NavMeshPath path;
 
-    public Texture2D pheromoneTexture;
+    [Header("Texture Stuff")]
+    //public Texture2D pheromoneTexture;
+    public GameObject pheromoneVFXPrefab;
+    public float puffInterval = 0.07f;
+    private float puffTimer = 0f;
+    public int puffsPerInterval = 3;
+    public float tubeRadius = 0.08f;
+
+    private List<Vector3> lastTrailPoints = new List<Vector3>();
     // Start is called before the first frame update
     void Awake()
     {
@@ -21,16 +30,12 @@ public class PheromoneTrail : MonoBehaviour
         line.useWorldSpace = true;
         path = new NavMeshPath();
 
-        //Pheromone trail deisgn
-        line.startWidth = 0.05f;
-        line.endWidth = 0.05f;
-
         // Create material
         Material mat = new Material(Shader.Find("Unlit/Transparent"));
 
         // Assign texture if you have one (recommended)
-        if (pheromoneTexture != null)
-            mat.mainTexture = pheromoneTexture;
+        //if (pheromoneTexture != null)
+            //mat.mainTexture = pheromoneTexture;
 
         // Soft glowing pheromone color
         mat.color = new Color(0.5f, 1f, 0.8f, 0.7f); // minty glow with transparency
@@ -38,8 +43,8 @@ public class PheromoneTrail : MonoBehaviour
         line.material = mat;
 
         // Trail width
-        line.startWidth = 0.02f;
-        line.endWidth = 0.02f;
+        line.startWidth = 0f;
+        line.endWidth = 0f;
 
         // Texture tiling mode so it repeats
         line.textureMode = LineTextureMode.Tile;
@@ -61,16 +66,39 @@ public class PheromoneTrail : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        if(lastTrailPoints == null || lastTrailPoints.Count == 0) return;
+
+        puffTimer += Time.deltaTime;
+        if(puffTimer >= puffInterval)
+        {
+            puffTimer = 0f;
+            
+            for(int i = 0; i < puffsPerInterval; i++)
+            {
+                int idx = Random.Range(0, lastTrailPoints.Count);
+                Vector3 basePos = lastTrailPoints[idx];
+
+                Vector2 offset2D = Random.insideUnitCircle*tubeRadius;
+                Vector3 spawnPos = basePos + new Vector3(offset2D.x, 0f, offset2D.y);
+
+                spawnPos += Vector3.up*0.05f;
+
+                GameObject puff = Instantiate(pheromoneVFXPrefab, spawnPos, Quaternion.identity, home);
+            }
+        }
+    }
 
     void UpdatePath()
     {
-        if (player == null || targetItem == null)
+        if (home == null || targetItem == null)
         {
             line.positionCount = 0;
             return;
         }
 
-        if (!NavMesh.CalculatePath(player.position, targetItem.position, NavMesh.AllAreas, path))
+        if (!NavMesh.CalculatePath(home.position, targetItem.position, NavMesh.AllAreas, path))
         {
             line.positionCount = 0;
             return;
@@ -112,6 +140,9 @@ public class PheromoneTrail : MonoBehaviour
 
         line.positionCount = finalPoints.Count;
         line.SetPositions(finalPoints.ToArray());
+
+        //store trail for particle spawning
+        lastTrailPoints = finalPoints;
     }
 
     void SetupGradient()
