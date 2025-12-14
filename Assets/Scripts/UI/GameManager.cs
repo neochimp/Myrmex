@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject respawnUI;
 
+    [SerializeField] GameObject ammoContainer; 
+
     [SerializeField] CinemachineVirtualCamera gameOverCamera;
     [SerializeField] CinemachineVirtualCamera playerFollowCamera; 
 
@@ -79,7 +81,6 @@ public class GameManager : MonoBehaviour
     }
     public void RespawnSoldier()
     {   
-        Debug.Log("Respawning Soldier");
         SwitchPlayerCamera(); 
         FirstPersonController.PauseGame(); 
         isSoldier = true;
@@ -93,6 +94,7 @@ public class GameManager : MonoBehaviour
     {   
         SwitchPlayerCamera();
         FirstPersonController.PauseGame();
+        ammoContainer.SetActive(false); // worker does not use ammo UI
         isSoldier = false;
         isWorker = true; 
         playerManager.SpawnAnt(isSoldier, isWorker);

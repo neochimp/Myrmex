@@ -76,9 +76,9 @@ public class SoldierAbility : MonoBehaviour
 
     void Start()
     {   
-        // Begin the game by switching to the starting ability, and initialize the main camera. 
-        SwitchAbility(primaryAbility); 
+        // Begin the game by switching to the starting ability, and initialize the main camera.  
         cam = GameObject.FindAnyObjectByType<CinemachineVirtualCamera>(); 
+        SwitchAbility(primaryAbility);
     }
 
     void Update()
@@ -96,10 +96,8 @@ public class SoldierAbility : MonoBehaviour
    
     void OnEnable() 
     {
-        // A public facing method to take care of some housecleaning which needs to occur when switching from soldier to worker.
-        //Debug.Log("Enabling soldier.");
-        //UnzoomWeapon(); // If this is not called we will be permanently zoomed in. // But we might not need it if we switch primary. 
-        ammoUI.SetActive(true); // Hide the ammo 
+        // When soldier abilties enabled, reset to baseline. 
+        Reset(); 
     }
 
     void OnDisable()

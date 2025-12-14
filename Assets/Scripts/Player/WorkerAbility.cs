@@ -37,7 +37,7 @@ public class WorkerAbility : MonoBehaviour
     // There is no Start method because there is nothing to switch to,
     // The worker abilities are static (they don't get upgraded or change)
 
-
+    
     void Update()
     {   
         if (!firstPersonController.IsPaused())
