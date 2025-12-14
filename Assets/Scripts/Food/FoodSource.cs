@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class FoodSource : MonoBehaviour
 {   
+    // Representing the big food source, from which smaller particles fall. 
     [SerializeField] int startingFoodAmount = 10;
     [SerializeField] int stageTwoCutoff = 5; 
     [SerializeField] GameObject foodParticle; 

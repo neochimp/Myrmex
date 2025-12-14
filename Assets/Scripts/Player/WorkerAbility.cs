@@ -82,52 +82,5 @@ public class WorkerAbility : MonoBehaviour
             pheromoneTrail.ShowTrail(false); 
         }
     }
-
-    void HandlePheremones()
-    {
-        // no timer needed. 
-        // This activates on hold.
-        //Find the nearest object tagged Food within X meters.
-
-        //If found, spawn a visual effect that points from the player to that food.
-
-        //Let the effect exist for Y seconds, then disappear.
-
-       //respect pause and cooldown like other abilities.”
-
-       //1. Get player position
-       Transform currentTransform = this.gameObject.GetComponentInParent<Transform>(); 
-       Vector3 loc = currentTransform.position; 
-       //2. Find all objects tagged food. 
-       //3. Loop through food. 
-       //4. Find closest food.
-       float smallest = 9999;
-       FoodItem smallestFood = null;   
-       foreach (FoodItem food in FindObjectsByType<FoodItem>(FindObjectsSortMode.None))
-       {
-            if(food.DistanceToTarget(currentTransform) < smallest)
-            {
-                smallest = food.DistanceToTarget(currentTransform);
-                smallestFood = food;  
-            }
-       }
-       Debug.Log("This is the smallest food " + smallestFood + "it is " + smallest + " distance away.");
-
-       // Calculate the steps needed
-       int steps = (int)smallest;
-       // Classic vector formula for direction finding.
-       
-       Vector3 direction = (smallestFood.foodLocation().position - loc).normalized;
-       for (int i = 0; i < steps; i++)
-       {
-        // Current position + direction we need to travel * the magnitude (number of steps)
-        //Instantiate(pheremoneVFX, loc + (direction * i), Quaternion.identity);
-       } 
-
-       // steps = distance/spacing
-       // loop from i = 0 to steps
-       // trailPoint = playerPos + direction * (spacing * i)
-       // instantiate a pheremone puff at that position 
-    }
 }
 

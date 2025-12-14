@@ -1,21 +1,13 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
+// Technically this script doesn't even need to exist.
+// But it's a simple way to both retrieve FoodPickup GameObjects uniformally (they all have this script attached)
+// And it also gives a clean, hierarchical destruction. (We risk destroying only the mesh object, or root etc.)
 public class FoodItem : MonoBehaviour
 {   
-    public float DistanceToTarget(Transform target)
+    public void DestroyFood()
     {
-        Transform currentPosition = gameObject.GetComponent<Transform>(); 
-
-        return (target.position - currentPosition.position).sqrMagnitude; 
-    }
-
-    public Transform foodLocation()
-    {   
-        Debug.Log("I am " + gameObject.name + "My location is " + gameObject.transform.position);
-        var mesh = GetComponentInChildren<MeshRenderer>();
-        Debug.Log($"{name} | root={transform.position} | mesh={(mesh ? mesh.transform.position : Vector3.positiveInfinity)}");
-
-
-        return gameObject.transform; 
+        Destroy(this.gameObject); 
     }
 }

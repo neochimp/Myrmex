@@ -20,7 +20,7 @@ public class WorkerHandler : MonoBehaviour
             {   
                 // PICKUP FOOD
                 // Destroy the entire game object. 
-                Destroy(hit.collider.GetComponentInParent<FoodItem>().gameObject);
+                hit.collider.GetComponentInParent<FoodItem>().DestroyFood();
                 playerFood.SetActive(true); 
             }
             else if(hit.collider.tag == "FoodSource" && !playerFood.activeInHierarchy)
