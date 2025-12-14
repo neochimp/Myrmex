@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject respawnUI;
 
-    [SerializeField] GameObject ammoContainer; 
+    //[SerializeField] GameObject ammoContainer; 
+    //[SerializeField] GameObject pheremoneContainer; 
 
     [SerializeField] CinemachineVirtualCamera gameOverCamera;
     [SerializeField] CinemachineVirtualCamera playerFollowCamera; 
@@ -85,6 +86,7 @@ public class GameManager : MonoBehaviour
         FirstPersonController.PauseGame(); 
         isSoldier = true;
         isWorker = false; 
+        //pheremoneContainer.SetActive(false); // Soldier does not use pheremone UI
         playerManager.SpawnAnt(isSoldier, isWorker);
         respawnUI.SetActive(false);
         starterAssetsInputs.SetCursorState(true);
@@ -94,7 +96,7 @@ public class GameManager : MonoBehaviour
     {   
         SwitchPlayerCamera();
         FirstPersonController.PauseGame();
-        ammoContainer.SetActive(false); // worker does not use ammo UI
+        //ammoContainer.SetActive(false); // worker does not use ammo UI
         isSoldier = false;
         isWorker = true; 
         playerManager.SpawnAnt(isSoldier, isWorker);

@@ -102,8 +102,8 @@ public class SoldierAbility : MonoBehaviour
 
     void OnDisable()
     {
-        ammoUI.SetActive(false);
-        //Debug.Log("Disabling soldier.");
+        ammoUI.SetActive(false); // Worker does not use ammo UI
+        UnzoomWeapon(); // If you died as a soldier with the sniper zoomed, then respawned as a worker, this would be a nasty glitch.  
     }
 
     public void Reset()

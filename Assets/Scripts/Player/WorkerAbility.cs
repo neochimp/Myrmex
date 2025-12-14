@@ -20,7 +20,7 @@ public class WorkerAbility : MonoBehaviour
 
     [SerializeField] PheromoneTrail pheromoneTrail; 
     
-    //[SerializeField] AbilitySO secondaryAbility; 
+    [SerializeField] GameObject pheremoneContainer; 
 
     float foodTimer = 0f; 
 
@@ -37,7 +37,7 @@ public class WorkerAbility : MonoBehaviour
     // There is no Start method because there is nothing to switch to,
     // The worker abilities are static (they don't get upgraded or change)
 
-    
+
     void Update()
     {   
         if (!firstPersonController.IsPaused())
@@ -45,6 +45,12 @@ public class WorkerAbility : MonoBehaviour
             HandleFood(); 
             SenseFood(); 
         }
+    }
+
+    void OnDisable()
+    {
+        pheremoneContainer.SetActive(false); // Soldier will not require this UI
+        pheromoneTrail.ShowTrail(false); // No trail remaining on screen please. 
     }
     void HandleFood()
     {
@@ -73,13 +79,15 @@ public class WorkerAbility : MonoBehaviour
         if (starterAssetsInputs.secondary)
         {   
             // While input detected, trail is always set to true. 
-            pheromoneTrail.ShowTrail(true);  
+            pheromoneTrail.ShowTrail(true);
+            pheremoneContainer.SetActive(true);  
         }
         else if (pheromoneTrail.TrailShowing())
         {   
             // If the trail is showing with no fire input
             // Then hide trail
-            pheromoneTrail.ShowTrail(false); 
+            pheromoneTrail.ShowTrail(false);
+            pheremoneContainer.SetActive(false);   
         }
     }
 }
