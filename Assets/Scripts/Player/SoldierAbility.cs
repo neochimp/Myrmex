@@ -1,6 +1,8 @@
 using Cinemachine;
 using StarterAssets;
-using TMPro; 
+using TMPro;
+using TMPro.EditorUtilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SoldierAbility : MonoBehaviour
@@ -50,7 +52,8 @@ public class SoldierAbility : MonoBehaviour
     // We have this present to prevent clipping of ability objects, they render over the main camera to solve that issue. 
     [SerializeField] Camera abilityCamera; 
 
-    [SerializeField] GameObject ammoUI; 
+    [SerializeField] GameObject ammoUI;
+    [SerializeField] GameObject enemyText; // Only soldier needs to track enemies. 
     TMP_Text ammoText; 
     
     CinemachineVirtualCamera cam; 
@@ -110,10 +113,15 @@ public class SoldierAbility : MonoBehaviour
         {
            UnzoomWeapon(); // If you died as a soldier with the sniper zoomed, then respawned as a worker, this would be a nasty glitch. 
         }
+        if(enemyText)
+        {
+            enemyText.SetActive(false); 
+        }
     }
 
     public void Reset()
-    {
+    {   
+        enemyText.SetActive(true);  
         SwitchAbility(primaryAbility); // Switch ability back to primary (as if we just spawned)
     }
 

@@ -21,6 +21,7 @@ public class WorkerAbility : MonoBehaviour
     [SerializeField] PheromoneTrail pheromoneTrail; 
     
     [SerializeField] GameObject pheremoneContainer; 
+    [SerializeField] GameObject foodText; 
 
     float foodTimer = 0f; 
 
@@ -47,6 +48,11 @@ public class WorkerAbility : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        foodText.SetActive(true); // Display remaining food for workers. 
+    }
+
     void OnDisable()
     {   
         if(pheremoneContainer)
@@ -56,6 +62,10 @@ public class WorkerAbility : MonoBehaviour
         if (pheromoneTrail)
         {
             pheromoneTrail.ShowTrail(false); // No trail remaining on screen please. 
+        }
+        if(foodText)
+        {
+            foodText.SetActive(false); // Soldier does not need to see food UI. 
         }
     }
     void HandleFood()
