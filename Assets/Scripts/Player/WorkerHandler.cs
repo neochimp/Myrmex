@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+//using System.Numerics;
 using UnityEngine;
 
 public class WorkerHandler : MonoBehaviour
@@ -8,6 +7,11 @@ public class WorkerHandler : MonoBehaviour
     [SerializeField] LayerMask interactionLayers; 
 
     [SerializeField] GameObject playerFood; 
+
+    [SerializeField] float foodXOffset = 0f;
+    [SerializeField] float foodYOffset = 0.1f;
+
+    [SerializeField] float foodZOffset = 0.1f; 
 
     public void FireWorkerAbility(AbilitySO abilitySO)
     {
@@ -39,7 +43,12 @@ public class WorkerHandler : MonoBehaviour
                 // If you worker ant is "carrying food", then dropping is available. 
                 // Only one food carried at a time (toggle on/off)
                 // DROP FOOD
-                Instantiate(foodPrefab, hit.point, Quaternion.identity);
+                Vector3 offsetHit = new Vector3 (
+                    hit.point.x + foodXOffset,
+                    hit.point.y + foodYOffset, // Otherwise food is embedded in the floor. 
+                    hit.point.z + foodZOffset
+                ); 
+                Instantiate(foodPrefab, offsetHit, Quaternion.identity);
                 playerFood.SetActive(false); 
             }
         } 
