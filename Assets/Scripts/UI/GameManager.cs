@@ -3,16 +3,16 @@ using UnityEngine;
 using UnityEngine.SceneManagement; 
 using Cinemachine;
 using StarterAssets;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {   
-    [SerializeField] TMP_Text enemiesText; 
-    [SerializeField] GameObject winText; 
+    [SerializeField] TMP_Text enemiesText; //enemies remaining on map
+    [SerializeField] TMP_Text foodText; //food required to win 
+    [SerializeField] GameObject winText; // win game menu
 
-    [SerializeField] GameObject respawnUI;
+    [SerializeField] GameObject respawnUI; // respawn game menu 
 
-    //[SerializeField] GameObject ammoContainer; 
-    //[SerializeField] GameObject pheremoneContainer; 
 
     [SerializeField] CinemachineVirtualCamera gameOverCamera;
     [SerializeField] CinemachineVirtualCamera playerFollowCamera; 
@@ -23,7 +23,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] PlayerManager playerManager;
 
     const string ENEMIES_STRING = "Enemies: ";
+    const string FOOD_STRING = "Food Required: ";
     int enemiesRemaining = 0;
+    [SerializeField] int foodRemaining = 10; // The amount of food that needs to be returned to win the game. 
 
     // The highest priority camera will always be the POV. 
     // So adjusting priority switches cameras (that's unity behavior)
@@ -35,6 +37,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Respawn(); 
+        AdjustFoodCount(0); // Activate food counter. 
     }
 
     void SwitchPlayerCamera()
@@ -78,6 +81,17 @@ public class GameManager : MonoBehaviour
             //playerManager.SpawnWorker(); // this works
             //playerManager.Respawn(); // this works better
             Respawn(); 
+        }
+    }
+
+    public void AdjustFoodCount(int amount)
+    {
+        foodRemaining += amount;
+        foodText.text = FOOD_STRING + foodRemaining.ToString();
+
+        if (foodRemaining <= 0)
+        {
+            // YOU WIN
         }
     }
     public void RespawnSoldier()
