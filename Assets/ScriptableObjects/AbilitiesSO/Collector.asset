@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Collector
   m_EditorClassIdentifier: 
   Damage: 2
-  FireRate: 1
+  FireRate: 0.5
   ZoomAmount: 10
   ZoomRotationSpeed: 0.2
   MagazineSize: 10
