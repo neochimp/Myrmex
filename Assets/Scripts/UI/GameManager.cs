@@ -91,7 +91,6 @@ public class GameManager : MonoBehaviour
 
     public void RespawnWorker()
     {   
-        Debug.Log("Respawning Worker");
         SwitchPlayerCamera();
         FirstPersonController.PauseGame();
         isSoldier = false;
@@ -112,7 +111,7 @@ public class GameManager : MonoBehaviour
     public void Quit()
     {   
         // You can't actually Application.Quit the editor, has to be built. 
-        Debug.LogWarning("Will not work in Unity editor"); 
+        Debug.LogWarning("Quit does not work in Unity editor, but QUIT button was pressed"); 
         Application.Quit(); 
     }
 

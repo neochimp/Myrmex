@@ -146,24 +146,24 @@ public class PheromoneTrail : MonoBehaviour
 
     Vector3 GetClosestFood()
     {
-        Debug.Log("Calculating next closest food.");
+        //Debug.Log("Calculating next closest food.");
         //1. Get home position
         // already exists as home.  
         
         //2. Find all objects tagged food.
         //and 3. Loop through food.
         float smallest = Mathf.Infinity;
-        FoodItem smallestFood = null;   
+        FoodSource smallestFood = null;   
 
-        foreach (GameObject f in GameObject.FindGameObjectsWithTag("Food"))
+        foreach (GameObject f in GameObject.FindGameObjectsWithTag("FoodSource"))
         {   
-            FoodItem food = f.GetComponent<FoodItem>();
+            FoodSource food = f.GetComponent<FoodSource>();
             if (food == null)
             {   
                 // We are only worried about base food items with scripts attached. 
                 continue;
             }
-            Debug.Log("Found a valid food item " + f.name); 
+            //Debug.Log("Found a valid food item " + f.name); 
             float d = food.DistanceToTarget(home); // Squared Distance
 
             if (d < smallest)
@@ -191,7 +191,6 @@ public class PheromoneTrail : MonoBehaviour
         // if trail is off or no target locked, do nothing
         if (home == null || !showTrail || !hasLockedTarget)
         {   
-            Debug.Log("No target");
             line.positionCount = 0;
             return;
         }
@@ -200,13 +199,9 @@ public class PheromoneTrail : MonoBehaviour
 
         if (!NavMesh.CalculatePath(home.position, targetPos, NavMesh.AllAreas, path))
         {   
-            Debug.Log("Also no target"); 
             line.positionCount = 0;
             return;
         }
-
-        Debug.Log("Succesfull trail lock, generating path to" + targetPos);
-
         // If only 2 corners, still generate smooth and terrain-adjusted points.
         List<Vector3> finalPoints = new List<Vector3>();
 
