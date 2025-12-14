@@ -19,18 +19,17 @@ public class WorkerHandler : MonoBehaviour
 
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, abilitySO.range, interactionLayers, QueryTriggerInteraction.Ignore))
         {   
-            // Pickup food if HIT food and NOT already carring food.
+            //PICKUP FOOD
             if (hit.collider.tag == "Food" && !playerFood.activeInHierarchy)
             {   
-                // PICKUP FOOD
                 // Destroy the entire game object. 
                 hit.collider.GetComponentInParent<FoodItem>().DestroyFood();
                 playerFood.SetActive(true); 
             }
+            //MINE FOOD
             else if(hit.collider.tag == "FoodSource" && !playerFood.activeInHierarchy)
             {
                 // Mining functionality prototyping 
-                Debug.Log("You hit a food source"); 
                 // The Scriptable Object system holds the Damage Effect, which we invoke here. 
                 // (It adds a "damage effect" like we chomped the apple)
                 Instantiate(abilitySO.DamageEffect, hit.point, Quaternion.identity);
@@ -38,6 +37,17 @@ public class WorkerHandler : MonoBehaviour
                 FoodSource foodSource = hit.collider.GetComponentInParent<FoodSource>();
                 foodSource.TakeChomp(abilitySO.Damage); 
             }
+            // DROP FOOD AT NEST
+            else if (hit.collider.tag == "Nest" && playerFood.activeInHierarchy)
+            {
+                // Deactivate food
+                playerFood.SetActive(false);
+                // Spawn particle effect
+                Instantiate(abilitySO.DamageEffect, hit.point, Quaternion.identity);
+                // Reduce food count by one using the script attached to nest. 
+                hit.collider.GetComponentInParent<Nest>().DeliverFood(); 
+            }
+            //DROP FOOD
             else if (playerFood.activeInHierarchy)
             {   
                 // If you worker ant is "carrying food", then dropping is available. 

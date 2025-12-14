@@ -48,9 +48,15 @@ public class WorkerAbility : MonoBehaviour
     }
 
     void OnDisable()
-    {
-        pheremoneContainer.SetActive(false); // Soldier will not require this UI
-        pheromoneTrail.ShowTrail(false); // No trail remaining on screen please. 
+    {   
+        if(pheremoneContainer)
+        {
+            pheremoneContainer.SetActive(false); // Soldier will not require this UI
+        }
+        if (pheromoneTrail)
+        {
+            pheromoneTrail.ShowTrail(false); // No trail remaining on screen please. 
+        }
     }
     void HandleFood()
     {

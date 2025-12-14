@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Food
   - FoodSource
+  - Nest
   layers:
   - Default
   - TransparentFX

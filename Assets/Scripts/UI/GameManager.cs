@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     const string ENEMIES_STRING = "Enemies: ";
     const string FOOD_STRING = "Food Required: ";
     int enemiesRemaining = 0;
-    [SerializeField] int foodRemaining = 10; // The amount of food that needs to be returned to win the game. 
+    int winningFoodCOndition; // The amount of food that needs to be returned to win the game. 
 
     // The highest priority camera will always be the POV. 
     // So adjusting priority switches cameras (that's unity behavior)
@@ -37,7 +37,20 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Respawn(); 
-        AdjustFoodCount(0); // Activate food counter. 
+    }
+
+    public void SetCondition(int condition)
+    {
+        winningFoodCOndition = condition;
+        AdjustFoodCount(0); // Update the food count.  
+    }
+
+    void WinCondition()
+    {   
+        // This method can be changed and adapted as we see fit, 
+        // Maybe it goes to a new scene, or there is a win menu, etc. 
+        // For now it's useful just to register the condition. 
+        winText.SetActive(true);
     }
 
     void SwitchPlayerCamera()
@@ -86,12 +99,12 @@ public class GameManager : MonoBehaviour
 
     public void AdjustFoodCount(int amount)
     {
-        foodRemaining += amount;
-        foodText.text = FOOD_STRING + foodRemaining.ToString();
+        winningFoodCOndition += amount;
+        foodText.text = FOOD_STRING + winningFoodCOndition.ToString();
 
-        if (foodRemaining <= 0)
+        if (winningFoodCOndition <= 0)
         {
-            // YOU WIN
+            WinCondition(); 
         }
     }
     public void RespawnSoldier()
