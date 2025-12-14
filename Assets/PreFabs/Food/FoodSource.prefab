@@ -53,6 +53,7 @@ MonoBehaviour:
     type: 3}
   stageOne: {fileID: 4832288948064209555}
   stageTwo: {fileID: 6041865548597570775}
+  anchorPoint: {fileID: 7643163561007454011}
 --- !u!1 &4832288948064209555
 GameObject:
   m_ObjectHideFlags: 0
