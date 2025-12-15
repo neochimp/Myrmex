@@ -54,7 +54,6 @@ public class PheromoneTrail : MonoBehaviour
         // Texture tiling mode so it repeats
         line.textureMode = LineTextureMode.Tile;
         line.material.mainTextureScale = new Vector2(3f, 1f);
-        SetupGradient();
     }
 
     void OnEnable()
@@ -101,6 +100,7 @@ public class PheromoneTrail : MonoBehaviour
             // Turn off the trail
             hasLockedTarget = false;
             line.positionCount = 0;
+            lastTrailPoints.Clear();
             //line.startWidth = 0f;
             //line.endWidth = 0f; 
         }
@@ -139,7 +139,6 @@ public class PheromoneTrail : MonoBehaviour
 
                 spawnPos += Vector3.up*0.05f;
 
-                Debug.Log("puffing");
                 GameObject puff = Instantiate(pheromoneVFXPrefab, spawnPos, Quaternion.identity, home);
             }
         }
@@ -156,7 +155,7 @@ public class PheromoneTrail : MonoBehaviour
         float smallest = Mathf.Infinity;
         FoodSource smallestFood = null;   
 
-        foreach (GameObject f in GameObject.FindGameObjectsWithTag("FoodSource"))
+        foreach (GameObject f in GameObject.FindGameObjectsWithTag("FoodShell"))
         {   
             FoodSource food = f.GetComponent<FoodSource>();
             if (food == null)
@@ -193,6 +192,7 @@ public class PheromoneTrail : MonoBehaviour
         if (home == null || !showTrail || !hasLockedTarget)
         {   
             line.positionCount = 0;
+            lastTrailPoints.Clear();
             return;
         }
 
@@ -208,7 +208,7 @@ public class PheromoneTrail : MonoBehaviour
 
         float segmentStep = 0.3f;     // smaller = smoother line
         float hoverHeight = 1f;    // how high above ground the line floats
-        LayerMask groundMask = LayerMask.GetMask("Default"); // Adjust to your terrain layer(s)
+        LayerMask groundMask = LayerMask.GetMask("Ground"); // Adjust to your terrain layer(s)
 
         Vector3[] corners = path.corners;
 
@@ -244,25 +244,4 @@ public class PheromoneTrail : MonoBehaviour
         lastTrailPoints = finalPoints;
     }
 
-    void SetupGradient()
-    {
-        Gradient g = new Gradient();
-
-        g.SetKeys(
-            new GradientColorKey[]
-            {
-            new GradientColorKey(new Color(0.7f, 0.9f, 0.85f), 0f),
-            new GradientColorKey(new Color(0.6f, 0.8f, 0.8f), 1f)
-            },
-            new GradientAlphaKey[]
-            {
-            new GradientAlphaKey(0.0f, 0f),
-            new GradientAlphaKey(0.6f, 0.3f),
-            new GradientAlphaKey(0.6f, 0.7f),
-            new GradientAlphaKey(0.0f, 1f)
-            }
-        );
-
-        line.colorGradient = g;
-    }
 }
