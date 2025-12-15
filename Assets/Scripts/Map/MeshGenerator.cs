@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.AI.Navigation;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(MeshFilter))]
 public class MeshGenerator : MonoBehaviour
@@ -121,7 +122,23 @@ public class MeshGenerator : MonoBehaviour
         }
         navMeshSurface.collectObjects = CollectObjects.Children;
         navMeshSurface.BuildNavMesh();
-
+        var agents = FindObjectsOfType<NavMeshAgent>();
+        foreach (var agent in agents)
+        {
+            NavMeshHit hit;
+            // Look for nearest navmesh point within a radius
+            if (NavMesh.SamplePosition(agent.transform.position, out hit, 5f, NavMesh.AllAreas))
+            {
+                agent.Warp(hit.position); // teleport agent onto the navmesh
+                agent.enabled = true;
+            }
+        }
+        //correcting all food to be on terrain
+        GameObject[] foods = GameObject.FindGameObjectsWithTag("Food");
+        foreach(GameObject food in foods)
+        {
+            food.transform.position = new Vector3(food.transform.position.x,GetHeight(food.transform.position.x, food.transform.position.z),food.transform.position.z);
+        }
 
     }
 
@@ -207,7 +224,7 @@ public class MeshGenerator : MonoBehaviour
     {
         Vector2 center = new Vector2(xSize / 2f, zSize / 2f);
         float rampValue = 1.5f;
-        return Mathf.Pow((Vector2.Distance(pos, center) / (xSize / 2f)), rampValue) + 0.2f;
+        return Mathf.Pow((Vector2.Distance(pos, center) / (xSize / 2f)), rampValue);
     }
 
 
