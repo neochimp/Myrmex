@@ -3,17 +3,16 @@ using UnityEngine;
 public class FoodSource : MonoBehaviour
 {   
     // Representing the big food source, from which smaller particles fall. 
-    [SerializeField] int startingFoodHealth = 10;
-    [SerializeField] int stageTwoCutoff = 5; 
-
+    //stageCutoffs[0] is the starting health and the subsequent numbers are the corresponding values to start the next stage
+    [SerializeField] int[] stageCutoffs = {10, 5, 2};
     [SerializeField] int particleAmount; 
     [SerializeField] float particleSpawnRange; 
 
     const float groundPosition = -2.3f; 
     [SerializeField] GameObject foodParticle; 
 
-    [SerializeField] GameObject stageOne;
-    [SerializeField] GameObject stageTwo; 
+    [SerializeField] GameObject[] stage;
+    private int activeStage = 0;
 
     [SerializeField] Transform anchorPoint; // The anchor must always be grounded on the nav mesh. 
 
@@ -23,20 +22,24 @@ public class FoodSource : MonoBehaviour
     
     void Awake()
     {
-        currentFood = startingFoodHealth;
+        currentFood = stageCutoffs[0];
     }
     void Start()
     {   
-        // Begin in Stage Two form. 
-        stageOne.SetActive(true);
-        stageTwo.SetActive(false); 
+        // Begin in Stage 0 form. 
+        stage[0].SetActive(true);
+        stage[1].SetActive(false); 
+        stage[2].SetActive(false); 
+
     }
 
     void NextStage()
     {   
-        // Move into stage two. 
-        stageOne.SetActive(false);
-        stageTwo.SetActive(true); 
+        Debug.Log("Turning off " + activeStage);
+        stage[activeStage].SetActive(false);
+        activeStage++;
+        Debug.Log("Turning on " + activeStage);
+        stage[activeStage].SetActive(true);
     }
     
     void BreakOffFood()
@@ -60,18 +63,21 @@ public class FoodSource : MonoBehaviour
     {
         // Public function, to be called by WorkerHandler.cs 
         currentFood -= chompAmount;
-        if (currentFood <= (stageTwoCutoff) && stageOne.activeInHierarchy)
-        {   
-            // Once the stage/two cut off
-            NextStage(); 
-            BreakOffFood(); 
-        }
         // Simply check if currentFood is less than zero and destroy if true. 
-        else if(currentFood <= 0)
+        if(currentFood <= 0)
         {   
             BreakOffFood();
             Destroy(this.gameObject); 
+            return;
         }
+
+        if(currentFood <= stageCutoffs[activeStage+1])
+        {
+            //once the current food cutoff is met
+            NextStage();
+            BreakOffFood();
+        }
+
     }
 
     public float DistanceToTarget(Transform target)
