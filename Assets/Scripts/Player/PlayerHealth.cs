@@ -27,8 +27,9 @@ public class PlayerHealth : MonoBehaviour
         if(currentHealth <= 0)
         {   
             //PlayerGameOver();
-            // At this point, when the player dies, we just get the option to respawn as a new type of ant. 
-            gameManager.Respawn();  
+            // At this point, when the player dies, we just get the option to respawn as a new type of ant.
+            // Decrease lives.  
+            gameManager.AdjustLives(-1);  
 
         }
     }

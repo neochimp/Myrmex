@@ -9,13 +9,16 @@ public class GameManager : MonoBehaviour
 {   
     [SerializeField] TMP_Text enemiesText; //enemies remaining on map
     [SerializeField] TMP_Text foodText; //food required to win 
-    [SerializeField] GameObject winText; // win game menu
 
+    [SerializeField] TMP_Text livesText;
+    [SerializeField] GameObject winText; // win game menu
     [SerializeField] GameObject respawnUI; // respawn game menu 
+    [SerializeField] GameObject gameOverUI; // For game over (out of lives)
 
 
     [SerializeField] CinemachineVirtualCamera gameOverCamera;
     [SerializeField] CinemachineVirtualCamera playerFollowCamera; 
+    //[SerializeField] CinemachineVirtualCamera abilityCamera; 
 
     [SerializeField] StarterAssetsInputs starterAssetsInputs; // Required in order to detect input
     [SerializeField] FirstPersonController FirstPersonController; // Also required for handling input (onPause for example). 
@@ -26,6 +29,7 @@ public class GameManager : MonoBehaviour
     const string FOOD_STRING = "Food Required: ";
     int enemiesRemaining = 0;
     int winningFoodCOndition; // The amount of food that needs to be returned to win the game. 
+    [SerializeField] int totalLives = 3; 
 
     // The highest priority camera will always be the POV. 
     // So adjusting priority switches cameras (that's unity behavior)
@@ -35,8 +39,40 @@ public class GameManager : MonoBehaviour
     bool isWorker; 
 
     void Start()
+    {   
+        livesText.text = totalLives.ToString();
+        Respawn();
+    }
+
+    public void AdjustLives(int lives)
     {
-        Respawn(); 
+        totalLives += lives;
+        livesText.text = totalLives.ToString();
+        if(totalLives <= 0)
+        {
+            GameOver(); 
+        }
+        else if (lives <= -1)
+        {
+            // If this is a reduction of lives. 
+            Respawn(); 
+        }
+    }
+
+    void GameOver()
+    {
+        // Unparent the weapon cam to prevent errors after player deletion. 
+        // It would be childed to a destroyed object
+        //abilityCamera.parent = null; 
+        // Increase priority to instigate a switch of cameras. 
+        gameOverCamera.Priority = virtualCameraPriority;
+        // Deactivate Cursor/Lock cursor: (because it's game over)
+        StarterAssetsInputs starterAssetsInputs = FindAnyObjectByType<StarterAssetsInputs>(); 
+        starterAssetsInputs.SetCursorState(false); 
+        // Display the game over screen 
+        gameOverUI.SetActive(true); 
+        // Destroy the player. 
+        Destroy(FindAnyObjectByType<PlayerHealth>().gameObject);
     }
 
     public void SetCondition(int condition)
