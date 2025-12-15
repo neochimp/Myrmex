@@ -26,10 +26,10 @@ public class PlayerHealth : MonoBehaviour
         // Check if health is less than zero and call a GameOver result if true. 
         if(currentHealth <= 0)
         {   
-            Debug.Log("You died, respawning");   
             //PlayerGameOver();
-            // At this point, when the player dies, we just get the option to respawn as a new type of ant. 
-            gameManager.Respawn();  
+            // At this point, when the player dies, we just get the option to respawn as a new type of ant.
+            // Decrease lives.  
+            gameManager.AdjustLives(-1);  
 
         }
     }
@@ -55,12 +55,10 @@ public class PlayerHealth : MonoBehaviour
     {   
         if (gameManager.IsSoldier())
         {   
-            Debug.Log("loading soldier health"); 
             currentHealth = soldierHealth;
         }
         else if (gameManager.IsWorker())
         {   
-            Debug.Log("loading worker health"); 
             currentHealth = workerHealth;
         }
         // Once the correct health level is set, adjust the UI to match. 

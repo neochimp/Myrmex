@@ -1,6 +1,8 @@
 using Cinemachine;
 using StarterAssets;
-using TMPro; 
+using TMPro;
+using TMPro.EditorUtilities;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SoldierAbility : MonoBehaviour
@@ -50,7 +52,8 @@ public class SoldierAbility : MonoBehaviour
     // We have this present to prevent clipping of ability objects, they render over the main camera to solve that issue. 
     [SerializeField] Camera abilityCamera; 
 
-    [SerializeField] GameObject ammoUI; 
+    [SerializeField] GameObject ammoUI;
+    [SerializeField] GameObject enemyText; // Only soldier needs to track enemies. 
     TMP_Text ammoText; 
     
     CinemachineVirtualCamera cam; 
@@ -76,9 +79,9 @@ public class SoldierAbility : MonoBehaviour
 
     void Start()
     {   
-        // Begin the game by switching to the starting ability, and initialize the main camera. 
-        SwitchAbility(primaryAbility); 
+        // Begin the game by switching to the starting ability, and initialize the main camera.  
         cam = GameObject.FindAnyObjectByType<CinemachineVirtualCamera>(); 
+        SwitchAbility(primaryAbility);
     }
 
     void Update()
@@ -96,20 +99,29 @@ public class SoldierAbility : MonoBehaviour
    
     void OnEnable() 
     {
-        // A public facing method to take care of some housecleaning which needs to occur when switching from soldier to worker.
-        //Debug.Log("Enabling soldier.");
-        //UnzoomWeapon(); // If this is not called we will be permanently zoomed in. // But we might not need it if we switch primary. 
-        ammoUI.SetActive(true); // Hide the ammo 
+        // When soldier abilties enabled, reset to baseline. 
+        Reset(); 
     }
 
     void OnDisable()
-    {
-        ammoUI.SetActive(false);
-        //Debug.Log("Disabling soldier.");
+    {   
+        if(ammoUI)
+        {
+            ammoUI.SetActive(false); // Worker does not use ammo UI
+        }
+        if(zoomVignette)
+        {
+           UnzoomWeapon(); // If you died as a soldier with the sniper zoomed, then respawned as a worker, this would be a nasty glitch. 
+        }
+        if(enemyText)
+        {
+            enemyText.SetActive(false); 
+        }
     }
 
     public void Reset()
-    {
+    {   
+        enemyText.SetActive(true);  
         SwitchAbility(primaryAbility); // Switch ability back to primary (as if we just spawned)
     }
 

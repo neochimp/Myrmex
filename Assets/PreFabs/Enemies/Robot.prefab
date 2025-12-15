@@ -139,20 +139,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8a1d00f21a48f241856c79da2018855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingHealth: 10
   explodeVFX: {fileID: 305274947037447249, guid: 0a0468b306e81704f8d766f26fbea385,
     type: 3}
-  startingHealth: 10
-  shieldBars:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!95 &7812091269182159868
 Animator:
   serializedVersion: 5

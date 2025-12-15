@@ -1,9 +1,13 @@
 fileFormatVersion: 2
-guid: 5a6c827f415227eba902c62ebcd36728
+guid: 4cadb2a1c5e85e740afb9770b7c68540
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - home: {instanceID: 0}
+  - targetItem: {instanceID: 0}
+  - pheromoneVFXPrefab: {fileID: 2303204518263089702, guid: 95c22a1f0c04b8e4ca6a310eafbeea62,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

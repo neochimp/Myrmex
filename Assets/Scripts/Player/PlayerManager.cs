@@ -42,10 +42,7 @@ public class PlayerManager : MonoBehaviour
         WorkerAbilities.SetActive(isWorker);
         SoldierAbilities.SetActive(isSoldier); 
 
-        // 5. Reset the ammo count for the soldier abilities. 
-        SoldierAbilities.GetComponentInChildren<SoldierAbility>().Reset();
-
-        // 6. Reset health back to standard
+        // 5. Reset health back to standard
         playerHealth.ResetHealth(); // health reset 
     }
 }

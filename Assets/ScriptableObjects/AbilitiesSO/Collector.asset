@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e44e1fcdea3351a41ba7d8d9520c462d, type: 3}
   m_Name: Collector
   m_EditorClassIdentifier: 
-  Damage: 10
-  FireRate: 0.05
+  Damage: 2
+  FireRate: 0.5
   ZoomAmount: 10
   ZoomRotationSpeed: 0.2
   MagazineSize: 10

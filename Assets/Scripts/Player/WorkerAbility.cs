@@ -18,9 +18,10 @@ public class WorkerAbility : MonoBehaviour
 
     [SerializeField] GameObject playerFood; 
 
-    [SerializeField] GameObject pheremoneVFX; 
+    [SerializeField] PheromoneTrail pheromoneTrail; 
     
-    //[SerializeField] AbilitySO secondaryAbility; 
+    [SerializeField] GameObject pheremoneContainer; 
+    [SerializeField] GameObject foodText; 
 
     float foodTimer = 0f; 
 
@@ -44,6 +45,27 @@ public class WorkerAbility : MonoBehaviour
         {
             HandleFood(); 
             SenseFood(); 
+        }
+    }
+
+    void OnEnable()
+    {
+        foodText.SetActive(true); // Display remaining food for workers. 
+    }
+
+    void OnDisable()
+    {   
+        if(pheremoneContainer)
+        {
+            pheremoneContainer.SetActive(false); // Soldier will not require this UI
+        }
+        if (pheromoneTrail)
+        {
+            pheromoneTrail.ShowTrail(false); // No trail remaining on screen please. 
+        }
+        if(foodText)
+        {
+            foodText.SetActive(false); // Soldier does not need to see food UI. 
         }
     }
     void HandleFood()
@@ -71,60 +93,18 @@ public class WorkerAbility : MonoBehaviour
     void SenseFood()
     {
         if (starterAssetsInputs.secondary)
-        {
-            HandlePheremones(); 
+        {   
+            // While input detected, trail is always set to true. 
+            pheromoneTrail.ShowTrail(true);
+            pheremoneContainer.SetActive(true);  
         }
-    }
-
-    // Still need to refactor this out and add an actual ability for this, with a cooldown timer. 
-    // It works though, needs some comments and a refactor. 
-
-    void HandlePheremones()
-    {
-        // no timer needed. 
-        // This activates on hold.
-        //Find the nearest object tagged Food within X meters.
-
-        //If found, spawn a visual effect that points from the player to that food.
-
-        //Let the effect exist for Y seconds, then disappear.
-
-       //respect pause and cooldown like other abilities.”
-
-       //1. Get player position
-       Transform currentTransform = this.gameObject.GetComponentInParent<Transform>(); 
-       Vector3 loc = currentTransform.position; 
-       //2. Find all objects tagged food. 
-       //3. Loop through food. 
-       //4. Find closest food.
-       float smallest = 9999;
-       FoodItem smallestFood = null;   
-       foreach (FoodItem food in FindObjectsByType<FoodItem>(FindObjectsSortMode.None))
-       {
-            if(food.DistanceToTarget(currentTransform) < smallest)
-            {
-                smallest = food.DistanceToTarget(currentTransform);
-                smallestFood = food;  
-            }
-       }
-       Debug.Log("This is the smallest food " + smallestFood + "it is " + smallest + " distance away.");
-
-       // Calculate the steps needed
-       int steps = (int)smallest;
-       // Classic vector formula for direction finding.
-       
-       Vector3 direction = (smallestFood.foodLocation().position - loc).normalized;
-       for (int i = 0; i < steps; i++)
-       {
-        // Current position + direction we need to travel * the magnitude (number of steps)
-        Instantiate(pheremoneVFX, loc + (direction * i), Quaternion.identity);
-       } 
-
-       // steps = distance/spacing
-       // loop from i = 0 to steps
-       // trailPoint = playerPos + direction * (spacing * i)
-       // instantiate a pheremone puff at that position 
-
+        else if (pheromoneTrail.TrailShowing())
+        {   
+            // If the trail is showing with no fire input
+            // Then hide trail
+            pheromoneTrail.ShowTrail(false);
+            pheremoneContainer.SetActive(false);   
+        }
     }
 }
 
