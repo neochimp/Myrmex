@@ -43,7 +43,7 @@ public class PheromoneTrail : MonoBehaviour
             //mat.mainTexture = pheromoneTexture;
 
         // Soft glowing pheromone color
-        mat.color = new Color(0.5f, 1f, 0.8f, 0.7f); // minty glow with transparency
+        mat.color = new Color(0.5f, 1f, 0.8f, 0.7f);
 
         line.material = mat;
 
@@ -139,6 +139,7 @@ public class PheromoneTrail : MonoBehaviour
 
                 spawnPos += Vector3.up*0.05f;
 
+                Debug.Log("puffing");
                 GameObject puff = Instantiate(pheromoneVFXPrefab, spawnPos, Quaternion.identity, home);
             }
         }
@@ -207,7 +208,7 @@ public class PheromoneTrail : MonoBehaviour
 
         float segmentStep = 0.3f;     // smaller = smoother line
         float hoverHeight = 1f;    // how high above ground the line floats
-        LayerMask groundMask = LayerMask.GetMask("Ground"); // Adjust to your terrain layer(s)
+        LayerMask groundMask = LayerMask.GetMask("Default"); // Adjust to your terrain layer(s)
 
         Vector3[] corners = path.corners;
 

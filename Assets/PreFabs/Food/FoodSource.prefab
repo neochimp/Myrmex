@@ -47,8 +47,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6298501716dcb744e885800d0e109537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingFoodAmount: 20
+  startingFoodHealth: 10
   stageTwoCutoff: 10
+  particleAmount: 0
+  particleSpawnRange: 0
   foodParticle: {fileID: 2911023951351720111, guid: f79621f4e75ddbd46bb4c8af97cbfa4d,
     type: 3}
   stageOne: {fileID: 4832288948064209555}
