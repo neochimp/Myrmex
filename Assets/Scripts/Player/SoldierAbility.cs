@@ -54,6 +54,7 @@ public class SoldierAbility : MonoBehaviour
 
     [SerializeField] GameObject ammoUI;
     [SerializeField] GameObject enemyText; // Only soldier needs to track enemies. 
+    [SerializeField] GameObject soldierControlsUI;
     TMP_Text ammoText; 
     
     CinemachineVirtualCamera cam; 
@@ -116,6 +117,10 @@ public class SoldierAbility : MonoBehaviour
         if(enemyText)
         {
             enemyText.SetActive(false); 
+        }
+        if(soldierControlsUI)
+        {
+            soldierControlsUI.SetActive(false);
         }
     }
 

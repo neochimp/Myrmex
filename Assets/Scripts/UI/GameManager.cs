@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] PlayerManager playerManager;
 
-    const string ENEMIES_STRING = "Enemies: ";
+    const string ENEMIES_STRING = "Enemies Remaining: ";
     const string FOOD_STRING = "Food Required: ";
     int enemiesRemaining = 0;
     int winningFoodCOndition; // The amount of food that needs to be returned to win the game. 
