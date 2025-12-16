@@ -40,6 +40,10 @@ public class MeshGenerator : MonoBehaviour
 
     [Header("Grass Objects")]
     public GameObject[] grass;
+
+    [Header("Pause UI")]
+    public GameObject pauseUI;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -148,6 +152,7 @@ public class MeshGenerator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             paused = !paused;
+            pauseUI.SetActive(paused);
             Debug.Log("Pause Toggled");
         }
 
