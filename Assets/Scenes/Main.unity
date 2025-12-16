@@ -1530,6 +1530,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 915134014}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &915134016 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8945397366050643818, guid: a7d24e939c8b432429b84f06f43a5cda,
+    type: 3}
+  m_PrefabInstance: {fileID: 915134014}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &915134017 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5266812417448334789, guid: a7d24e939c8b432429b84f06f43a5cda,
+    type: 3}
+  m_PrefabInstance: {fileID: 915134014}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &916271460 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2864630072224904241, guid: e7cf6a9b821a8f543a5abc3f04be150b,
@@ -1766,6 +1778,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2303204518263089702, guid: 95c22a1f0c04b8e4ca6a310eafbeea62,
         type: 3}
+    - target: {fileID: 2167518034381550025, guid: e7cf6a9b821a8f543a5abc3f04be150b,
+        type: 3}
+      propertyPath: workerHeader
+      value: 
+      objectReference: {fileID: 915134016}
     - target: {fileID: 2167518034381550025, guid: e7cf6a9b821a8f543a5abc3f04be150b,
         type: 3}
       propertyPath: pheromoneTrail
@@ -2008,6 +2025,11 @@ PrefabInstance:
       objectReference: {fileID: 915134015}
     - target: {fileID: 7048299706460202379, guid: e7cf6a9b821a8f543a5abc3f04be150b,
         type: 3}
+      propertyPath: soldierHeader
+      value: 
+      objectReference: {fileID: 915134017}
+    - target: {fileID: 7048299706460202379, guid: e7cf6a9b821a8f543a5abc3f04be150b,
+        type: 3}
       propertyPath: soldierControlsUI
       value: 
       objectReference: {fileID: 1017565561}
@@ -2019,7 +2041,7 @@ PrefabInstance:
     - target: {fileID: 7172498364374821926, guid: e7cf6a9b821a8f543a5abc3f04be150b,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 258
+      value: 261
       objectReference: {fileID: 0}
     - target: {fileID: 7546564647605925892, guid: e7cf6a9b821a8f543a5abc3f04be150b,
         type: 3}
@@ -2029,7 +2051,7 @@ PrefabInstance:
     - target: {fileID: 7546564647605925892, guid: e7cf6a9b821a8f543a5abc3f04be150b,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 6891
+      value: 6894
       objectReference: {fileID: 0}
     - target: {fileID: 7553666250524768330, guid: e7cf6a9b821a8f543a5abc3f04be150b,
         type: 3}

@@ -86,6 +86,11 @@ public class GameManager : MonoBehaviour
         // This method can be changed and adapted as we see fit, 
         // Maybe it goes to a new scene, or there is a win menu, etc. 
         // For now it's useful just to register the condition. 
+        // Increase priority to instigate a switch of cameras.
+        gameOverCamera.Priority = virtualCameraPriority;
+        // Deactivate Cursor/Lock cursor: (because win condition met)
+        StarterAssetsInputs starterAssetsInputs = FindAnyObjectByType<StarterAssetsInputs>(); 
+        starterAssetsInputs.SetCursorState(false); 
         winText.SetActive(true);
     }
 
