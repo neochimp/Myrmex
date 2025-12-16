@@ -29,7 +29,7 @@ public class FriendlyWorker : MonoBehaviour
         {
             PickUp(other.gameObject);
         }
-        if (other.CompareTag("Anthill"))
+        if (other.CompareTag("Nest"))
         {
             Drop();
         }

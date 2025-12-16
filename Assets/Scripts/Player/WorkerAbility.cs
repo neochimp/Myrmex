@@ -22,6 +22,8 @@ public class WorkerAbility : MonoBehaviour
     
     [SerializeField] GameObject pheremoneContainer; 
     [SerializeField] GameObject foodText; 
+    [SerializeField] GameObject workerHeader;
+    [SerializeField] GameObject workerControlsUI;
 
     float foodTimer = 0f; 
 
@@ -51,6 +53,8 @@ public class WorkerAbility : MonoBehaviour
     void OnEnable()
     {
         foodText.SetActive(true); // Display remaining food for workers. 
+        workerControlsUI.SetActive(true); // Display worker controls.
+        workerHeader.SetActive(true); // Display worker header.
     }
 
     void OnDisable()
@@ -66,6 +70,14 @@ public class WorkerAbility : MonoBehaviour
         if(foodText)
         {
             foodText.SetActive(false); // Soldier does not need to see food UI. 
+        }
+        if(workerHeader)
+        {
+            workerHeader.SetActive(false); // Soldier does not need to see worker header.
+        }
+        if(workerControlsUI)
+        {
+            workerControlsUI.SetActive(false); // Soldier does not need to see worker controls.
         }
     }
     void HandleFood()

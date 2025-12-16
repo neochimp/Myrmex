@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using Unity.AI.Navigation;
 using Unity.VisualScripting;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 [RequireComponent(typeof(MeshFilter))]
 public class MeshGenerator : MonoBehaviour
@@ -16,6 +17,7 @@ public class MeshGenerator : MonoBehaviour
     public int xSize = 200;
     public int zSize = 200;
 
+    public LayerMask groundMask;
     //Perlin noise testing variables
     [Header("Base Hills")]
     public float baseScale = 0.05f;
@@ -38,6 +40,10 @@ public class MeshGenerator : MonoBehaviour
 
     [Header("Grass Objects")]
     public GameObject[] grass;
+
+    [Header("Pause UI")]
+    public GameObject pauseUI;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -131,13 +137,12 @@ public class MeshGenerator : MonoBehaviour
                 agent.enabled = true;
             }
         }
-        //correcting all food to be on terrain
-        GameObject[] foods = GameObject.FindGameObjectsWithTag("Food");
-        foreach(GameObject food in foods)
-        {
-            food.transform.position = new Vector3(food.transform.position.x,GetHeight(food.transform.position.x, food.transform.position.z),food.transform.position.z);
-        }
 
+        GameObject player = GameObject.FindWithTag("Player");
+        player.transform.position = new Vector3(player.transform.position.x, GetHeight(player.transform.position.x, player.transform.position.z), player.transform.position.z);
+                
+        //correcting all food to be on terrain and not colliding with grass
+        FixOverlaps();
     }
 
     // Update is called once per frame
@@ -147,8 +152,12 @@ public class MeshGenerator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             paused = !paused;
+            pauseUI.SetActive(paused);
             Debug.Log("Pause Toggled");
         }
+
+
+        FoodDropsFixY();
 
         Time.timeScale = paused ? 0 : 1;
 
@@ -223,6 +232,54 @@ public class MeshGenerator : MonoBehaviour
         Vector2 center = new Vector2(xSize / 2f, zSize / 2f);
         float rampValue = 1.5f;
         return Mathf.Pow((Vector2.Distance(pos, center) / (xSize / 2f)), rampValue);
+    }
+
+    void FixOverlaps()
+    {
+        GameObject[] foods = GameObject.FindGameObjectsWithTag("FoodShell");
+        foreach (var food in foods)
+        {
+            food.transform.position = SnapToTerrain(food.transform.position);
+            int attempts = 0;
+            while(IsOverlappingGrass(food) && attempts < 100 /*max attempts*/)
+            {
+                Vector2 offset2D = Random.insideUnitCircle.normalized*2f;
+                Vector3 newPos = food.transform.position;
+                newPos.x += offset2D.x;
+                newPos.z += offset2D.y;
+
+                newPos = SnapToTerrain(newPos);
+                
+                food.transform.position = newPos;
+
+                attempts++;
+            }
+        }
+    }
+
+    bool IsOverlappingGrass(GameObject food)
+    {
+        Collider[] hits = Physics.OverlapSphere(food.transform.position, 1f /*Radius to check*/);
+        foreach(var hit in hits)
+        {
+            if(hit.CompareTag("Grass")) return true;
+        }
+        return false;
+    }
+
+    Vector3 SnapToTerrain(Vector3 pos)
+    {
+        return new Vector3(pos.x, GetHeight(pos.x, pos.z), pos.z);
+    }
+    
+    void FoodDropsFixY()
+    {
+        GameObject[] foods = GameObject.FindGameObjectsWithTag("Food");
+        foreach(var food in foods)
+        {
+            food.transform.position = SnapToTerrain(food.transform.position);
+        }
+
     }
 
 

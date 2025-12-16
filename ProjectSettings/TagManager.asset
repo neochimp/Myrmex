@@ -9,6 +9,9 @@ TagManager:
   - Food
   - FoodSource
   - Nest
+  - Anthill
+  - Grass
+  - FoodShell
   layers:
   - Default
   - TransparentFX
