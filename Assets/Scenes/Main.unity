@@ -1414,6 +1414,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7944106384031775810, guid: a7d24e939c8b432429b84f06f43a5cda,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 18.699951
+      objectReference: {fileID: 0}
     - target: {fileID: 8483430932859982956, guid: a7d24e939c8b432429b84f06f43a5cda,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1519,6 +1524,16 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 2045051186}
+    - target: {fileID: 8771425722721982592, guid: a7d24e939c8b432429b84f06f43a5cda,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 32.80005
+      objectReference: {fileID: 0}
+    - target: {fileID: 8771425722721982592, guid: a7d24e939c8b432429b84f06f43a5cda,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -118.69995
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2041,7 +2056,7 @@ PrefabInstance:
     - target: {fileID: 7172498364374821926, guid: e7cf6a9b821a8f543a5abc3f04be150b,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 261
+      value: 351
       objectReference: {fileID: 0}
     - target: {fileID: 7546564647605925892, guid: e7cf6a9b821a8f543a5abc3f04be150b,
         type: 3}
@@ -2051,7 +2066,7 @@ PrefabInstance:
     - target: {fileID: 7546564647605925892, guid: e7cf6a9b821a8f543a5abc3f04be150b,
         type: 3}
       propertyPath: m_VersionIndex
-      value: 6894
+      value: 6984
       objectReference: {fileID: 0}
     - target: {fileID: 7553666250524768330, guid: e7cf6a9b821a8f543a5abc3f04be150b,
         type: 3}
