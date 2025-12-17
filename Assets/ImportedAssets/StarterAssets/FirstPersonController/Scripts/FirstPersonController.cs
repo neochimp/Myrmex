@@ -67,7 +67,7 @@ namespace StarterAssets
         //pause game
         private bool paused;
 
-        private bool UIpause; 
+        private bool UIpause;
 
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
@@ -122,31 +122,32 @@ namespace StarterAssets
         }
 
         public void PauseGame()
-        {   
+        {
             // This is used to fire the pause system externally, for example when a UI menu is shown. 
             if (!UIpause)
             {
                 UIpause = true;
-                paused = true;  
-            } else if (UIpause)
+                paused = true;
+            }
+            else if (UIpause)
             {
-                UIpause = false; 
-                paused = false; 
+                UIpause = false;
+                paused = false;
             }
         }
 
         public bool IsPaused()
-        {   
+        {
             // This will come in handy when pausing the game.
             // Soldier/Worker abilities.cs has no way of knowing if the game is paused
             // With this, we are able to determine that and handle accordingly - Jordan
-            return paused; 
+            return paused;
         }
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.P) && !UIpause) //change KeyCode.P to "escape" to change key
-            {   
+            {
                 // Only occurs if key down AND a UI menu is not being currently displayed
                 paused = !paused;
                 Debug.Log("Pause Toggled");
@@ -155,7 +156,8 @@ namespace StarterAssets
             if (paused)
             {
                 Time.timeScale = 0;
-            } else if (!paused)
+            }
+            else if (!paused)
             {
                 Time.timeScale = 1;
                 JumpAndGravity();
@@ -165,9 +167,9 @@ namespace StarterAssets
         }
 
         private void LateUpdate()
-        {   
+        {
             if (!paused)
-            {   
+            {
                 // Camera only moves if the game is not paused. 
                 CameraRotation();
             }
@@ -243,6 +245,7 @@ namespace StarterAssets
             {
                 // move
                 inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
+
             }
 
             // move the player
