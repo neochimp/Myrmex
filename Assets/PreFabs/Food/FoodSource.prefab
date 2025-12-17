@@ -47,15 +47,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6298501716dcb744e885800d0e109537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingFoodHealth: 10
-  stageTwoCutoff: 10
+  stageCutoffs: 0a0000000500000002000000
   particleAmount: 0
   particleSpawnRange: 0
   foodParticle: {fileID: 2911023951351720111, guid: f79621f4e75ddbd46bb4c8af97cbfa4d,
     type: 3}
-  stageOne: {fileID: 4832288948064209555}
-  stageTwo: {fileID: 6041865548597570775}
+  stage: []
   anchorPoint: {fileID: 7643163561007454011}
+  bite: {fileID: 8300000, guid: ec2ad3f312c3bedd7aa637067fe3177c, type: 3}
+  chomp: {fileID: 8300000, guid: d19c03945a5891e2390f5a293e5ea80f, type: 3}
 --- !u!1 &4832288948064209555
 GameObject:
   m_ObjectHideFlags: 0

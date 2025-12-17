@@ -1,47 +1,53 @@
 using UnityEngine;
+using System.Collections;
 
 public class FoodSource : MonoBehaviour
-{   
+{
     // Representing the big food source, from which smaller particles fall. 
     //stageCutoffs[0] is the starting health and the subsequent numbers are the corresponding values to start the next stage
-    [SerializeField] int[] stageCutoffs = {10, 5, 2};
-    [SerializeField] int particleAmount; 
-    [SerializeField] float particleSpawnRange; 
+    [SerializeField] int[] stageCutoffs = { 10, 5, 2 };
+    [SerializeField] int particleAmount;
+    [SerializeField] float particleSpawnRange;
 
-    const float groundPosition = -2.3f; 
-    [SerializeField] GameObject foodParticle; 
+    const float groundPosition = -2.3f;
+    [SerializeField] GameObject foodParticle;
 
     [SerializeField] GameObject[] stage;
     private int activeStage = 0;
 
     [SerializeField] Transform anchorPoint; // The anchor must always be grounded on the nav mesh. 
 
+    [SerializeField] AudioClip bite;
+    [SerializeField] AudioClip chomp;
+    private AudioSource sfx;
     // GameManager used for adjusting UI
-    GameManager gameManager; 
+    GameManager gameManager;
     int currentFood;
-    
+
     void Awake()
     {
         currentFood = stageCutoffs[0];
+
+        sfx = gameObject.GetComponent<AudioSource>();
     }
     void Start()
-    {   
+    {
         // Begin in Stage 0 form. 
         stage[0].SetActive(true);
-        stage[1].SetActive(false); 
-        stage[2].SetActive(false); 
+        stage[1].SetActive(false);
+        stage[2].SetActive(false);
 
     }
 
     void NextStage()
-    {   
+    {
         Debug.Log("Turning off " + activeStage);
         stage[activeStage].SetActive(false);
         activeStage++;
         Debug.Log("Turning on " + activeStage);
         stage[activeStage].SetActive(true);
     }
-    
+
     void BreakOffFood()
     {
         for (int i = 0; i < particleAmount; i++)
@@ -64,32 +70,52 @@ public class FoodSource : MonoBehaviour
         // Public function, to be called by WorkerHandler.cs 
         currentFood -= chompAmount;
         // Simply check if currentFood is less than zero and destroy if true. 
-        if(currentFood <= 0)
-        {   
+        if (currentFood <= 0)
+        {
             BreakOffFood();
-            Destroy(this.gameObject); 
+            sfx.PlayOneShot(chomp);
+
+            //Destroy the food after a delay of 1 second.
+            StartCoroutine(DestroyAfterDelay(1f));
+
             return;
         }
 
-        if(currentFood <= stageCutoffs[activeStage+1])
+        if (currentFood <= stageCutoffs[activeStage + 1])
         {
             //once the current food cutoff is met
+
+            sfx.PlayOneShot(chomp);
             NextStage();
             BreakOffFood();
         }
+        else
+        {
 
+            sfx.PlayOneShot(bite);
+        }
+
+    }
+
+    //I had to make this so that the food would still play the audio before getting destroyed
+    IEnumerator DestroyAfterDelay(float delay)
+    {
+
+        stage[2].SetActive(false);
+        yield return new WaitForSeconds(delay);
+        Destroy(gameObject);
     }
 
     public float DistanceToTarget(Transform target)
     {
-        Transform currentPosition = gameObject.GetComponent<Transform>(); 
+        Transform currentPosition = gameObject.GetComponent<Transform>();
 
-        return (target.position - currentPosition.position).sqrMagnitude; 
+        return (target.position - currentPosition.position).sqrMagnitude;
     }
 
     public Transform foodLocation()
-    {   
+    {
         //Debug.Log("I am " + gameObject.name + "My location is " + anchorPoint.position); 
-        return anchorPoint; 
+        return anchorPoint;
     }
 }
