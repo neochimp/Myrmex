@@ -140,7 +140,7 @@ public class MeshGenerator : MonoBehaviour
 
         GameObject player = GameObject.FindWithTag("Player");
         player.transform.position = new Vector3(player.transform.position.x, GetHeight(player.transform.position.x, player.transform.position.z), player.transform.position.z);
-                
+
         //correcting all food to be on terrain and not colliding with grass
         FixOverlaps();
     }
@@ -241,15 +241,14 @@ public class MeshGenerator : MonoBehaviour
         {
             food.transform.position = SnapToTerrain(food.transform.position);
             int attempts = 0;
-            while(IsOverlappingGrass(food) && attempts < 100 /*max attempts*/)
+            while (IsOverlappingGrass(food) && attempts < 100 /*max attempts*/)
             {
-                Vector2 offset2D = Random.insideUnitCircle.normalized*2f;
+                Vector2 offset2D = Random.insideUnitCircle.normalized * 2f;
                 Vector3 newPos = food.transform.position;
                 newPos.x += offset2D.x;
                 newPos.z += offset2D.y;
 
                 newPos = SnapToTerrain(newPos);
-                
                 food.transform.position = newPos;
 
                 attempts++;
@@ -260,9 +259,9 @@ public class MeshGenerator : MonoBehaviour
     bool IsOverlappingGrass(GameObject food)
     {
         Collider[] hits = Physics.OverlapSphere(food.transform.position, 1f /*Radius to check*/);
-        foreach(var hit in hits)
+        foreach (var hit in hits)
         {
-            if(hit.CompareTag("Grass")) return true;
+            if (hit.CompareTag("Grass") || hit.CompareTag("FoodShell")) return true;
         }
         return false;
     }
@@ -271,11 +270,10 @@ public class MeshGenerator : MonoBehaviour
     {
         return new Vector3(pos.x, GetHeight(pos.x, pos.z), pos.z);
     }
-    
     void FoodDropsFixY()
     {
         GameObject[] foods = GameObject.FindGameObjectsWithTag("Food");
-        foreach(var food in foods)
+        foreach (var food in foods)
         {
             food.transform.position = SnapToTerrain(food.transform.position);
         }
