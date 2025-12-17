@@ -38,8 +38,9 @@ public class MeshGenerator : MonoBehaviour
     public float clusterThreshold = 0.4f;
 
 
-    [Header("Grass Objects")]
+    [Header("Terrain Objects")]
     public GameObject[] grass;
+    public GameObject[] rock;
 
     [Header("Pause UI")]
     public GameObject pauseUI;
@@ -121,6 +122,32 @@ public class MeshGenerator : MonoBehaviour
                 for (int i = 0; i < spawnCount; i++)
                 {
                     SpawnTerrainObject(grass[Random.Range(0, 2)], vertices[index], 0.5f);
+                }
+
+
+                //rock spawning stuff
+                float smRockThreshold = 0.2f;
+                float medRockThreshold = 0.6f;
+                float lgRockThreshold = 0.8f;
+
+                float rockDensity = Mathf.PerlinNoise(x * 0.01f, z * 0.01f);
+                float smRockDensity = Mathf.Clamp01((rockDensity - smRockThreshold) / (1f - smRockThreshold));
+                float medRockDensity = Mathf.Clamp01((rockDensity - medRockThreshold) / (1f - medRockThreshold));
+                float lgRockDensity = Mathf.Clamp01((rockDensity - lgRockThreshold) / (1f - lgRockThreshold));
+
+                if (Random.value < smRockDensity)
+                {
+                    SpawnTerrainObject(rock[0], vertices[index], 1f);
+                }
+
+                if (Random.value < medRockDensity)
+                {
+                    SpawnTerrainObject(rock[1], vertices[index], 1f);
+                }
+
+                if (Random.value < lgRockDensity)
+                {
+                    SpawnTerrainObject(rock[2], vertices[index], 1f);
                 }
             }
         }
@@ -224,7 +251,10 @@ public class MeshGenerator : MonoBehaviour
         Vector3 randPos = new Vector3(pos.x - 2f + Random.Range(0.0f, 4.0f), pos.y - 0.5f, pos.z - 2f + Random.Range(0.0f, 4.0f));
         GameObject grassBlade = Instantiate(obj, randPos, Quaternion.Euler(-90, 0, Random.Range(0, 360)));
         grassBlade.transform.parent = transform;
-        grassBlade.transform.localScale = new Vector3(scale, scale, scale);
+        if (scale != 1f)
+        {
+            grassBlade.transform.localScale = new Vector3(scale, scale, scale);
+        }
     }
 
     float DistanceFromCenterNormalizedWithEdgeBias(Vector2 pos)
@@ -254,6 +284,12 @@ public class MeshGenerator : MonoBehaviour
                 attempts++;
             }
         }
+
+        GameObject[] rocks = GameObject.FindGameObjectsWithTag("Rock");
+        foreach (var rock in rocks)
+        {
+            rock.transform.position = SnapToTerrain(rock.transform.position);
+        }
     }
 
     bool IsOverlappingGrass(GameObject food)
@@ -279,7 +315,6 @@ public class MeshGenerator : MonoBehaviour
         }
 
     }
-
 
 }
 

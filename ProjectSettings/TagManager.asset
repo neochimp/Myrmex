@@ -12,6 +12,7 @@ TagManager:
   - Anthill
   - Grass
   - FoodShell
+  - Rock
   layers:
   - Default
   - TransparentFX
