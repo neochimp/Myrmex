@@ -16,24 +16,10 @@ public class FriendlyWorker : MonoBehaviour
     private GameObject heldFood;
     Transform target;
     void Awake()
-    {   
-        // Initialize the agent component (attached to this object)
-        agent = GetComponent<NavMeshAgent>(); 
-        agent.enabled = false;
-    }
-
-    void OnTriggerEnter(Collider other)
     {
-        Debug.Log("collided");
-        if (other.CompareTag("Food") && !holdingFood)
-        {
-            PickUp(other.gameObject);
-        }
-        if (other.CompareTag("Nest"))
-        {
-            Drop();
-        }
-        
+        // Initialize the agent component (attached to this object)
+        agent = GetComponent<NavMeshAgent>();
+        agent.enabled = false;
     }
 
     void PickUp(GameObject food)
@@ -42,13 +28,13 @@ public class FriendlyWorker : MonoBehaviour
         heldFood = food;
 
         Collider col = food.GetComponent<Collider>();
-        if(col != null)
+        if (col != null)
         {
             col.enabled = false;
         }
 
         food.transform.SetParent(holdPoint);
-        food.transform.localPosition = new Vector3(0, 2, 0);
+        food.transform.localPosition = new Vector3(0, 1.5f, 0.5f);
         food.transform.localRotation = Quaternion.identity;
         holdingFood = true;
     }
@@ -56,25 +42,23 @@ public class FriendlyWorker : MonoBehaviour
     void Drop()
     {
         Debug.Log("Dropping");
-        if(heldFood == null) return;
+        if (heldFood == null) return;
         GameObject food = heldFood;
         heldFood = null;
         food.transform.SetParent(null);
         food.transform.position = transform.position;
         Collider col = food.GetComponent<Collider>();
-        if(col != null)
+        if (col != null)
         {
             col.enabled = true;
         }
         holdingFood = false;
-        //for visual testing purposes
-        Destroy(food);
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        SnapAgentToNavMesh(transform.position);
     }
 
     // Update is called once per frame
@@ -82,13 +66,27 @@ public class FriendlyWorker : MonoBehaviour
     {
         if (!holdingFood)
         {
-            target = FindNearestFood();
-            agent.SetDestination(target.position);
+            if (target = FindNearestFood())
+            {
+                agent.SetDestination(target.position);
+                if (arrived())
+                {
+                    PickUp(target.gameObject);
+                }
+            }
         }
         else
         {
-           agent.SetDestination(home.position);
+            target = home;
+            agent.SetDestination(target.position);
+            if (arrived())
+            {
+                Drop();
+                holdingFood = false;
+            }
         }
+
+
 
     }
 
@@ -99,16 +97,39 @@ public class FriendlyWorker : MonoBehaviour
         Transform nearest = null;
         float best = Mathf.Infinity;
 
-        foreach(var i in foods)
+        foreach (var i in foods)
         {
             float d = Vector3.Distance(transform.position, i.transform.position);
-            if(d < best)
+            if (d < best)
             {
                 best = d;
                 nearest = i.transform;
             }
         }
-         
+
         return nearest;
+    }
+    public void SnapAgentToNavMesh(Vector3 desiredPosition)
+    {
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(desiredPosition, out hit, 10f, NavMesh.AllAreas))
+        {
+            agent.Warp(hit.position);
+            Debug.Log("Agent warped to nearest NavMesh Point: " + hit.position);
+        }
+        else
+        {
+            Debug.LogWarning("Could not find a valid nav mesh position near: " + desiredPosition);
+        }
+    }
+
+    bool arrived()
+    {
+        if (Vector3.Distance(transform.position, target.position) < 1f)
+        {
+            Debug.Log("hit");
+            return true;
+        }
+        return false;
     }
 }

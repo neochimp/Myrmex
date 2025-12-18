@@ -1,12 +1,12 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement; 
+using UnityEngine.SceneManagement;
 using Cinemachine;
 using StarterAssets;
 using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
-{   
+{
     [SerializeField] TMP_Text enemiesText; //enemies remaining on map
     [SerializeField] TMP_Text foodText; //food required to win 
 
@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
 
 
     [SerializeField] CinemachineVirtualCamera gameOverCamera;
-    [SerializeField] CinemachineVirtualCamera playerFollowCamera; 
+    [SerializeField] CinemachineVirtualCamera playerFollowCamera;
     //[SerializeField] CinemachineVirtualCamera abilityCamera; 
 
     [SerializeField] StarterAssetsInputs starterAssetsInputs; // Required in order to detect input
@@ -29,17 +29,17 @@ public class GameManager : MonoBehaviour
     const string FOOD_STRING = "Food Required: ";
     int enemiesRemaining = 0;
     int winningFoodCOndition; // The amount of food that needs to be returned to win the game. 
-    [SerializeField] int totalLives = 3; 
+    [SerializeField] int totalLives = 3;
 
     // The highest priority camera will always be the POV. 
     // So adjusting priority switches cameras (that's unity behavior)
     const int virtualCameraPriority = 20;
 
     bool isSoldier;
-    bool isWorker; 
+    bool isWorker;
 
     void Start()
-    {   
+    {
         livesText.text = totalLives.ToString();
         Respawn();
     }
@@ -48,14 +48,15 @@ public class GameManager : MonoBehaviour
     {
         totalLives += lives;
         livesText.text = totalLives.ToString();
-        if(totalLives <= 0)
+        Debug.Log("Lives: " + totalLives);
+        if (totalLives <= 0)
         {
-            GameOver(); 
+            GameOver();
         }
         else if (lives <= -1)
         {
             // If this is a reduction of lives. 
-            Respawn(); 
+            Respawn();
         }
     }
 
@@ -67,10 +68,10 @@ public class GameManager : MonoBehaviour
         // Increase priority to instigate a switch of cameras. 
         gameOverCamera.Priority = virtualCameraPriority;
         // Deactivate Cursor/Lock cursor: (because it's game over)
-        StarterAssetsInputs starterAssetsInputs = FindAnyObjectByType<StarterAssetsInputs>(); 
-        starterAssetsInputs.SetCursorState(false); 
+        StarterAssetsInputs starterAssetsInputs = FindAnyObjectByType<StarterAssetsInputs>();
+        starterAssetsInputs.SetCursorState(false);
         // Display the game over screen 
-        gameOverUI.SetActive(true); 
+        gameOverUI.SetActive(true);
         // Destroy the player. 
         Destroy(FindAnyObjectByType<PlayerHealth>().gameObject);
     }
@@ -82,49 +83,49 @@ public class GameManager : MonoBehaviour
     }
 
     void WinCondition()
-    {   
+    {
         // This method can be changed and adapted as we see fit, 
         // Maybe it goes to a new scene, or there is a win menu, etc. 
         // For now it's useful just to register the condition. 
         // Increase priority to instigate a switch of cameras.
         gameOverCamera.Priority = virtualCameraPriority;
         // Deactivate Cursor/Lock cursor: (because win condition met)
-        StarterAssetsInputs starterAssetsInputs = FindAnyObjectByType<StarterAssetsInputs>(); 
-        starterAssetsInputs.SetCursorState(false); 
+        StarterAssetsInputs starterAssetsInputs = FindAnyObjectByType<StarterAssetsInputs>();
+        starterAssetsInputs.SetCursorState(false);
         winText.SetActive(true);
     }
 
     void SwitchPlayerCamera()
     {
         playerFollowCamera.Priority = virtualCameraPriority; // Return camera to follow position. 
-        gameOverCamera.Priority = 0; 
+        gameOverCamera.Priority = 0;
     }
 
     void SwitchGameCamera()
     {
         // Increase camera priority to initiate a switch of cameras. 
         gameOverCamera.Priority = virtualCameraPriority;
-        playerFollowCamera.Priority = 0; 
+        playerFollowCamera.Priority = 0;
     }
 
     public void Respawn()
     {
         // Increase camera priority to initiate a switch of cameras. 
-        SwitchGameCamera(); 
-        starterAssetsInputs.SetCursorState(false); 
+        SwitchGameCamera();
+        starterAssetsInputs.SetCursorState(false);
         // Display the respawning menu (pick the type of ant to respawn as) 
         respawnUI.SetActive(true);
-        FirstPersonController.PauseGame(); 
+        FirstPersonController.PauseGame();
     }
 
     public void AdjustEnemyCount(int amount)
-    {   
+    {
         // *note* This tracker could easily be adjusted to track multiple types of enemies, such as spiders, mantises, etc. 
 
         // Increase the enemies remaining tracker (or decrease if given negative argument value)
         enemiesRemaining += amount;
         // Adjust the TMP_Text object, including the newly updated value. 
-        enemiesText.text = ENEMIES_STRING + enemiesRemaining.ToString(); 
+        enemiesText.text = ENEMIES_STRING + enemiesRemaining.ToString();
 
         if (enemiesRemaining <= 0)
         {
@@ -134,7 +135,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("No more enemies");
             //playerManager.SpawnWorker(); // this works
             //playerManager.Respawn(); // this works better
-            Respawn(); 
+            //Respawn();
         }
     }
 
@@ -145,15 +146,15 @@ public class GameManager : MonoBehaviour
 
         if (winningFoodCOndition <= 0)
         {
-            WinCondition(); 
+            WinCondition();
         }
     }
     public void RespawnSoldier()
-    {   
-        SwitchPlayerCamera(); 
-        FirstPersonController.PauseGame(); 
+    {
+        SwitchPlayerCamera();
+        FirstPersonController.PauseGame();
         isSoldier = true;
-        isWorker = false; 
+        isWorker = false;
         //pheremoneContainer.SetActive(false); // Soldier does not use pheremone UI
         playerManager.SpawnAnt(isSoldier, isWorker);
         respawnUI.SetActive(false);
@@ -161,39 +162,39 @@ public class GameManager : MonoBehaviour
     }
 
     public void RespawnWorker()
-    {   
+    {
         SwitchPlayerCamera();
         FirstPersonController.PauseGame();
         //ammoContainer.SetActive(false); // worker does not use ammo UI
         isSoldier = false;
-        isWorker = true; 
+        isWorker = true;
         playerManager.SpawnAnt(isSoldier, isWorker);
         respawnUI.SetActive(false);
-        starterAssetsInputs.SetCursorState(true); 
+        starterAssetsInputs.SetCursorState(true);
     }
 
     public void RestartLevel()
-    {   
+    {
         // Obtain the current scene from the build hierarchy.
         // Load that scene. 
         int currentScene = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentScene); 
+        SceneManager.LoadScene(currentScene);
     }
 
     public void Quit()
-    {   
+    {
         // You can't actually Application.Quit the editor, has to be built. 
-        Debug.LogWarning("Quit does not work in Unity editor, but QUIT button was pressed"); 
-        Application.Quit(); 
+        Debug.LogWarning("Quit does not work in Unity editor, but QUIT button was pressed");
+        Application.Quit();
     }
 
     public bool IsWorker()
     {
-        return isWorker; 
+        return isWorker;
     }
 
     public bool IsSoldier()
     {
-        return isSoldier; 
+        return isSoldier;
     }
 }

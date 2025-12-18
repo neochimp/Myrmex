@@ -277,9 +277,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemy: {fileID: 6037038783218266419, guid: f1cdb51de908a7a24a2d81834a02e66e, type: 3}
-  spawnPoint: {fileID: 0}
+  spawnPoint: {fileID: 6272358686246516104}
   spawnVarianceRadius: {x: 4, y: 0, z: 4}
-  spawnDelay: 5
+  spawnDelay: 15
 --- !u!1 &5313304470859672990
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ public class SpawnGate : MonoBehaviour
     [SerializeField] Transform spawnPoint; //center of spawning
     [SerializeField] Vector3 spawnVarianceRadius = new Vector3(4f, 0, 4f); //if you want the spawning to be randomly disperesed
     // Careful with this, if it's too small you will be spamming prefabs.
-    [SerializeField] float spawnDelay = 10f;
+    [SerializeField] float spawnDelay = 15f;
 
     void Start()
     {

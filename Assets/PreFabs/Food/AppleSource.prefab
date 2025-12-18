@@ -260,7 +260,7 @@ MonoBehaviour:
   enemy: {fileID: 6037038783218266419, guid: f1cdb51de908a7a24a2d81834a02e66e, type: 3}
   spawnPoint: {fileID: 6532890374306380321}
   spawnVarianceRadius: {x: 4, y: 0, z: 4}
-  spawnDelay: 5
+  spawnDelay: 15
 --- !u!1 &7527886030723591896
 GameObject:
   m_ObjectHideFlags: 0
@@ -315,7 +315,7 @@ MonoBehaviour:
   stageCutoffs: 0a0000000500000002000000
   particleAmount: 5
   particleSpawnRange: 3
-  foodParticle: {fileID: 2911023951351720111, guid: f79621f4e75ddbd46bb4c8af97cbfa4d,
+  foodParticle: {fileID: 5130292335889352626, guid: 6a24f3e1088e48c45ae4d95a46c91673,
     type: 3}
   stage:
   - {fileID: 7070738598765505160}
