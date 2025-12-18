@@ -11,6 +11,8 @@ public class SpawnGate : MonoBehaviour
     [SerializeField] Vector3 spawnVarianceRadius = new Vector3(4f, 0, 4f); //if you want the spawning to be randomly disperesed
     // Careful with this, if it's too small you will be spamming prefabs.
     [SerializeField] float spawnDelay = 15f;
+    [SerializeField] int maxSpawns = 5;
+    public int currentSpawns = 0;
 
     void Start()
     {
@@ -22,15 +24,14 @@ public class SpawnGate : MonoBehaviour
     IEnumerator SpawnEnemy()
     {
         // Create a co-routine which will be called every :spawnDelay: time interval
-        while (player)
+        while (player && currentSpawns < maxSpawns)
         {
             // Spawn an enemy at the given point.
-            Instantiate(enemy, randomSpawn(spawnPoint.position, spawnVarianceRadius), Quaternion.identity);
+            Instantiate(enemy, randomSpawn(spawnPoint.position, spawnVarianceRadius), Quaternion.identity, transform);
             // Pause coroutine for the delay.  
+            currentSpawns++;
             yield return new WaitForSeconds(spawnDelay);
         }
-        // Now detonate the object upon player death. 
-        this.gameObject.GetComponent<EnemyHealth>().SelfDestruct();
     }
 
     Vector3 randomSpawn(Vector3 center, Vector3 varianceRadius)
@@ -38,6 +39,11 @@ public class SpawnGate : MonoBehaviour
         return new Vector3(center.x + Random.Range(-varianceRadius.x, varianceRadius.x),
                            center.y + Random.Range(-varianceRadius.y, varianceRadius.y),
                            center.z + Random.Range(-varianceRadius.z, varianceRadius.z));
+    }
+
+    public void countEnemyDeath()
+    {
+        currentSpawns--;
     }
 
 }

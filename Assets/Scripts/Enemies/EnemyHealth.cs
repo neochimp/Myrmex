@@ -8,7 +8,9 @@ public class EnemyHealth : MonoBehaviour
 
     // GameManager used for adjusting UI
     GameManager gameManager;
+    SpawnGate parentGate;
     int currentHealth;
+    [SerializeField] AudioClip deathSound;
 
     void Awake()
     {
@@ -24,6 +26,7 @@ public class EnemyHealth : MonoBehaviour
         gameManager = FindFirstObjectByType<GameManager>();
         // Adjust UI count by 1. 
         gameManager.AdjustEnemyCount(1);
+        parentGate = GetComponentInParent<SpawnGate>();
     }
 
     public void TakeDamage(int damageAmount)
@@ -45,6 +48,8 @@ public class EnemyHealth : MonoBehaviour
         // The explosion effect itself will cause damage to the player, see Explosion.cs for details. 
         //Instantiate(explodeVFX, transform.position, Quaternion.identity);
         // Adjust the UI tracker. 
+        parentGate.currentSpawns--;
+        AudioSource.PlayClipAtPoint(deathSound, transform.position, 0.8f);
         gameManager.AdjustEnemyCount(-1);
         Destroy(gameObject);
         Debug.Log("Died");

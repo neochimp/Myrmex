@@ -260,7 +260,9 @@ MonoBehaviour:
   enemy: {fileID: 6037038783218266419, guid: f1cdb51de908a7a24a2d81834a02e66e, type: 3}
   spawnPoint: {fileID: 6532890374306380321}
   spawnVarianceRadius: {x: 4, y: 0, z: 4}
-  spawnDelay: 15
+  spawnDelay: 40
+  maxSpawns: 0
+  currentSpawns: 0
 --- !u!1 &7527886030723591896
 GameObject:
   m_ObjectHideFlags: 0

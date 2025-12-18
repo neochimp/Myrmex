@@ -13,7 +13,6 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] int workerHealth = 10;
     [SerializeField] UnityEngine.UI.Image[] shieldBars;
     [SerializeField] GameManager gameManager;
-
     int currentHealth;
 
     public void TakeDamage(int damageAmount)

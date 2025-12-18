@@ -54,9 +54,12 @@ MonoBehaviour:
   stageCutoffs: 0a0000000500000002000000
   particleAmount: 5
   particleSpawnRange: 3
-  foodParticle: {fileID: 2911023951351720111, guid: f79621f4e75ddbd46bb4c8af97cbfa4d,
+  foodParticle: {fileID: 6961720377308684013, guid: 5e989c93b47d6174badc64209566d912,
     type: 3}
-  stage: []
+  stage:
+  - {fileID: 4622717600730374328}
+  - {fileID: 8211215660973928115}
+  - {fileID: 7626512678046346195}
   anchorPoint: {fileID: 6272358686246516104}
   bite: {fileID: 8300000, guid: ec2ad3f312c3bedd7aa637067fe3177c, type: 3}
   chomp: {fileID: 8300000, guid: d19c03945a5891e2390f5a293e5ea80f, type: 3}
@@ -190,7 +193,7 @@ GameObject:
   - component: {fileID: 6323954218691010685}
   m_Layer: 0
   m_Name: CheeseStage1
-  m_TagString: Untagged
+  m_TagString: FoodSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -279,7 +282,9 @@ MonoBehaviour:
   enemy: {fileID: 6037038783218266419, guid: f1cdb51de908a7a24a2d81834a02e66e, type: 3}
   spawnPoint: {fileID: 6272358686246516104}
   spawnVarianceRadius: {x: 4, y: 0, z: 4}
-  spawnDelay: 15
+  spawnDelay: 40
+  maxSpawns: 0
+  currentSpawns: 0
 --- !u!1 &5313304470859672990
 GameObject:
   m_ObjectHideFlags: 0
@@ -294,7 +299,7 @@ GameObject:
   - component: {fileID: 8251592858443601978}
   m_Layer: 0
   m_Name: Anchor
-  m_TagString: FoodSource
+  m_TagString: FoodShell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -397,7 +402,7 @@ GameObject:
   - component: {fileID: 368101629738201486}
   m_Layer: 0
   m_Name: CheeseStage3
-  m_TagString: Untagged
+  m_TagString: FoodSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -451,7 +456,7 @@ GameObject:
   - component: {fileID: 9053155884349058796}
   m_Layer: 0
   m_Name: CheeseStage2
-  m_TagString: Untagged
+  m_TagString: FoodSource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

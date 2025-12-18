@@ -7,37 +7,56 @@ using UnityEngine.AI;
 public class FriendlyWorker : MonoBehaviour
 {
     NavMeshAgent agent;
-    float maxHealth = 10;
+    float maxHealth = 5;
     float currentHealth;
-    bool holdingFood;
+    bool holdingFood = false;
 
     public Transform holdPoint; //this is where the food will stick to when the ant is holding food.
     Transform home;
-    private GameObject heldFood;
+    private GameObject heldFood = null;
     Transform target;
+
+    public AudioClip deathSound;
+    private AudioSource sfx;
+
+    public
     void Awake()
     {
         // Initialize the agent component (attached to this object)
         agent = GetComponent<NavMeshAgent>();
         home = GameObject.FindWithTag("Nest").transform;
+        currentHealth = maxHealth;
+        sfx = gameObject.GetComponent<AudioSource>();
+
+        holdingFood = false;
+        heldFood = null;
     }
 
-    void PickUp(GameObject food)
+    bool TryPickUp(GameObject food)
     {
-        if (food.tag == "CarriedFood")
+        if (food == null)
         {
-            return;
+            return false;
         }
+
+        if (!food.CompareTag("Food"))
+        {
+            return false;
+        }
+
         food.tag = "CarriedFood";
-        food.transform.GetChild(0).tag = "CarriedFood";
-        Transform f = food.transform.GetChild(0);
-        if (f)
+        if (food.transform.childCount > 0)
         {
-            f.tag = "CarriedFood";
+            Transform child = food.transform.GetChild(0);
+            if (child != null)
+            {
+                child.tag = "CarriedFood";
+            }
         }
+
         Debug.Log("picking up");
         heldFood = food;
-
+        holdingFood = true;
         Collider col = food.GetComponent<Collider>();
         if (col != null)
         {
@@ -46,14 +65,18 @@ public class FriendlyWorker : MonoBehaviour
         food.transform.SetParent(holdPoint);
         food.transform.localPosition = new Vector3(0, 1.5f, 0.5f);
         food.transform.localRotation = Quaternion.identity;
+
+        return true;
     }
 
     void Drop()
     {
-        Debug.Log("Dropping");
         if (heldFood == null) return;
+
+        Debug.Log("Dropping");
         GameObject food = heldFood;
         heldFood = null;
+        holdingFood = false;
         food.transform.SetParent(null);
         food.transform.position = transform.position;
         Collider col = food.GetComponent<Collider>();
@@ -72,35 +95,45 @@ public class FriendlyWorker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        bool holdingFood = holdPoint.childCount > 0;
+        if (agent == null || home == null) return;
+
         if (!holdingFood)
         {
-            if (target = FindNearestFood())
+            if (target == null || !target.CompareTag("Food"))
             {
+                target = FindNearestFood();
+            }
+            if (target != null)
+            {
+                agent.isStopped = false;
                 agent.SetDestination(target.position);
-                if (arrived())
+                if (ArrivedAt(target.position))
                 {
-                    PickUp(target.gameObject);
-                }
-                else
-                {
-                    target = FindNearestFood();
-                    agent.SetDestination(target.position);
+                    bool picked = TryPickUp(target.gameObject);
+                    if (!picked)
+                    {
+                        target = null;
+                    }
                 }
             }
         }
         else
         {
+            if (heldFood == null)
+            {
+                holdingFood = false;
+                target = null;
+                return;
+            }
+            agent.isStopped = false;
             target = home;
-            agent.SetDestination(target.position);
-            if (arrived())
+            agent.SetDestination(home.position);
+            if (ArrivedAt(home.position))
             {
                 Drop();
+                target = null;
             }
         }
-
-
-
     }
 
     Transform FindNearestFood()
@@ -123,6 +156,18 @@ public class FriendlyWorker : MonoBehaviour
 
         return nearest;
     }
+
+    bool ArrivedAt(Vector3 point)
+    {
+        if (agent.pathPending) return false;
+
+        if (agent.remainingDistance <= agent.stoppingDistance + 0.1)
+        {
+            return true;
+        }
+        return Vector3.Distance(transform.position, point) < 1f;
+    }
+
     public void SnapAgentToNavMesh(Vector3 desiredPosition)
     {
         NavMeshHit hit;
@@ -137,12 +182,19 @@ public class FriendlyWorker : MonoBehaviour
         }
     }
 
-    bool arrived()
+    public void TakeDamage(int damageAmount)
     {
-        if (Vector3.Distance(transform.position, target.position) < 1f)
+        currentHealth -= damageAmount;
+        Debug.Log("Worker ant health left: " + currentHealth);
+        if (currentHealth <= 0)
         {
-            return true;
+            Die();
         }
-        return false;
+    }
+
+    void Die()
+    {
+        AudioSource.PlayClipAtPoint(deathSound, transform.position, 0.8f);
+        Destroy(gameObject);
     }
 }

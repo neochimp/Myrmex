@@ -47,7 +47,9 @@ MonoBehaviour:
   enemy: {fileID: 6037038783218266419, guid: f1cdb51de908a7a24a2d81834a02e66e, type: 3}
   spawnPoint: {fileID: 231662480303114362}
   spawnVarianceRadius: {x: 4, y: 0, z: 4}
-  spawnDelay: 15
+  spawnDelay: 40
+  maxSpawns: 0
+  currentSpawns: 0
 --- !u!1 &2649782640259394726
 GameObject:
   m_ObjectHideFlags: 0
@@ -205,8 +207,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 6
-  m_Center: {x: 0, y: -1, z: -1.28}
+  m_Radius: 4.04
+  m_Center: {x: 0, y: 1.68, z: -0.83}
 --- !u!1 &7757691093330743178
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,8 +261,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 6
-  m_Center: {x: 0, y: -1, z: -1.28}
+  m_Radius: 3.54
+  m_Center: {x: 0, y: 1.18, z: -0.87}
 --- !u!1 &7766870114494972526
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,8 +315,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 4
-  m_Center: {x: 0, y: -2.43, z: -4.15}
+  m_Radius: 2.51
+  m_Center: {x: 0, y: 1.8, z: -2.08}
 --- !u!1 &8511488178780464625
 GameObject:
   m_ObjectHideFlags: 0
