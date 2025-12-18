@@ -7,7 +7,7 @@ using UnityEngine;
 public class FoodItem : MonoBehaviour
 {
     Transform nest;
-
+    public bool isHeld;
     void Start()
     {
         nest = GameObject.FindWithTag("Nest").transform;

@@ -12,18 +12,29 @@ public class FriendlyWorker : MonoBehaviour
     bool holdingFood;
 
     public Transform holdPoint; //this is where the food will stick to when the ant is holding food.
-    public Transform home;
+    Transform home;
     private GameObject heldFood;
     Transform target;
     void Awake()
     {
         // Initialize the agent component (attached to this object)
         agent = GetComponent<NavMeshAgent>();
-        agent.enabled = false;
+        home = GameObject.FindWithTag("Nest").transform;
     }
 
     void PickUp(GameObject food)
     {
+        if (food.tag == "CarriedFood")
+        {
+            return;
+        }
+        food.tag = "CarriedFood";
+        food.transform.GetChild(0).tag = "CarriedFood";
+        Transform f = food.transform.GetChild(0);
+        if (f)
+        {
+            f.tag = "CarriedFood";
+        }
         Debug.Log("picking up");
         heldFood = food;
 
@@ -32,11 +43,9 @@ public class FriendlyWorker : MonoBehaviour
         {
             col.enabled = false;
         }
-
         food.transform.SetParent(holdPoint);
         food.transform.localPosition = new Vector3(0, 1.5f, 0.5f);
         food.transform.localRotation = Quaternion.identity;
-        holdingFood = true;
     }
 
     void Drop()
@@ -52,7 +61,6 @@ public class FriendlyWorker : MonoBehaviour
         {
             col.enabled = true;
         }
-        holdingFood = false;
     }
 
     // Start is called before the first frame update
@@ -64,6 +72,7 @@ public class FriendlyWorker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        bool holdingFood = holdPoint.childCount > 0;
         if (!holdingFood)
         {
             if (target = FindNearestFood())
@@ -72,6 +81,11 @@ public class FriendlyWorker : MonoBehaviour
                 if (arrived())
                 {
                     PickUp(target.gameObject);
+                }
+                else
+                {
+                    target = FindNearestFood();
+                    agent.SetDestination(target.position);
                 }
             }
         }
@@ -82,7 +96,6 @@ public class FriendlyWorker : MonoBehaviour
             if (arrived())
             {
                 Drop();
-                holdingFood = false;
             }
         }
 
@@ -99,6 +112,7 @@ public class FriendlyWorker : MonoBehaviour
 
         foreach (var i in foods)
         {
+
             float d = Vector3.Distance(transform.position, i.transform.position);
             if (d < best)
             {
@@ -127,7 +141,6 @@ public class FriendlyWorker : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, target.position) < 1f)
         {
-            Debug.Log("hit");
             return true;
         }
         return false;

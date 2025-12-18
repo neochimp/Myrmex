@@ -91,7 +91,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 328906285873634233}
-  home: {fileID: 0}
 --- !u!1001 &2654742160488254995
 PrefabInstance:
   m_ObjectHideFlags: 0
