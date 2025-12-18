@@ -261,7 +261,7 @@ MonoBehaviour:
   spawnPoint: {fileID: 6532890374306380321}
   spawnVarianceRadius: {x: 4, y: 0, z: 4}
   spawnDelay: 40
-  maxSpawns: 0
+  maxSpawns: 3
   currentSpawns: 0
 --- !u!1 &7527886030723591896
 GameObject:
