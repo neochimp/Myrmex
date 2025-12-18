@@ -21,14 +21,14 @@ public class PheromoneTrail : MonoBehaviour
     public int puffsPerInterval = 3;
     public float tubeRadius = 0.08f;
 
-    bool showTrail = false; 
+    bool showTrail = false;
 
     private List<Vector3> lastTrailPoints = new List<Vector3>();
 
     // add these:
     private Vector3 lockedTargetPos = Vector3.zero;
-    private bool hasLockedTarget = false; 
-    
+    private bool hasLockedTarget = false;
+
     void Awake()
     {
         line = GetComponent<LineRenderer>();
@@ -40,7 +40,7 @@ public class PheromoneTrail : MonoBehaviour
 
         // Assign texture if you have one (recommended)
         //if (pheromoneTexture != null)
-            //mat.mainTexture = pheromoneTexture;
+        //mat.mainTexture = pheromoneTexture;
 
         // Soft glowing pheromone color
         mat.color = new Color(0.5f, 1f, 0.8f, 0.7f);
@@ -64,39 +64,39 @@ public class PheromoneTrail : MonoBehaviour
     System.Collections.IEnumerator UpdatePathRoutine()
     {
         while (true)
-        {   
+        {
             UpdatePath();
             yield return new WaitForSeconds(refreshRate);
         }
     }
 
     public void ShowTrail(bool flag)
-    {   
+    {
         // Flag the trail (either showing or NOT showing)
-        showTrail = flag; 
+        showTrail = flag;
 
         if (showTrail)
         {
             // lock a target when trail is triggered by true flag
             Vector3 candidate = GetClosestFood();
             line.startWidth = 0f;
-            line.endWidth = 0f; 
+            line.endWidth = 0f;
             if (candidate == Vector3.zero)
-            {   
+            {
                 // no valid food found
                 hasLockedTarget = false;
                 line.positionCount = 0;
             }
             else
-            {   
-                lockedTargetPos = candidate; 
+            {
+                lockedTargetPos = candidate;
                 hasLockedTarget = true;
             }
             //line.startWidth = 0.3f;
             //line.endWidth = 0.3f;
         }
         else
-        {   
+        {
             // Turn off the trail
             hasLockedTarget = false;
             line.positionCount = 0;
@@ -107,37 +107,37 @@ public class PheromoneTrail : MonoBehaviour
     }
 
     public bool TrailShowing()
-    {   
+    {
         // Return trail status
-        return showTrail; 
+        return showTrail;
     }
 
     void Update()
     {
         if (showTrail)
         {
-            HandleTrail(); 
+            HandleTrail();
         }
     }
 
     void HandleTrail()
     {
-        if(lastTrailPoints == null || lastTrailPoints.Count == 0) return;
+        if (lastTrailPoints == null || lastTrailPoints.Count == 0) return;
 
         puffTimer += Time.deltaTime;
-        if(puffTimer >= puffInterval)
+        if (puffTimer >= puffInterval)
         {
             puffTimer = 0f;
-            
-            for(int i = 0; i < puffsPerInterval; i++)
+
+            for (int i = 0; i < puffsPerInterval; i++)
             {
                 int idx = UnityEngine.Random.Range(0, lastTrailPoints.Count);
                 Vector3 basePos = lastTrailPoints[idx];
 
-                Vector2 offset2D = UnityEngine.Random.insideUnitCircle*tubeRadius;
+                Vector2 offset2D = UnityEngine.Random.insideUnitCircle * tubeRadius;
                 Vector3 spawnPos = basePos + new Vector3(offset2D.x, 0f, offset2D.y);
 
-                spawnPos += Vector3.up*0.05f;
+                spawnPos += Vector3.up * 0.05f;
 
                 GameObject puff = Instantiate(pheromoneVFXPrefab, spawnPos, Quaternion.identity, home);
             }
@@ -149,48 +149,34 @@ public class PheromoneTrail : MonoBehaviour
         //Debug.Log("Calculating next closest food.");
         //1. Get home position
         // already exists as home.  
-        
+
         //2. Find all objects tagged food.
         //and 3. Loop through food.
         float smallest = Mathf.Infinity;
-        FoodSource smallestFood = null;   
-
-        foreach (GameObject f in GameObject.FindGameObjectsWithTag("FoodShell"))
-        {   
-            FoodSource food = f.GetComponent<FoodSource>();
-            if (food == null)
-            {   
-                // We are only worried about base food items with scripts attached. 
-                continue;
-            }
-            //Debug.Log("Found a valid food item " + f.name); 
-            float d = food.DistanceToTarget(home); // Squared Distance
-
+        Transform nearest = null;
+        GameObject[] foods = GameObject.FindGameObjectsWithTag("FoodShell");
+        foreach (GameObject f in foods)
+        {
+            float d = Vector3.Distance(transform.position, f.transform.position);
             if (d < smallest)
             {
                 smallest = d;
-                smallestFood = food; 
+                nearest = f.transform;
             }
-           if(food.DistanceToTarget(home) < smallest)
-           {    
-                smallest = food.DistanceToTarget(home);
-                smallestFood = food; 
-           }
         }
-
         // If no food found return a flag value
-        if (smallestFood == null)
+        if (nearest == null)
         {
             return Vector3.zero;
         }
         // else 
-        return smallestFood.foodLocation().position;
+        return nearest.position;
     }
     void UpdatePath()
-    {   
+    {
         // if trail is off or no target locked, do nothing
         if (home == null || !showTrail || !hasLockedTarget)
-        {   
+        {
             line.positionCount = 0;
             lastTrailPoints.Clear();
             return;
@@ -199,7 +185,7 @@ public class PheromoneTrail : MonoBehaviour
         Vector3 targetPos = lockedTargetPos;
 
         if (!NavMesh.CalculatePath(home.position, targetPos, NavMesh.AllAreas, path))
-        {   
+        {
             line.positionCount = 0;
             return;
         }

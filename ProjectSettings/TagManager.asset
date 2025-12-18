@@ -13,6 +13,8 @@ TagManager:
   - Grass
   - FoodShell
   - Rock
+  - npc
+  - CarriedFood
   layers:
   - Default
   - TransparentFX
