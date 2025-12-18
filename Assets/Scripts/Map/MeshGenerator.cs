@@ -41,6 +41,7 @@ public class MeshGenerator : MonoBehaviour
     [Header("Terrain Objects")]
     public GameObject[] grass;
     public GameObject[] rock;
+    public GameObject[] food;
 
     [Header("Pause UI")]
     public GameObject pauseUI;
@@ -121,13 +122,21 @@ public class MeshGenerator : MonoBehaviour
 
                 for (int i = 0; i < spawnCount; i++)
                 {
-                    SpawnTerrainObject(grass[Random.Range(0, 2)], vertices[index], 0.5f);
+                    SpawnTerrainObject(grass[Random.Range(0, 3)], vertices[index], 0.5f, false);
                 }
 
+                //Spawn a food if there is tile is bare.
+                if (spawnCount == 0)
+                {
+                    if (Random.Range(0, 70) == 1)
+                    {
+                        SpawnTerrainObject(food[Random.Range(0, 3)], vertices[index], 1f, true);
+                    }
+                }
 
                 //rock spawning stuff
-                float smRockThreshold = 0.2f;
-                float medRockThreshold = 0.6f;
+                float smRockThreshold = 0.25f;
+                float medRockThreshold = 0.65f;
                 float lgRockThreshold = 0.8f;
 
                 float rockDensity = Mathf.PerlinNoise(x * 0.01f, z * 0.01f);
@@ -137,17 +146,17 @@ public class MeshGenerator : MonoBehaviour
 
                 if (Random.value < smRockDensity)
                 {
-                    SpawnTerrainObject(rock[0], vertices[index], 1f);
+                    SpawnTerrainObject(rock[0], vertices[index], 1f, false);
                 }
 
                 if (Random.value < medRockDensity)
                 {
-                    SpawnTerrainObject(rock[1], vertices[index], 1f);
+                    SpawnTerrainObject(rock[1], vertices[index], 1f, false);
                 }
 
                 if (Random.value < lgRockDensity)
                 {
-                    SpawnTerrainObject(rock[2], vertices[index], 1f);
+                    SpawnTerrainObject(rock[2], vertices[index], 1f, false);
                 }
             }
         }
@@ -246,15 +255,27 @@ public class MeshGenerator : MonoBehaviour
         return big + mid + small;
     }
 
-    void SpawnTerrainObject(GameObject obj, Vector3 pos, float scale)
+    void SpawnTerrainObject(GameObject obj, Vector3 pos, float scale, bool preservePosition)
     {
-        Vector3 randPos = new Vector3(pos.x - 2f + Random.Range(0.0f, 4.0f), pos.y - 0.5f, pos.z - 2f + Random.Range(0.0f, 4.0f));
-        GameObject grassBlade = Instantiate(obj, randPos, Quaternion.Euler(-90, 0, Random.Range(0, 360)));
-        grassBlade.transform.parent = transform;
-        if (scale != 1f)
+        GameObject spawn;
+        if (preservePosition)
         {
-            grassBlade.transform.localScale = new Vector3(scale, scale, scale);
+            Quaternion baseRot = obj.transform.rotation;
+            Quaternion randomRot = Quaternion.Euler(
+                baseRot.eulerAngles.x,
+                Random.Range(0f, 360f),
+                baseRot.eulerAngles.z
+              );
+            spawn = Instantiate(obj, pos, randomRot);
         }
+        else
+        {
+            Vector3 randPos = new Vector3(pos.x - 2f + Random.Range(0.0f, 4.0f), pos.y - 0.5f, pos.z - 2f + Random.Range(0.0f, 4.0f));
+            spawn = Instantiate(obj, randPos, Quaternion.Euler(-90, 0, Random.Range(0, 360)));
+            spawn.transform.localScale = new Vector3(scale, scale, scale);
+        }
+
+        spawn.transform.parent = transform;
     }
 
     float DistanceFromCenterNormalizedWithEdgeBias(Vector2 pos)
