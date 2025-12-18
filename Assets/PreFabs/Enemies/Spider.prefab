@@ -76,7 +76,7 @@ NavMeshAgent:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6037038783218266419}
   m_Enabled: 1
-  m_AgentTypeID: 0
+  m_AgentTypeID: 1479372276
   m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
@@ -135,6 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8a1d00f21a48f241856c79da2018855, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingHealth: 10
   explodeVFX: {fileID: 305274947037447249, guid: 0a0468b306e81704f8d766f26fbea385,
     type: 3}
 --- !u!1001 &7511854462211506069
