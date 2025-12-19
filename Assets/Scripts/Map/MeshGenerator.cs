@@ -289,8 +289,9 @@ public class MeshGenerator : MonoBehaviour
     {
         GameObject[] foods = GameObject.FindGameObjectsWithTag("FoodShell");
         foreach (var food in foods)
-        {
-            food.transform.position = SnapToTerrain(food.transform.position);
+        {   
+            // PROTOTYPE CHANGED: food.transform.position = SnapToTerrain(food.transform.position);
+            food.transform.position = SnapToNavMesh(food.transform.position);
             int attempts = 0;
             while (IsOverlappingGrass(food) && attempts < 100 /*max attempts*/)
             {
@@ -299,7 +300,8 @@ public class MeshGenerator : MonoBehaviour
                 newPos.x += offset2D.x;
                 newPos.z += offset2D.y;
 
-                newPos = SnapToTerrain(newPos);
+                //newPos = SnapToTerrain(newPos);
+                newPos = SnapToNavMesh(newPos);
                 food.transform.position = newPos;
 
                 attempts++;
@@ -327,12 +329,29 @@ public class MeshGenerator : MonoBehaviour
     {
         return new Vector3(pos.x, GetHeight(pos.x, pos.z), pos.z);
     }
+
+    Vector3 SnapToNavMesh(Vector3 pos)
+    // PROTOTYPE
+    {
+        NavMeshHit hit;
+        // Try to snap to nearest point on the NavMesh within a small radius
+        if (NavMesh.SamplePosition(pos, out hit, 2f, NavMesh.AllAreas))
+        {
+            return hit.position;
+        }
+
+    // Fallback so we never leave things floating
+    return SnapToTerrain(pos);
+    }
+
     void FoodDropsFixY()
+    // Prototype change
     {
         GameObject[] foods = GameObject.FindGameObjectsWithTag("Food");
         foreach (var food in foods)
         {
-            food.transform.position = SnapToTerrain(food.transform.position);
+            //food.transform.position = SnapToTerrain(food.transform.position);
+            food.transform.position = SnapToNavMesh(food.transform.position);
         }
 
     }
